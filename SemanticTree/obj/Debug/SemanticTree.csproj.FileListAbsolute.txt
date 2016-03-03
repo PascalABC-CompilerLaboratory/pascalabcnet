@@ -1,5 +1,4 @@
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\SemanticTree.dll
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\SemanticTree.pdb
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\SemanticTree\obj\Debug\SemanticTree.csprojResolveAssemblyReference.cache
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\SemanticTree\obj\Debug\SemanticTree.dll
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\SemanticTree\obj\Debug\SemanticTree.pdb

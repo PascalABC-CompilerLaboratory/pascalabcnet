@@ -18850,8 +18850,11 @@ namespace PascalABCCompiler.TreeConverter
 
         private bool CheckUnknownIdentNeedsClassCapture(SyntaxTree.unknown_ident _unk)
         {
+            string Consts__Self = "<>4__self";
+
             // Find semantic class containing iterator (yield-method) with unknown ident
-            var iteratorContainingClass = context._cmn.types.Where(t => t.name == _unk.ClassName.name).First();
+            var iteratorContainingClass = context._ctn.fields.Where(f => f.name == Consts__Self).First().type;
+            //var iteratorContainingClass = context._cmn.types.Where(t => t.name == _unk.ClassName.name).First();
 
             if ((object)iteratorContainingClass != null)
             {

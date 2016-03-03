@@ -15,7 +15,7 @@ type R = class
 
   //property sin: real read testR;
 
-private
+//private
   function sin(x: real): real;
   begin
     result := 83.9;
@@ -23,18 +23,12 @@ private
 end;
 
 type A = class(R)
-  testField: real := 23.3;
+  testField: real;
 
   function Gen(n: integer): sequence of real;
-  var j,k: real;
   begin
-    //yield testField;
-    //yield testR;
-    //msin;
-    //yield mcos;
-    //yield cos(3.14);
+    yield testField;
     yield sin(3.14);
-    //yield jgdFail;
   end;
 end;
 

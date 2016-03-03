@@ -11,7 +11,6 @@
 
 using ICSharpCode.Core.Presentation;
 using ICSharpCode.SharpDevelop.Gui.Dialogs.ReferenceDialog;
-using ICSharpCode.SharpDevelop.Gui.OptionPanels;
 using ICSharpCode.SharpDevelop.Widgets;
 using System;
 using System.Diagnostics;
