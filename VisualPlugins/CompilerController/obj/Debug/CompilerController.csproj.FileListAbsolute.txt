@@ -1,0 +1,8 @@
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\CompilerController.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\CompilerController.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\CompilerController\obj\Debug\CompilerController.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\CompilerController\obj\Debug\VisualPascalABCPlugins.CompilerInformation.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\CompilerController\obj\Debug\VisualPascalABCPlugins.Properties.Resources.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\CompilerController\obj\Debug\CompilerController.csproj.GenerateResource.Cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\CompilerController\obj\Debug\CompilerController.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\CompilerController\obj\Debug\CompilerController.pdb

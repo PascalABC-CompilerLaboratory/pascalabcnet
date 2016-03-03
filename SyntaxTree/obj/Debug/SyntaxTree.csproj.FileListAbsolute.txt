@@ -1,0 +1,5 @@
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\SyntaxTree.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\SyntaxTree.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\SyntaxTree\obj\Debug\SyntaxTree.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\SyntaxTree\obj\Debug\SyntaxTree.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\SyntaxTree\obj\Debug\SyntaxTree.pdb

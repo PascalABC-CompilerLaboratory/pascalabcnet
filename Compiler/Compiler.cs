@@ -238,7 +238,16 @@ namespace PascalABCCompiler
             this.source_context = sc;
         }
     }
-    
+
+    public class InvalidAssemblyPathError : CompilerCompilationError
+    {
+        public InvalidAssemblyPathError(string FileName,SyntaxTree.SourceContext sc)
+            : base(string.Format(StringResources.Get("COMPILATIONERROR_INVALID_ASSEMBLY_PATH")), FileName)
+        {
+            this.source_context = sc;
+        }
+    }
+
     public class ResourceFileNotFound : CompilerCompilationError
     {
         public ResourceFileNotFound(string ResFileName, TreeRealization.location sl)
@@ -1682,7 +1691,7 @@ namespace PascalABCCompiler
                 {
                 	PrepareCompileOptionsForProject();
                 }
-                Environment.CurrentDirectory = CompilerOptions.SourceFileDirectory;
+                Environment.CurrentDirectory = CompilerOptions.SourceFileDirectory; // нужно для подключения *.inc и *.resources
                 Units = new PascalABCCompiler.TreeRealization.unit_node_list();
                 CurrentSyntaxUnit = new SyntaxTree.uses_unit_in(new SyntaxTree.string_const(CompilerOptions.SourceFileName));
                 CompileUnit(Units, CurrentSyntaxUnit);
@@ -1827,7 +1836,13 @@ namespace PascalABCCompiler
                     List<TreeRealization.compiler_directive> ResourceDirectives = compilerDirectives[TreeConverter.compiler_string_consts.compiler_directive_resource];
                     foreach (TreeRealization.compiler_directive cd in ResourceDirectives)
                         if (!File.Exists(cd.directive))
-                            ErrorsList.Add(new ResourceFileNotFound(cd.directive, cd.location));
+                        {
+                            string fileName = Path.Combine(cd.location.doc.file_name, cd.directive);
+                            if (File.Exists(fileName))
+                                ResourceFiles.Add(fileName);
+                            else
+                                ErrorsList.Add(new ResourceFileNotFound(cd.directive, cd.location));
+                        }
                         else
                             ResourceFiles.Add(cd.directive);
                 }
@@ -2370,7 +2385,7 @@ namespace PascalABCCompiler
             }
             //\MikhailoMMX
 
-            if (System.IO.File.Exists(FileName))
+            if (System.IO.File.Exists(FileName)) // для отладки с *.inc файлами
             {
                 return FileName;//.ToLower();//? а надо ли tolover?
             }
@@ -2526,7 +2541,19 @@ namespace PascalABCCompiler
             SyntaxTree.SourceContext sc = null;
             if (loc!=null)
                 sc = new SyntaxTree.SourceContext(loc.begin_line_num,loc.begin_column_num,loc.end_line_num,loc.end_column_num,0,0);
-            string UnitName = GetReferenceFileName(cd.directive,sc);
+            string UnitName = null;
+            try
+            {
+                UnitName = GetReferenceFileName(cd.directive, sc);
+            }
+            catch (AssemblyNotFound ex)
+            {
+                throw;
+            }
+            catch(Exception ex)
+            {
+                throw new InvalidAssemblyPathError(CurrentCompilationUnit.SyntaxTree.file_name, sc);
+            }
             CompilationUnit CurrentUnit = null;
             if (UnitTable.Count == 0) throw new ProgramModuleExpected(UnitName, null);
             if ((CurrentUnit = ReadDLL(UnitName)) != null)
@@ -3228,6 +3255,7 @@ namespace PascalABCCompiler
         static string standartAssemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetAssembly(typeof(string)).ManifestModule.FullyQualifiedName);
         public static string get_assembly_path(string name, bool search_for_intellisense)
         {
+            
             //если явно задан каталог то ищем только там
             if (Environment.OSVersion.Platform != PlatformID.Unix && Environment.OSVersion.Platform != PlatformID.MacOSX)
             {

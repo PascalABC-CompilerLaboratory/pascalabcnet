@@ -19,7 +19,7 @@ namespace PascalABCCompiler.PascalABCNewParser
     {
         private List<Errors.Error> Errs;
         private string FileName;
-        public bool build_tree_for_brackets = false;
+        public bool build_tree_for_formatter = false;
 
         public GPPGParserHelper(List<Errors.Error> Errs, string FileName)
         {
@@ -39,7 +39,7 @@ namespace PascalABCCompiler.PascalABCNewParser
 #endif
             PT parsertools = new PT(); // контекст сканера и парсера
             parsertools.errors = Errs;
-            parsertools.CurrentFileName = FileName;
+            parsertools.CurrentFileName = Path.GetFullPath(FileName);
 
 
             Scanner scanner = new Scanner();
@@ -47,7 +47,7 @@ namespace PascalABCCompiler.PascalABCNewParser
             scanner.parsertools = parsertools;// передали parsertools в объект сканера
 
             GPPGParser parser = new GPPGParser(scanner);
-            parsertools.build_tree_for_brackets = build_tree_for_brackets;
+            parsertools.build_tree_for_formatter = build_tree_for_formatter;
             parser.parsertools = parsertools; // передали parsertools в объект парсера
             
             if (!parser.Parse())
@@ -81,7 +81,7 @@ namespace PascalABCCompiler.PascalABCNewParser
 
             PT parsertools = new PT(); // контекст сканера и парсера
             parsertools.errors = Errs;
-            parsertools.CurrentFileName = FileName;
+            parsertools.CurrentFileName = Path.GetFullPath(FileName);
 
             var scanner = new PreprocessorScanner();
             scanner.SetSource(Text, 0);
@@ -107,7 +107,7 @@ namespace PascalABCCompiler.PascalABCNewParser
         //public Preprocessor2.Preprocessor2 preprocessor2 = new PascalABCCompiler.Preprocessor2.Preprocessor2(null);
 
         public PascalABCNewLanguageParser()
-            : base("PascalABC.NET", "1.2", "(c) Mikhalkovich S.S., Saushkin R., 2012-13", false, new string[] { ".pas" })
+            : base("PascalABC.NET", "1.2", "Copyright © 2005-2016 by Ivan Bondarev, Stanislav Mihalkovich", false, new string[] { ".pas" })
         {
         }
 
@@ -253,7 +253,7 @@ namespace PascalABCCompiler.PascalABCNewParser
         {
             Errors.Clear();
             localparserhelper = new GPPGParserHelper(Errors, FileName);
-            localparserhelper.build_tree_for_brackets = true;
+            localparserhelper.build_tree_for_formatter = true;
             syntax_tree_node root = localparserhelper.Parse(Text);
             return root;
         }

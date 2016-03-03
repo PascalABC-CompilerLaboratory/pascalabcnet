@@ -1,0 +1,5 @@
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\PascalABCParser.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\PascalABCParser.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Parsers\PascalABCParserNewSaushkin\obj\Debug\PascalABCSaushkinParser.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Parsers\PascalABCParserNewSaushkin\obj\Debug\PascalABCParser.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Parsers\PascalABCParserNewSaushkin\obj\Debug\PascalABCParser.pdb

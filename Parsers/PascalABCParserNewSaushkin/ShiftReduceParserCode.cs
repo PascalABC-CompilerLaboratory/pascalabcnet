@@ -745,7 +745,17 @@ namespace QUT.Gppg
         /// <param name="last">The last location in the result span</param>
         /// <returns>The merged span</returns>
         public LexLocation Merge(LexLocation last)
-        { return new LexLocation(this.startLine, this.startColumn, last.endLine, last.endColumn); }
+        { 
+           string n_file_name = null;
+            if ((last.filename == null))
+                n_file_name = this.filename;
+            else
+            if ((this.filename == null))
+                n_file_name = last.filename;
+            else
+                n_file_name = this.filename;
+            return new LexLocation(this.startLine, this.startColumn, last.endLine, last.endColumn, n_file_name); 
+        }
 
         public static implicit operator SourceContext(LexLocation loc)
         {
@@ -757,7 +767,7 @@ namespace QUT.Gppg
 
         public static LexLocation MergeAll(params LexLocation[] locs)
         {
-            // первая - корректная
+            // РїРµСЂРІР°СЏ - РєРѕСЂСЂРµРєС‚РЅР°СЏ
             var l = locs[0];
             for (int i = 1; i < locs.Length; i++)
             {
@@ -774,7 +784,7 @@ namespace QUT.Gppg
 
         public static LexLocation MergeAll1(params LexLocation[] locs)
         {
-            // сливаем все до последней корректной
+            // СЃР»РёРІР°РµРј РІСЃРµ РґРѕ РїРѕСЃР»РµРґРЅРµР№ РєРѕСЂСЂРµРєС‚РЅРѕР№
             var ind = -1;
             for (int i = locs.Length - 1; i >= 0; i--)
             {

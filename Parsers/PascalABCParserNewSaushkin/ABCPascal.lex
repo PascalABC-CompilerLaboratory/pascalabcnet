@@ -46,6 +46,8 @@ DIRECTIVE \{\${DotChr1}*\}
 
 ALPHABET [^ a-zA-Z_0-9\r\n\t\'$#&,:.;@\+\-\*/=<>\^()\[\]\x01]
 
+UNICODEARROW \x890
+
 %x COMMENT
 %x COMMENT1
 %x COMMENTONELINE
@@ -59,7 +61,7 @@ ALPHABET [^ a-zA-Z_0-9\r\n\t\'$#&,:.;@\+\-\*/=<>\^()\[\]\x01]
 }
 
 {DIRECTIVE} {
-	if (parsertools.build_tree_for_brackets)
+	if (parsertools.build_tree_for_formatter)
 		break;
 
 	parsertools.DivideDirectiveOn(yytext,out directivename,out directiveparam);
@@ -183,6 +185,7 @@ ALPHABET [^ a-zA-Z_0-9\r\n\t\'$#&,:.;@\+\-\*/=<>\^()\[\]\x01]
 "["              { return (int)Tokens.tkSquareOpen; }
 "]"              { return (int)Tokens.tkSquareClose; }
 "?"              { return (int)Tokens.tkQuestion; }
+"?."              { return (int)Tokens.tkQuestionPoint; }
 "=>"			 { return (int)Tokens.tkMatching; }
 "@"              { yylval = new Union(); yylval.op = new op_type_node(Operators.AddressOf); return (int)Tokens.tkAddressOf; }
 ":="            { yylval = new Union(); yylval.op = new op_type_node(Operators.Assignment); return (int)Tokens.tkAssign; }
@@ -202,6 +205,7 @@ ALPHABET [^ a-zA-Z_0-9\r\n\t\'$#&,:.;@\+\-\*/=<>\^()\[\]\x01]
 "<>"            { yylval = new Union(); yylval.op = new op_type_node(Operators.NotEqual); return (int)Tokens.tkNotEqual; }
 "^"             { yylval = new Union(); yylval.op = new op_type_node(Operators.Deref); return (int)Tokens.tkDeref; }
 "->"            { yylval = new Union(); yylval.ti = new token_info(yytext); return (int)Tokens.tkArrow; }
+\x2192 			{ yylval = new Union(); yylval.ti = new token_info(yytext); return (int)Tokens.tkArrow; }
 \<\<expression\>\> { return (int)Tokens.tkParseModeExpression; }
 \<\<statement\>\>  { return (int)Tokens.tkParseModeStatement; }
 \<\<type\>\>  { return (int)Tokens.tkParseModeType; }
@@ -502,7 +506,7 @@ ALPHABET [^ a-zA-Z_0-9\r\n\t\'$#&,:.;@\+\-\*/=<>\^()\[\]\x01]
                 BufferContext savedCtx = MkBuffCtx();
                 string full_path = fName;
                 if (!Path.IsPathRooted(full_path))
-                    full_path = Path.Combine(Path.GetDirectoryName(parsertools.CurrentFileName),fName);
+                    full_path = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(parsertools.CurrentFileName), fName));
                 SetSource(File.ReadAllText(full_path), 0);
 				fNameStack.Push(parsertools.CurrentFileName);
 				parsertools.CurrentFileName = full_path;

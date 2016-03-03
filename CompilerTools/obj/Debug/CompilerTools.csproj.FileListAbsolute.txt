@@ -1,0 +1,5 @@
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\CompilerTools.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\CompilerTools.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\CompilerTools\obj\Debug\CompilerTools.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\CompilerTools\obj\Debug\CompilerTools.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\CompilerTools\obj\Debug\CompilerTools.pdb

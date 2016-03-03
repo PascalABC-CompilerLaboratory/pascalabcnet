@@ -1,0 +1,7 @@
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\HelpBuilder.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\HelpBuilder.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\HelpBuilder\obj\Debug\HelpBuilder.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\HelpBuilder\obj\Debug\VisualPascalABCPlugins.HelpBuilderForm.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\HelpBuilder\obj\Debug\HelpBuilder.csproj.GenerateResource.Cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\HelpBuilder\obj\Debug\HelpBuilder.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\HelpBuilder\obj\Debug\HelpBuilder.pdb

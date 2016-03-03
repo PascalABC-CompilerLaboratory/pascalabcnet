@@ -153,7 +153,6 @@ namespace CodeCompletion
     {
         public SymScope topScope;
         public string file_name;
-        public using_namespace_list unl;
         public List<SymScope> used_units;
         public SymInfo si;
         public location loc;
@@ -163,7 +162,6 @@ namespace CodeCompletion
         public Hashtable symbol_table;
         public int cur_line = -1;
         public int cur_col = -1;
-        public location uses_source_range;
         public SymScope declaringUnit;
         public string documentation;
         public access_modifer acc_mod;
@@ -172,31 +170,29 @@ namespace CodeCompletion
         public bool is_abstract = false;
         public bool is_override = false;
         public bool is_reintroduce = false;
-        private List<Assembly> ref_assms;
+        
         public List<Position> regions;
         public Dictionary<TypeScope, List<ProcScope>> extension_methods;
 
         public SymScope() { }
 
-        public SymScope(SymInfo si, SymScope topScope, using_namespace_list unl)
+        public SymScope(SymInfo si, SymScope topScope)
         {
             this.si = si;
             //si.describe = "unit "+si.name;
             si.IsUnitNamespace = true;
             this.topScope = topScope;
-            this.unl = unl;
             //this.ht = new Hashtable(CaseInsensitiveHashCodeProvider.Default,CaseInsensitiveComparer.Default);
             this.used_units = new List<SymScope>();
             members = new List<SymScope>();
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
-            if (unl != null) unl.clear();
             if (members != null) members.Clear();
             if (symbol_table != null) symbol_table.Clear();
             if (used_units != null) used_units.Clear();
-            if (ref_assms != null) ref_assms.Clear();
+            
             declaringUnit = null;
             topScope = null;
         }
@@ -304,22 +300,6 @@ namespace CodeCompletion
 
         }
 
-        public void AddReferencedAssembly(System.Reflection.Assembly assm)
-        {
-            if (ref_assms == null) ref_assms = new List<Assembly>();
-            ref_assms.Add(assm);
-            List<Type> lst = PascalABCCompiler.NetHelper.NetHelper.entry_types[assm] as List<Type>;
-            Type entry_type = null;
-            if (lst != null)
-                entry_type = lst[0];
-            if (entry_type != null)
-            {
-                NamespaceScope ns = new NamespaceScope(entry_type.Namespace);
-                ns.entry_type = TypeTable.get_compiled_type(new SymInfo("", SymbolKind.Type, ""), entry_type);
-                used_units.Add(ns);
-            }
-        }
-
         public void AddExtensionMethod(string name, ProcScope meth, TypeScope ts)
         {
             if (extension_methods == null)
@@ -376,10 +356,9 @@ namespace CodeCompletion
                     {
                         foreach (TypeScope t in extension_methods.Keys)
                         {
-                            if (t.IsEqual(tmp_ts2) || (t is ArrayScope && tmp_ts2.IsArray) || ( tmp_ts2 is ArrayScope && t.IsArray))
+                            if (t.IsEqual(tmp_ts2) || (t is ArrayScope && tmp_ts2.IsArray) || ( tmp_ts2 is ArrayScope && t.IsArray) || (t is TemplateParameterScope || t is UnknownScope))
                             {
                                 lst.AddRange(extension_methods[t]);
-                                break;
                             }
                         }
                     }
@@ -402,7 +381,7 @@ namespace CodeCompletion
                             if (t.IsEqual(int_ts2) || (t is ArrayScope && int_ts2.IsArray) || (int_ts2 is ArrayScope && t.IsArray))
                             {
                                 lst.AddRange(extension_methods[t]);
-                                break;
+                                //break;
                             }
                         }
                         
@@ -418,20 +397,13 @@ namespace CodeCompletion
             return lst;
         }
 
-        public bool IsAssembliesChanged()
+        public virtual bool IsAssembliesChanged()
         {
-            if (ref_assms != null)
-                foreach (Assembly a in ref_assms)
-                    if (PascalABCCompiler.NetHelper.NetHelper.IsAssemblyChanged(a.ManifestModule.ScopeName))
-                        return true;
             return false;
         }
 
-        public void InitAssemblies()
+        public virtual void InitAssemblies()
         {
-            if (ref_assms != null)
-                foreach (Assembly a in ref_assms)
-                    PascalABCCompiler.NetHelper.NetHelper.init_namespaces(a);
         }
 
         public void AddUsedUnit(SymScope unit)
@@ -582,11 +554,9 @@ namespace CodeCompletion
                     if (ss is ProcScope) ss.ClearNames();
         }
 
-        public bool InUsesRange(int line, int column)
+        public virtual  bool InUsesRange(int line, int column)
         {
-            if (this.uses_source_range != null)
-                return IsInScope(this.uses_source_range, line, this.uses_source_range.end_column_num);
-            else return false;
+            return false;
         }
 
         //proverka na vhozhdenie v scope
@@ -766,6 +736,8 @@ namespace CodeCompletion
         //eto nuzhno tak kak u nas tablicy vse zapolneny
         protected SymScope internal_find(string name, bool check_for_def)
         {
+            if (name.Length > 0 && name[0] == '?')
+                name = name.Substring(1);
             if (symbol_table != null)
             {
                 object o = symbol_table[name];
@@ -805,6 +777,7 @@ namespace CodeCompletion
                 else return ss;
             }
             else
+                if (members != null)
                 foreach (SymScope ss in members)
                     if (string.Compare(ss.si.name, name, !CodeCompletionController.CurrentParser.LanguageInformation.CaseSensitive) == 0)
                         if (ss.loc != null && loc != null && check_for_def && cur_line != -1 && cur_col != -1)
@@ -851,7 +824,7 @@ namespace CodeCompletion
                     }
                     else names.Add(ss);
             }
-            else
+            else if (members != null)
                 foreach (SymScope ss in members)
                     if (string.Compare(ss.si.name, name, !CodeCompletionController.CurrentParser.LanguageInformation.CaseSensitive) == 0)
                         if (ss.loc != null && loc != null && check_for_def && cur_line != -1 && cur_col != -1)
@@ -979,13 +952,60 @@ namespace CodeCompletion
     public class InterfaceUnitScope : SymScope, IInterfaceUnitScope
     {
         public ImplementationUnitScope impl_scope;
+        private List<Assembly> ref_assms;
+        public location uses_source_range;
 
-        public InterfaceUnitScope(SymInfo si, SymScope topScope, using_namespace_list unl)
-            : base(si, topScope, unl)
+        public InterfaceUnitScope(SymInfo si, SymScope topScope)
+            : base(si, topScope)
         {
             UnitDocCache.AddDescribeToComplete(this);
             this.symbol_table = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
             si.describe = this.ToString();
+        }
+
+        public override bool InUsesRange(int line, int column)
+        {
+            if (this.uses_source_range != null)
+                return IsInScope(this.uses_source_range, line, this.uses_source_range.end_column_num);
+            return false;
+        }
+
+        public override void Clear()
+        {
+            base.Clear();
+            if (ref_assms != null) ref_assms.Clear();
+        }
+
+        public override bool IsAssembliesChanged()
+        {
+            if (ref_assms != null)
+                foreach (Assembly a in ref_assms)
+                    if (PascalABCCompiler.NetHelper.NetHelper.IsAssemblyChanged(a.ManifestModule.ScopeName))
+                        return true;
+            return false;
+        }
+
+        public override void InitAssemblies()
+        {
+            if (ref_assms != null)
+                foreach (Assembly a in ref_assms)
+                    PascalABCCompiler.NetHelper.NetHelper.init_namespaces(a);
+        }
+
+        public void AddReferencedAssembly(System.Reflection.Assembly assm)
+        {
+            if (ref_assms == null) ref_assms = new List<Assembly>();
+            ref_assms.Add(assm);
+            List<Type> lst = PascalABCCompiler.NetHelper.NetHelper.entry_types[assm] as List<Type>;
+            Type entry_type = null;
+            if (lst != null)
+                entry_type = lst[0];
+            if (entry_type != null)
+            {
+                NamespaceScope ns = new NamespaceScope(entry_type.Namespace);
+                ns.entry_type = TypeTable.get_compiled_type(new SymInfo("", SymbolKind.Type, ""), entry_type);
+                used_units.Add(ns);
+            }
         }
 
         public override void AddName(string name, SymScope sc)
@@ -1028,10 +1048,19 @@ namespace CodeCompletion
     //interfejsnyj scope
     public class ImplementationUnitScope : SymScope, IImplementationUnitScope
     {
-        public ImplementationUnitScope(SymInfo si, SymScope topScope, using_namespace_list unl)
-            : base(si, topScope, unl)
+        public location uses_source_range;
+
+        public ImplementationUnitScope(SymInfo si, SymScope topScope)
+            : base(si, topScope)
         {
 
+        }
+
+        public override bool InUsesRange(int line, int column)
+        {
+            if (this.uses_source_range != null)
+                return IsInScope(this.uses_source_range, line, this.uses_source_range.end_column_num);
+            return false;
         }
 
         public override ScopeKind Kind
@@ -2483,6 +2512,7 @@ namespace CodeCompletion
             : base(SymbolKind.Type, null, baseType)
         {
             this.declScope = declScope;
+            this.topScope = declScope;
             this.name = name;
             si.describe = name + " in " + declScope.si.name;
         }
@@ -2574,7 +2604,10 @@ namespace CodeCompletion
 
         public override TypeScope GetInstance(List<TypeScope> gen_args)
         {
-            return actType.GetInstance(gen_args);
+            TypeScope original_type = actType;
+            if (actType.original_type != null)
+                original_type = actType.original_type;
+            return original_type.GetInstance(gen_args);
         }
 
         public override void AddIndexer(TypeScope ts)
@@ -3013,7 +3046,7 @@ namespace CodeCompletion
             {
                 return this.indexes.Length == arrs.indexes.Length;
             }
-            return false;
+            return true;
             /*if (this.indexes == null && arrs.indexes == null) return true;//?????
             if (this.indexes != null && arrs.indexes != null)
             {
@@ -3421,7 +3454,6 @@ namespace CodeCompletion
         public List<TypeScope> implemented_interfaces;
         public List<TypeScope> instances;
         protected List<string> generic_params;
-        private string template_str = "";
         public bool is_final;
         public bool aliased = false;
 
@@ -4584,6 +4616,7 @@ namespace CodeCompletion
             {
                 CompiledScope typ = new CompiledScope(new SymInfo(t.Name, SymbolKind.Type, t.Name), t);
                 typ.generic_params = new List<string>();
+                typ.original_type = TypeTable.get_compiled_type(new SymInfo(t.Name, SymbolKind.Type, t.Name), t);
                 Type[] args = t.GetGenericArguments();
                 for (int i = 0; i < args.Length; i++)
                 {
@@ -4682,6 +4715,7 @@ namespace CodeCompletion
             CompiledScope sc = new CompiledScope(new SymInfo(si.name, si.kind, si.describe), t);
             sc.generic_params = new List<string>();
             sc.instances = new List<TypeScope>();
+            sc.original_type = this;
             for (int i = 0; i < gen_args.Count; i++)
             {
                 sc.generic_params.Add(gen_args[i].si.name);
@@ -4848,34 +4882,38 @@ namespace CodeCompletion
                     return this.IsConvertable((ts as TypeSynonim).actType);
                 else
                     if (ts is ShortStringScope && ctn == typeof(string))
+                    return true;
+                else
+                {
+                    if (ts is UnknownScope)
                         return true;
-                    else
+                    else if (ts is ProcType)
                     {
-                        if (ts is UnknownScope)
-                            return true;
-                        else if (ts is ProcType)
+                        ProcType pt = ts as ProcType;
+                        MethodInfo invoke_meth = this.ctn.GetMethod("Invoke");
+                        if (invoke_meth == null)
                         {
-                            ProcType pt = ts as ProcType;
-                            MethodInfo invoke_meth = this.ctn.GetMethod("Invoke");
-                            if (invoke_meth == null)
-                                return false;
-                            if (pt.target.parameters == null)
-                                if (invoke_meth.GetParameters().Length > 0)
-                                    return false;
-                            if (pt.target.parameters != null && pt.target.parameters.Count != invoke_meth.GetParameters().Length)
-                                return false;
-                            ParameterInfo[] parameters = invoke_meth.GetParameters();
-                            for (int i=0; i<parameters.Length; i++)
-                            {
-                                CompiledScope param_cs = TypeTable.get_compiled_type(new SymInfo(null, SymbolKind.Type, null), parameters[i].ParameterType);
-                                if (!(pt.target.parameters[i].sc is TypeScope) || !param_cs.IsConvertable(pt.target.parameters[i].sc as TypeScope))
-                                    return false;
-                            }
-                            return true;
-                        }
-                        else
+                            if (this.ctn == typeof(Delegate))
+                                return true;
                             return false;
+                        }
+                        if (pt.target.parameters == null)
+                            if (invoke_meth.GetParameters().Length > 0)
+                                return false;
+                        if (pt.target.parameters != null && pt.target.parameters.Count != invoke_meth.GetParameters().Length)
+                            return false;
+                        ParameterInfo[] parameters = invoke_meth.GetParameters();
+                        for (int i = 0; i < parameters.Length; i++)
+                        {
+                            CompiledScope param_cs = TypeTable.get_compiled_type(new SymInfo(null, SymbolKind.Type, null), parameters[i].ParameterType);
+                            if (!(pt.target.parameters[i].sc is TypeScope) || !param_cs.IsConvertable(pt.target.parameters[i].sc as TypeScope))
+                                return false;
+                        }
+                        return true;
                     }
+                    else
+                        return false;
+                }
             if (this.ctn == cs.ctn)
                 return true;
 
@@ -5003,7 +5041,7 @@ namespace CodeCompletion
                 else if (ci.GetParameters().Length > 0)
                     constrs.Add(ci);
             constrs.AddRange(mis);
-            constrs.AddRange(PascalABCCompiler.NetHelper.NetHelper.GetExtensionMethods(ctn));
+            //constrs.AddRange(PascalABCCompiler.NetHelper.NetHelper.GetExtensionMethods(ctn));
             mis = constrs.ToArray();
             if (ctn.IsInterface)
             {
@@ -5621,7 +5659,12 @@ namespace CodeCompletion
 
         public override TypeScope GetElementType()
         {
-            if (!is_def_prop_searched) get_default_property();
+            if (!is_def_prop_searched)
+                get_default_property();
+            if (ctn == typeof(IEnumerable<>) && instances.Count > 0)
+            {
+                return instances[0];
+            }
             return elementType;
         }
 
@@ -5785,7 +5828,9 @@ namespace CodeCompletion
                 if (string.Compare(name, "Create", true) == 0)
                     si = PascalABCCompiler.NetHelper.NetHelper.GetConstructor(ctn);
                 if (si == null)
+                {
                     return null;
+                }  
             }
             switch (si.sym_info.semantic_node_type)
             {
@@ -6297,6 +6342,10 @@ namespace CodeCompletion
             {
                 generic_args = new List<string>();
                 generic_args.AddRange(args);
+            }
+            if (mi.GetGenericArguments().Length > 0)
+            {
+                
             }
             if (mi.ReturnType != typeof(void))
             {

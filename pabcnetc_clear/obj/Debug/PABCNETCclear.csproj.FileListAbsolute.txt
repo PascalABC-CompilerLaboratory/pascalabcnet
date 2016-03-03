@@ -1,0 +1,6 @@
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\pabcnetcclear.exe.config
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\pabcnetcclear.exe
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\pabcnetcclear.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\pabcnetc_clear\obj\Debug\pabcnetcclear.exe
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\pabcnetc_clear\obj\Debug\pabcnetcclear.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\pabcnetc_clear\obj\Debug\PABCNETCclear.csprojResolveAssemblyReference.cache

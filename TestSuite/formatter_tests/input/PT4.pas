@@ -1,12 +1,14 @@
-/// Модуль электронного задачника Programming Taskbook 4
+/// РњРѕРґСѓР»СЊ СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ Р·Р°РґР°С‡РЅРёРєР° Programming Taskbook 4
 unit PT4;
 
 //------------------------------------------------------------------------------
-// Модуль для подключения задачника Programming Taskbook
-// Версия 1.3
+// РњРѕРґСѓР»СЊ РґР»СЏ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Р·Р°РґР°С‡РЅРёРєР° Programming Taskbook
+// Р’РµСЂСЃРёСЏ 4.13
 // Copyright (c) 2006-2008 DarkStar, SSM
-// Copyright (c) 2010 М.Э.Абрамян, дополнения к версии 1.3
-// Электронный задачник Programming Taskbook Copyright (c)М.Э.Абрамян, 1998-2010
+// Copyright (c) 2010 Рњ.Р­.РђР±СЂР°РјСЏРЅ, РґРѕРїРѕР»РЅРµРЅРёСЏ Рє РІРµСЂСЃРёРё 1.3
+// Copyright (c) 2014-2015 Рњ.Р­.РђР±СЂР°РјСЏРЅ, РґРѕРїРѕР»РЅРµРЅРёСЏ Рє РІРµСЂСЃРёРё 4.13
+// Copyright (c) 2015 Рњ.Р­.РђР±СЂР°РјСЏРЅ, РґРѕРїРѕР»РЅРµРЅРёСЏ Рє РІРµСЂСЃРёРё 4.14
+// Р­Р»РµРєС‚СЂРѕРЅРЅС‹Р№ Р·Р°РґР°С‡РЅРёРє Programming Taskbook Copyright (c)Рњ.Р­.РђР±СЂР°РјСЏРЅ, 1998-2015
 //------------------------------------------------------------------------------
 
 {$apptype windows}
@@ -17,11 +19,10 @@ interface
 uses System,
      System.Collections,
      System.Runtime.InteropServices;
-
 type
-  /// Тип указателя на узел списка
+  /// РўРёРї СѓРєР°Р·Р°С‚РµР»СЏ РЅР° СѓР·РµР» СЃРїРёСЃРєР°
   PNode = ^TNode;
-  /// Тип узла списка
+  /// РўРёРї СѓР·Р»Р° СЃРїРёСЃРєР°
   TNode = record
     Data: integer;
     Next,Prev,Left,Right,Parent: PNode;
@@ -77,45 +78,59 @@ type
     property Data: integer read getData write SetData;
   end;
 
-/// Вывести формулировку задания
+/// Р’С‹РІРµСЃС‚Рё С„РѕСЂРјСѓР»РёСЂРѕРІРєСѓ Р·Р°РґР°РЅРёСЏ
 procedure Task(name: string);
 
-/// Ввести и вернуть значение целого типа
+/// Р’РІРµСЃС‚Рё Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ С†РµР»РѕРіРѕ С‚РёРїР°
 function GetInt: integer;
-/// Ввести и вернуть значение целого типа
+/// Р’РІРµСЃС‚Рё Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ С†РµР»РѕРіРѕ С‚РёРїР°
 function GetInteger: integer;
-/// Ввести и вернуть значение вещественного типа
+/// Р’РІРµСЃС‚Рё Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‚РёРїР°
 function GetReal: real;
-/// Ввести и вернуть значение вещественного типа
+/// Р’РІРµСЃС‚Рё Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‚РёРїР°
 function GetDouble: real;
-/// Ввести и вернуть значение символьного типа
+/// Р’РІРµСЃС‚Рё Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ СЃРёРјРІРѕР»СЊРЅРѕРіРѕ С‚РёРїР°
 function GetChar: char;
-/// Ввести и вернуть значение строкового типа
+/// Р’РІРµСЃС‚Рё Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ СЃС‚СЂРѕРєРѕРІРѕРіРѕ С‚РёРїР°
 function GetString: string;
-/// Ввести и вернуть значение логического типа
+/// Р’РІРµСЃС‚Рё Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ Р»РѕРіРёС‡РµСЃРєРѕРіРѕ С‚РёРїР°
 function GetBool: boolean;
-/// Ввести и вернуть значение логического типа
+/// Р’РІРµСЃС‚Рё Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ Р»РѕРіРёС‡РµСЃРєРѕРіРѕ С‚РёРїР°
 function GetBoolean: boolean;
-/// Ввести и вернуть значение типа Node 
+/// Р’РІРµСЃС‚Рё Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° Node 
 function GetNode: Node;
-/// Ввести и вернуть значение типа PNode 
+/// Р’РІРµСЃС‚Рё Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° PNode 
 function GetPNode: PNode;
 
-/// Возвращает введенное значение типа integer
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° integer
 function ReadInteger: integer;
-/// Возвращает введенное значение типа real
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real
 function ReadReal: real;
-/// Возвращает введенное значение типа char
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° char
 function ReadChar: char;
-/// Возвращает введенное значение типа string
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° string
 function ReadString: string;
-/// Возвращает введенное значение типа boolean
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° boolean
 function ReadBoolean: boolean;
-/// Возвращает введенное значение типа PNode
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° PNode
 function ReadPNode: PNode;
-/// Возвращает введенное значение типа Node
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° Node
 function ReadNode: Node;
 
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° integer
+function ReadlnInteger: integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real
+function ReadlnReal: real;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° char
+function ReadlnChar: char;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° string
+function ReadlnString: string;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° boolean
+function ReadlnBoolean: boolean;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° PNode
+function ReadlnPNode: PNode;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° Node
+function ReadlnNode: Node;
 
 procedure GetR(var param: real);
 procedure GetN(var param: integer);
@@ -142,9 +157,9 @@ procedure Put(param: boolean);
 procedure Put(param: PNode);
 procedure Put(param: Node);
 
-//Ввод этих данных не поддерживается
+//Р’РІРѕРґ СЌС‚РёС… РґР°РЅРЅС‹С… РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ
 ///- read(a,b,...)
-/// Вводит значения a,b,... из окна электронного задачника
+/// Р’РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... РёР· РѕРєРЅР° СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ Р·Р°РґР°С‡РЅРёРєР°
 procedure read(var x: byte); 
 ///--
 procedure read(var x: shortint); 
@@ -179,13 +194,17 @@ procedure Read(var val: PNode);
 ///--
 procedure Readln;
 
-/// Освобождает память, выделенную динамически, на которую указывает p
+procedure Print(params args: array of object);
+
+procedure Println(params args: array of object);
+
+/// РћСЃРІРѕР±РѕР¶РґР°РµС‚ РїР°РјСЏС‚СЊ, РІС‹РґРµР»РµРЅРЅСѓСЋ РґРёРЅР°РјРёС‡РµСЃРєРё, РЅР° РєРѕС‚РѕСЂСѓСЋ СѓРєР°Р·С‹РІР°РµС‚ p
 procedure Dispose(p: pointer);
 
-// Фиктивная пустая процедура - для Intellisense
-// Нет, нельзя пользоваться - закрываются процедуры write системного модуля
+// Р¤РёРєС‚РёРІРЅР°СЏ РїСѓСЃС‚Р°СЏ РїСЂРѕС†РµРґСѓСЂР° - РґР»СЏ Intellisense
+// РќРµС‚, РЅРµР»СЊР·СЏ РїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ - Р·Р°РєСЂС‹РІР°СЋС‚СЃСЏ РїСЂРѕС†РµРґСѓСЂС‹ write СЃРёСЃС‚РµРјРЅРѕРіРѕ РјРѕРґСѓР»СЏ
 ///- write(a,b,...)
-/// Выводит значения a,b,... в окно электронного задачника
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... РІ РѕРєРЅРѕ СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ Р·Р°РґР°С‡РЅРёРєР°
 //procedure write;
 
 ///--
@@ -193,104 +212,172 @@ procedure __InitModule__;
 ///--
 procedure __FinalizeModule__;
 
-// == Версия 1.3. Дополнения ==
+// == Р’РµСЂСЃРёСЏ 1.3. Р”РѕРїРѕР»РЅРµРЅРёСЏ ==
 
-/// Выводит строку S в разделе отладки окна задачника
+/// Р’С‹РІРѕРґРёС‚ СЃС‚СЂРѕРєСѓ S РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°
 procedure Show(S: string);
 
-/// Выводит число A с комментарием S в разделе отладки
-/// окна задачника; для вывода числа отводится W экранных позиций
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A СЃ РєРѕРјРјРµРЅС‚Р°СЂРёРµРј S РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё
+/// РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°; РґР»СЏ РІС‹РІРѕРґР° С‡РёСЃР»Р° РѕС‚РІРѕРґРёС‚СЃСЏ W СЌРєСЂР°РЅРЅС‹С… РїРѕР·РёС†РёР№
 procedure Show(S: string; A: integer; W: integer);
 
-/// Выводит число A с комментарием S в разделе отладки
-/// окна задачника; для вывода числа отводится W экранных позиций
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A СЃ РєРѕРјРјРµРЅС‚Р°СЂРёРµРј S РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё
+/// РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°; РґР»СЏ РІС‹РІРѕРґР° С‡РёСЃР»Р° РѕС‚РІРѕРґРёС‚СЃСЏ W СЌРєСЂР°РЅРЅС‹С… РїРѕР·РёС†РёР№
 procedure Show(S: string; A: real; W: integer);
 
-/// Выводит число A с комментарием S в разделе отладки окна задачника
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A СЃ РєРѕРјРјРµРЅС‚Р°СЂРёРµРј S РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°
 procedure Show(S: string; A: integer);
 
-/// Выводит число A с комментарием S в разделе отладки окна задачника
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A СЃ РєРѕРјРјРµРЅС‚Р°СЂРёРµРј S РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°
 procedure Show(S: string; A: real);
 
-/// Выводит число A в разделе отладки окна задачника;
-/// для вывода отводится W экранных позиций
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°;
+/// РґР»СЏ РІС‹РІРѕРґР° РѕС‚РІРѕРґРёС‚СЃСЏ W СЌРєСЂР°РЅРЅС‹С… РїРѕР·РёС†РёР№
 procedure Show(A: integer; W: integer);
 
-/// Выводит число A в разделе отладки окна задачника;
-/// для вывода отводится W экранных позиций
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°;
+/// РґР»СЏ РІС‹РІРѕРґР° РѕС‚РІРѕРґРёС‚СЃСЏ W СЌРєСЂР°РЅРЅС‹С… РїРѕР·РёС†РёР№
 procedure Show(A: real; W: integer);
 
-/// Выводит число A в разделе отладки окна задачника
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°
 procedure Show(A: integer);
 
-/// Выводит число A в разделе отладки окна задачника
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°
 procedure Show(A: real);
 
-/// Выполняет переход на новую экранную строку
-/// в разделе отладки окна задачника
+/// Р’С‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЌРєСЂР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
+/// РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°
 procedure ShowLine;
 
-/// Выводит строку S в разделе отладки окна задачника,
-/// после чего выполняет переход на новую экранную строку
+/// Р’С‹РІРѕРґРёС‚ СЃС‚СЂРѕРєСѓ S РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°,
+/// РїРѕСЃР»Рµ С‡РµРіРѕ РІС‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЌРєСЂР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure ShowLine(S: string);
 
-/// Выводит число A с комментарием S в разделе отладки
-/// окна задачника; для вывода числа отводится W экранных позиций.
-/// После вывода данных выполняет переход на новую экранную строку
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A СЃ РєРѕРјРјРµРЅС‚Р°СЂРёРµРј S РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё
+/// РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°; РґР»СЏ РІС‹РІРѕРґР° С‡РёСЃР»Р° РѕС‚РІРѕРґРёС‚СЃСЏ W СЌРєСЂР°РЅРЅС‹С… РїРѕР·РёС†РёР№.
+/// РџРѕСЃР»Рµ РІС‹РІРѕРґР° РґР°РЅРЅС‹С… РІС‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЌРєСЂР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure ShowLine(S: string; A: integer; W: integer);
 
-/// Выводит число A с комментарием S в разделе отладки
-/// окна задачника; для вывода числа отводится W экранных позиций.
-/// После вывода данных выполняет переход на новую экранную строку
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A СЃ РєРѕРјРјРµРЅС‚Р°СЂРёРµРј S РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё
+/// РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°; РґР»СЏ РІС‹РІРѕРґР° С‡РёСЃР»Р° РѕС‚РІРѕРґРёС‚СЃСЏ W СЌРєСЂР°РЅРЅС‹С… РїРѕР·РёС†РёР№.
+/// РџРѕСЃР»Рµ РІС‹РІРѕРґР° РґР°РЅРЅС‹С… РІС‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЌРєСЂР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure ShowLine(S: string; A: real; W: integer);
 
-/// Выводит число A с комментарием S в разделе отладки окна задачника,
-/// после чего выполняет переход на новую экранную строку
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A СЃ РєРѕРјРјРµРЅС‚Р°СЂРёРµРј S РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°,
+/// РїРѕСЃР»Рµ С‡РµРіРѕ РІС‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЌРєСЂР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure ShowLine(S: string; A: integer);
 
-/// Выводит число A с комментарием S в разделе отладки окна задачника,
-/// после чего выполняет переход на новую экранную строку
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A СЃ РєРѕРјРјРµРЅС‚Р°СЂРёРµРј S РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°,
+/// РїРѕСЃР»Рµ С‡РµРіРѕ РІС‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЌРєСЂР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure ShowLine(S: string; A: real);
 
-/// Выводит число A в разделе отладки окна задачника;
-/// для вывода отводится W экранных позиций.
-/// После вывода числа выполняет переход на новую экранную строку
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°;
+/// РґР»СЏ РІС‹РІРѕРґР° РѕС‚РІРѕРґРёС‚СЃСЏ W СЌРєСЂР°РЅРЅС‹С… РїРѕР·РёС†РёР№.
+/// РџРѕСЃР»Рµ РІС‹РІРѕРґР° С‡РёСЃР»Р° РІС‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЌРєСЂР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure ShowLine(A: integer; W: integer);
 
-/// Выводит число A в разделе отладки окна задачника;
-/// для вывода отводится W экранных позиций.
-/// После вывода числа выполняет переход на новую экранную строку
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°;
+/// РґР»СЏ РІС‹РІРѕРґР° РѕС‚РІРѕРґРёС‚СЃСЏ W СЌРєСЂР°РЅРЅС‹С… РїРѕР·РёС†РёР№.
+/// РџРѕСЃР»Рµ РІС‹РІРѕРґР° С‡РёСЃР»Р° РІС‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЌРєСЂР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure ShowLine(A: real; W: integer);
 
-/// Выводит число A в разделе отладки окна задачника,
-/// после чего выполняет переход на новую экранную строку
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°,
+/// РїРѕСЃР»Рµ С‡РµРіРѕ РІС‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЌРєСЂР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure ShowLine(A: integer);
 
-/// Выводит число A в разделе отладки окна задачника,
-/// после чего выполняет переход на новую экранную строку
+/// Р’С‹РІРѕРґРёС‚ С‡РёСЃР»Рѕ A РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°,
+/// РїРѕСЃР»Рµ С‡РµРіРѕ РІС‹РїРѕР»РЅСЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЌРєСЂР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure ShowLine(A: real);
 
-/// Настраивает формат вывода вещественных чисел в разделе отладки
-/// окна задачника. Если N > 0, то число выводится в формате
-/// с фиксированной точкой и N дробными знаками. Если N = 0,
-/// то число выводится в экспоненциальном формате, число дробных
-/// знаков определяется шириной поля вывода
+/// РќР°СЃС‚СЂР°РёРІР°РµС‚ С„РѕСЂРјР°С‚ РІС‹РІРѕРґР° РІРµС‰РµСЃС‚РІРµРЅРЅС‹С… С‡РёСЃРµР» РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё
+/// РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°. Р•СЃР»Рё N > 0, С‚Рѕ С‡РёСЃР»Рѕ РІС‹РІРѕРґРёС‚СЃСЏ РІ С„РѕСЂРјР°С‚Рµ
+/// СЃ С„РёРєСЃРёСЂРѕРІР°РЅРЅРѕР№ С‚РѕС‡РєРѕР№ Рё N РґСЂРѕР±РЅС‹РјРё Р·РЅР°РєР°РјРё. Р•СЃР»Рё N = 0,
+/// С‚Рѕ С‡РёСЃР»Рѕ РІС‹РІРѕРґРёС‚СЃСЏ РІ СЌРєСЃРїРѕРЅРµРЅС†РёР°Р»СЊРЅРѕРј С„РѕСЂРјР°С‚Рµ, С‡РёСЃР»Рѕ РґСЂРѕР±РЅС‹С…
+/// Р·РЅР°РєРѕРІ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ С€РёСЂРёРЅРѕР№ РїРѕР»СЏ РІС‹РІРѕРґР°
 procedure SetPrecision(N: integer);
 
-/// Обеспечивает автоматическое скрытие всех разделов
-/// окна задачника, кроме раздела отладки
+/// РћР±РµСЃРїРµС‡РёРІР°РµС‚ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРµ СЃРєСЂС‹С‚РёРµ РІСЃРµС… СЂР°Р·РґРµР»РѕРІ
+/// РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР°, РєСЂРѕРјРµ СЂР°Р·РґРµР»Р° РѕС‚Р»Р°РґРєРё
 procedure HideTask;
 
-// == Конец дополнений к версии 1.3 ==
+// == РљРѕРЅРµС† РґРѕРїРѕР»РЅРµРЅРёР№ Рє РІРµСЂСЃРёРё 1.3 ==
 
+// == Р’РµСЂСЃРёСЏ 4.14. Р”РѕРїРѕР»РЅРµРЅРёСЏ ==
 
+/// Р’РІРѕРґРёС‚ n С†РµР»С‹С… С‡РёСЃРµР»
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Рµ С‡РёСЃР»Р° РІ РІРёРґРµ РјР°СЃСЃРёРІР°
+function ReadArrInteger(n: integer): array of integer;
+
+/// Р’РІРѕРґРёС‚ n РІРµС‰РµСЃС‚РІРµРЅРЅС‹С… С‡РёСЃРµР»
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Рµ С‡РёСЃР»Р° РІ РІРёРґРµ РјР°СЃСЃРёРІР°
+function ReadArrReal(n: integer): array of real;
+
+/// Р’РІРѕРґРёС‚ n СЃС‚СЂРѕРє 
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Рµ СЃС‚СЂРѕРєРё РІ РІРёРґРµ РјР°СЃСЃРёРІР°
+function ReadArrString(n: integer): array of string;
+
+/// Р’РІРѕРґРёС‚ n С†РµР»С‹С… С‡РёСЃРµР»
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Рµ С‡РёСЃР»Р° РІ РІРёРґРµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+function ReadSeqInteger(n: integer): System.Collections.Generic.IEnumerable<integer>;
+
+/// Р’РІРѕРґРёС‚ n РІРµС‰РµСЃС‚РІРµРЅРЅС‹С… С‡РёСЃРµР»
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Рµ С‡РёСЃР»Р° РІ РІРёРґРµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+function ReadSeqReal(n: integer): System.Collections.Generic.IEnumerable<real>;
+
+/// Р’РІРѕРґРёС‚ n СЃС‚СЂРѕРє 
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Рµ СЃС‚СЂРѕРєРё РІ РІРёРґРµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+function ReadSeqString(n: integer): System.Collections.Generic.IEnumerable<string>;
+
+/// Р’РІРѕРґРёС‚ СЂР°Р·РјРµСЂ РЅР°Р±РѕСЂР° С†РµР»С‹С… С‡РёСЃРµР» Рё РµРіРѕ СЌР»РµРјРµРЅС‚С‹
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Р№ РЅР°Р±РѕСЂ РІ РІРёРґРµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+function ReadSeqInteger(): System.Collections.Generic.IEnumerable<integer>;
+
+/// Р’РІРѕРґРёС‚ СЂР°Р·РјРµСЂ РЅР°Р±РѕСЂР° РІРµС‰РµСЃС‚РІРµРЅРЅС‹С… С‡РёСЃРµР» Рё РµРіРѕ СЌР»РµРјРµРЅС‚С‹
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Р№ РЅР°Р±РѕСЂ РІ РІРёРґРµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+function ReadSeqReal(): System.Collections.Generic.IEnumerable<real>;
+
+/// Р’РІРѕРґРёС‚ СЂР°Р·РјРµСЂ РЅР°Р±РѕСЂР° СЃС‚СЂРѕРє Рё РµРіРѕ СЌР»РµРјРµРЅС‚С‹
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Р№ РЅР°Р±РѕСЂ РІ РІРёРґРµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+function ReadSeqString(): System.Collections.Generic.IEnumerable<string>;
+
+/// Р’РІРѕРґРёС‚ СЂР°Р·РјРµСЂ РЅР°Р±РѕСЂР° С†РµР»С‹С… С‡РёСЃРµР» Рё РµРіРѕ СЌР»РµРјРµРЅС‚С‹
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Р№ РЅР°Р±РѕСЂ РІ РІРёРґРµ РјР°СЃСЃРёРІР°
+function ReadArrInteger(): array of integer;
+
+/// Р’РІРѕРґРёС‚ СЂР°Р·РјРµСЂ РЅР°Р±РѕСЂР° РІРµС‰РµСЃС‚РІРµРЅРЅС‹С… С‡РёСЃРµР» Рё РµРіРѕ СЌР»РµРјРµРЅС‚С‹
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Р№ РЅР°Р±РѕСЂ РІ РІРёРґРµ РјР°СЃСЃРёРІР°
+function ReadArrReal(): array of real;
+
+/// Р’РІРѕРґРёС‚ СЂР°Р·РјРµСЂ РЅР°Р±РѕСЂР° СЃС‚СЂРѕРє Рё РµРіРѕ СЌР»РµРјРµРЅС‚С‹
+/// Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РІРІРµРґРµРЅРЅС‹Р№ РЅР°Р±РѕСЂ РІ РІРёРґРµ РјР°СЃСЃРёРІР°
+function ReadArrString(): array of string;
+
+/// Р’РІРѕРґРёС‚ С†РµР»СѓСЋ РјР°С‚СЂРёС†Сѓ СЂР°Р·РјРµСЂР° m РЅР° n РїРѕ СЃС‚СЂРѕРєР°Рј
+function  ReadMatrInteger(m,n: integer): array [,] of integer;
+
+/// Р’РІРѕРґРёС‚ СЂР°Р·РјРµСЂС‹ РјР°С‚СЂРёС†С‹ Рё Р·Р°С‚РµРј С†РµР»СѓСЋ РјР°С‚СЂРёС†Сѓ СѓРєР°Р·Р°РЅРЅС‹С… СЂР°Р·РјРµСЂРѕРІ РїРѕ СЃС‚СЂРѕРєР°Рј
+function  ReadMatrInteger(): array [,] of integer;
+
+/// Р’РІРѕРґРёС‚ РІРµС‰РµСЃС‚РІРµРЅРЅСѓСЋ РјР°С‚СЂРёС†Сѓ СЂР°Р·РјРµСЂР° m РЅР° n РїРѕ СЃС‚СЂРѕРєР°Рј
+function  ReadMatrReal(m,n: integer): array [,] of real;
+
+/// Р’РІРѕРґРёС‚ СЂР°Р·РјРµСЂС‹ РјР°С‚СЂРёС†С‹ Рё Р·Р°С‚РµРј РІРµС‰РµСЃС‚РІРµРЅРЅСѓСЋ РјР°С‚СЂРёС†Сѓ СѓРєР°Р·Р°РЅРЅС‹С… СЂР°Р·РјРµСЂРѕРІ РїРѕ СЃС‚СЂРѕРєР°Рј
+function  ReadMatrReal(): array [,] of real;
+
+/// Р’РІРѕРґРёС‚ РјР°С‚СЂРёС†Сѓ РёР· СЃС‚СЂРѕРє СЂР°Р·РјРµСЂР° m РЅР° n РїРѕ СЃС‚СЂРѕРєР°Рј
+function  ReadMatrString(m,n: integer): array [,] of string;
+
+/// Р’РІРѕРґРёС‚ СЂР°Р·РјРµСЂС‹ РјР°С‚СЂРёС†С‹ Рё Р·Р°С‚РµРј СЃС‚СЂРѕРєРѕРІСѓСЋ РјР°С‚СЂРёС†Сѓ СѓРєР°Р·Р°РЅРЅС‹С… СЂР°Р·РјРµСЂРѕРІ РїРѕ СЃС‚СЂРѕРєР°Рј
+function  ReadMatrString(): array [,] of string;
+
+// == РљРѕРЅРµС† РґРѕРїРѕР»РЅРµРЅРёР№ Рє РІРµСЂСЃРёРё 4.14 ==
 
 implementation
 
 const
-  NotSupportedReadTypeMessage = 'Ввод данных типа {0} не поддерживается';
-  NotSupportedWriteTypeMessage = 'Вывод данных типа {0} не поддерживается';
-  eMessage = 'Попытка обращения к объекту Node после вызова его метода Dispose';
+  NotSupportedReadTypeMessage = 'Р’РІРѕРґ РґР°РЅРЅС‹С… С‚РёРїР° {0} РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ';
+  NotSupportedWriteTypeMessage = 'Р’С‹РІРѕРґ РґР°РЅРЅС‹С… С‚РёРїР° {0} РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ';
+  eMessage = 'РџРѕРїС‹С‚РєР° РѕР±СЂР°С‰РµРЅРёСЏ Рє РѕР±СЉРµРєС‚Сѓ Node РїРѕСЃР»Рµ РІС‹Р·РѕРІР° РµРіРѕ РјРµС‚РѕРґР° Dispose';
 
 var 
   loadNodes: ArrayList;
@@ -324,6 +411,7 @@ procedure _PutB(param: integer);                external '%PABCSYSTEM%\PT4\PT4PA
 procedure _GetP(var param: IntPtr);     external '%PABCSYSTEM%\PT4\PT4PABC.dll' name 'getp';
 procedure _PutP(param: IntPtr); external '%PABCSYSTEM%\PT4\PT4PABC.dll' name 'putp';
 procedure DisposeP(sNode: IntPtr);      external '%PABCSYSTEM%\PT4\PT4PABC.dll' name 'disposep';
+function FinishPT(): integer;      external '%PABCSYSTEM%\PT4\PT4PABC.dll' name 'finishpt';  // == 4.13 ==
 
 procedure Dispose(p: pointer);
 begin
@@ -498,7 +586,7 @@ begin
   else x.Parent := Parent.addr;
 
   addr := Marshal.AllocHGlobal(sizeof(InternalNode));
-  Marshal.StructureToPtr(x, addr, false);
+  Marshal.StructureToPtr(x as object, addr, false);
   isAllocMem := true;
   isDisposed := false;
   loadNodes.Add(self); 
@@ -511,11 +599,11 @@ begin
   if value = nil then 
   begin
     x.Next := IntPtr.Zero; 
-    Marshal.StructureToPtr(x, addr, isAllocMem); 
+    Marshal.StructureToPtr(x as object, addr, isAllocMem); 
   end else 
   begin
     x.Next := value.addr;
-    Marshal.StructureToPtr(x, addr, isAllocMem);                                             
+    Marshal.StructureToPtr(x as object, addr, isAllocMem);                                             
   end;
 end;
 
@@ -549,11 +637,11 @@ begin
   if value = nil then 
   begin
     x.Prev := IntPtr.Zero; 
-    Marshal.StructureToPtr(x, addr, isAllocMem); 
+    Marshal.StructureToPtr(x as object, addr, isAllocMem); 
   end else 
   begin
     x.Prev := value.addr;
-    Marshal.StructureToPtr(x, addr, isAllocMem);                                             
+    Marshal.StructureToPtr(x as object, addr, isAllocMem);                                             
   end;
 end;
 
@@ -585,11 +673,11 @@ begin
   if value = nil then 
   begin
     x.Left := IntPtr.Zero; 
-    Marshal.StructureToPtr(x, addr, isAllocMem); 
+    Marshal.StructureToPtr(x as object, addr, isAllocMem); 
   end else 
   begin
     x.Left := value.addr;
-    Marshal.StructureToPtr(x, addr, isAllocMem);                                             
+    Marshal.StructureToPtr(x as object, addr, isAllocMem);                                             
   end;
 end;
 
@@ -621,11 +709,11 @@ begin
   if value = nil then 
   begin
     x.Right := IntPtr.Zero; 
-    Marshal.StructureToPtr(x, addr, isAllocMem); 
+    Marshal.StructureToPtr(x as object, addr, isAllocMem); 
   end else 
   begin
     x.Right := value.addr;
-    Marshal.StructureToPtr(x, addr, isAllocMem);                                             
+    Marshal.StructureToPtr(x as object, addr, isAllocMem);                                             
   end;
 end;
 
@@ -657,11 +745,11 @@ begin
   if value = nil then 
   begin
     x.Parent := IntPtr.Zero; 
-    Marshal.StructureToPtr(x, addr, isAllocMem); 
+    Marshal.StructureToPtr(x as object, addr, isAllocMem); 
   end else 
   begin
     x.Parent := value.addr;
-    Marshal.StructureToPtr(x, addr, isAllocMem);                                             
+    Marshal.StructureToPtr(x as object, addr, isAllocMem);                                             
   end;
 end;
 
@@ -691,7 +779,7 @@ begin
   if isDisposed then
     raise new ObjectDisposedException(ToString, eMessage);
   self.x.Data := value;
-  Marshal.StructureToPtr(x, addr, isAllocMem);
+  Marshal.StructureToPtr(x as object, addr, isAllocMem);
 end;
 
 function Node.getData: integer;
@@ -732,7 +820,7 @@ begin
 end;
 
 // -----------------------------------------------------
-//                      Функции Get
+//                      Р¤СѓРЅРєС†РёРё Get
 // -----------------------------------------------------
 function GetInt: integer;
 var val:integer;
@@ -768,7 +856,7 @@ end;
 function GetString: string;
 var val: System.Text.StringBuilder;
 begin
-  val := new System.Text.StringBuilder(200);//TODO почему 200?
+  val := new System.Text.StringBuilder(200);//TODO РїРѕС‡РµРјСѓ 200?
   _gets(val);
   result := val.ToString;
 end;
@@ -800,8 +888,8 @@ var
   sNode: InternalNode;
   i: integer;
 begin
-  //raise new NotSupportedException('Работа с динамическими структурами задачника PT4 не поддерживается в этой версии компилятора. Исправление ошибки планируется в следуйщей версии');
-  //result := new PT4Node(sNode, p);// fixme здесь ошибка генерации кода!
+  //raise new NotSupportedException('Р Р°Р±РѕС‚Р° СЃ РґРёРЅР°РјРёС‡РµСЃРєРёРјРё СЃС‚СЂСѓРєС‚СѓСЂР°РјРё Р·Р°РґР°С‡РЅРёРєР° PT4 РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РІ СЌС‚РѕР№ РІРµСЂСЃРёРё РєРѕРјРїРёР»СЏС‚РѕСЂР°. РСЃРїСЂР°РІР»РµРЅРёРµ РѕС€РёР±РєРё РїР»Р°РЅРёСЂСѓРµС‚СЃСЏ РІ СЃР»РµРґСѓР№С‰РµР№ РІРµСЂСЃРёРё');
+  //result := new PT4Node(sNode, p);// fixme Р·РґРµСЃСЊ РѕС€РёР±РєР° РіРµРЅРµСЂР°С†РёРё РєРѕРґР°!
   p := IntPtr.Zero;
   sNode.Data := 0;
   sNode.Next := IntPtr.Zero;
@@ -865,8 +953,43 @@ begin
   Result := GetNode;
 end;
 
+function ReadlnInteger: integer;
+begin
+  Result := GetInt;
+end;
+
+function ReadlnReal: real;
+begin
+  Result := GetReal;
+end;
+
+function ReadlnChar: char;
+begin
+  Result := GetChar;
+end;
+
+function ReadlnString: string;
+begin
+  Result := GetString;
+end;
+
+function ReadlnBoolean: boolean;
+begin
+  Result := GetBool;
+end;
+
+function ReadlnPNode: PNode;
+begin
+  Result := GetPNode;
+end;
+
+function ReadlnNode: Node;
+begin
+  Result := GetNode;
+end;
+
 // -----------------------------------------------------
-//                      Процедуры Put
+//                      РџСЂРѕС†РµРґСѓСЂС‹ Put
 // -----------------------------------------------------
 procedure PutInt(val: integer);
 begin
@@ -915,7 +1038,7 @@ begin
 end;
 
 // -----------------------------------------------------
-//                  Генерация исключений
+//                  Р“РµРЅРµСЂР°С†РёСЏ РёСЃРєР»СЋС‡РµРЅРёР№
 // -----------------------------------------------------
 procedure RaisePTAndCheckPT(e: Exception);
 begin
@@ -1027,6 +1150,19 @@ procedure Readln;
 begin
 end;
 
+procedure Print(params args: array of object);
+begin
+  if args.Length = 0 then
+    exit;
+  for var i := 0 to args.length - 1 do
+    write(args[i]);
+end;
+
+procedure Println(params args: array of object);
+begin
+  Print(args);
+end;
+
 {procedure write;
 begin
 end;}
@@ -1097,9 +1233,48 @@ begin
   if InfoT=0 then 
     Console.WriteLine(InfoS);
   FreePT;
+  // == РќР°С‡Р°Р»Рѕ РґРѕРїРѕР»РЅРµРЅРёР№ Рє РІРµСЂСЃРёРё 4.13 == 
+  var fpt := FinishPT;
+  if fpt = 1 then exit;
+  var asm := System.Reflection.Assembly.GetExecutingAssembly;
+  var nm := asm.FullName;
+  Delete(nm, Pos(',', nm), length(nm));
+  var prg := asm.GetType(nm+'.Program');
+  var solveproc := prg.GetMethod('$Main');
+  var initproc := prg.GetMethod('$_InitVariables_');
+  var examunit := asm.GetType('PT4Exam.PT4Exam');
+  var finexamproc: System.Reflection.MethodInfo := nil;
+  if examunit <> nil then
+    finexamproc := examunit.GetMethod('FinExam');
+  var i := 0;
+  while (fpt = 0) and (i < 10) do 
+  begin
+    StartPT(512);    
+    try
+      foreach var f in prg.GetFields do
+        if not f.Name.StartsWith('$') then 
+        try
+          f.SetValue(nil, nil);
+        except
+        end;
+      if initproc <> nil then
+        initproc.Invoke(nil,nil);
+      solveproc.Invoke(nil,nil);
+    except
+      on e: Exception do
+        RaisePT(e.InnerException.GetType.ToString, e.InnerException.Message);
+    end;
+    if finexamproc <> nil then
+      finexamproc.Invoke(nil,nil);
+    InfoS := CheckPT(InfoT);
+    FreePT;
+    inc(i);
+    fpt := FinishPT;
+  end;
+  // == РљРѕРЅРµС† РґРѕРїРѕР»РЅРµРЅРёР№ Рє РІРµСЂСЃРёРё 4.13 == 
 end;
 
-// == Версия 1.3. Дополнения ==
+// == Р’РµСЂСЃРёСЏ 1.3. Р”РѕРїРѕР»РЅРµРЅРёСЏ ==
 
 var 
   D: integer := 2;
@@ -1117,9 +1292,9 @@ procedure Show(S: string; A: Real; W: Integer);
 var s0: string;
 begin
   if D > 0 then
-    Str(A:W:D, s0)
+    s0 := string.Format('{0,'+W+':f'+D+'}', A).Replace(',','.')
   else
-    Str(A:W, s0);
+    s0 := string.Format('{0,'+W+':e}', A).Replace(',','.');
   Show(S + s0);
 end;
 
@@ -1221,7 +1396,199 @@ begin
     D := N;
 end;
 
-// == Конец дополнений к версии 1.3 ==
+// == РљРѕРЅРµС† РґРѕРїРѕР»РЅРµРЅРёР№ Рє РІРµСЂСЃРёРё 1.3 ==
+
+// == Р’РµСЂСЃРёСЏ 4.14. Р”РѕРїРѕР»РЅРµРЅРёСЏ ==
+
+function  ReadSeqInteger(): System.Collections.Generic.IEnumerable<integer>;
+begin
+  result := Range(1, GetInteger()).Select(e -> GetInteger()).ToArray();
+end;  
+
+function  ReadSeqReal(): System.Collections.Generic.IEnumerable<real>;
+begin
+  result := Range(1, GetInteger()).Select(e -> GetReal()).ToArray();
+end;  
+
+function ReadSeqString(): System.Collections.Generic.IEnumerable<string>;
+begin
+  result := Range(1, GetInteger()).Select(e -> GetString()).ToArray();
+end;           
+
+function  ReadSeqInteger(n: integer): System.Collections.Generic.IEnumerable<integer>;
+begin
+  result := Range(1, n).Select(e -> GetInteger()).ToArray();
+end;  
+
+function  ReadSeqReal(n: integer): System.Collections.Generic.IEnumerable<real>;
+begin
+  result := Range(1, n).Select(e -> GetReal()).ToArray();
+end;  
+
+function ReadSeqString(n: integer): System.Collections.Generic.IEnumerable<string>;
+begin
+  result := Range(1, n).Select(e -> GetString()).ToArray();
+end;           
+
+function  ReadArrInteger(): array of integer;
+begin
+  result := Range(1, GetInteger()).Select(e -> GetInteger()).ToArray();
+end;  
+
+function  ReadArrReal(): array of real;
+begin
+  result := Range(1, GetInteger()).Select(e -> GetReal()).ToArray();
+end;  
+
+function ReadArrString(): array of string;
+begin
+  result := Range(1, GetInteger()).Select(e -> GetString()).ToArray();
+end;           
+
+function  ReadArrInteger(n: integer): array of integer;
+begin
+  result := Range(1, n).Select(e -> GetInteger()).ToArray();
+end;  
+
+function  ReadArrReal(n: integer): array of real;
+begin
+  result := Range(1, n).Select(e -> GetReal()).ToArray();
+end;  
+
+function ReadArrString(n: integer): array of string;
+begin
+  result := Range(1, n).Select(e -> GetString()).ToArray();
+end;   
+
+function  ReadMatrInteger(m,n: integer): array [,] of integer;
+begin
+  result := new integer[m,n];
+  for var i := 0 to m-1 do
+    for var j := 0 to n-1 do
+      result[i,j] := ReadInteger;
+end;
+
+function  ReadMatrInteger(): array [,] of integer;
+begin
+  result := ReadMatrInteger(ReadInteger,ReadInteger);
+end;
+
+function  ReadMatrReal(m,n: integer): array [,] of real;
+begin
+  result := new real[m,n];
+  for var i := 0 to m-1 do
+    for var j := 0 to n-1 do
+      result[i,j] := ReadReal;
+end;
+
+function  ReadMatrReal(): array [,] of real;
+begin
+  result := ReadMatrReal(ReadInteger,ReadInteger);
+end;
+
+function  ReadMatrString(m,n: integer): array [,] of string;
+begin
+  result := new string[m,n];
+  for var i := 0 to m-1 do
+    for var j := 0 to n-1 do
+      result[i,j] := ReadString;
+end;
+
+function  ReadMatrString(): array [,] of string;
+begin
+  result := ReadMatrString(ReadInteger,ReadInteger);
+end;        
+
+
+/// Р’С‹РІРѕРґРёС‚ СЂР°Р·РјРµСЂ Рё СЌР»РµРјРµРЅС‚С‹ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+procedure System.Collections.Generic.IEnumerable<T>.WriteAll();
+begin
+  var b := self.ToArray();
+  PT4.Put(b.Length);
+  foreach e : T in b do
+    PT4.Put(e);
+end;
+
+/// Р’С‹РІРѕРґРёС‚ СЌР»РµРјРµРЅС‚С‹ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+procedure System.Collections.Generic.IEnumerable<T>.Write();
+begin
+  var b := self.ToArray();
+  foreach e : T in b do
+    PT4.Put(e);
+end;
+
+/// Р’С‹РІРѕРґРёС‚ СЌР»РµРјРµРЅС‚С‹ РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ РјР°СЃСЃРёРІР°
+procedure Write<T>(self: array of T); extensionmethod;
+begin
+  for var i:=0 to self.Length-1 do
+    PT4.Put(self[i]);
+end;
+
+/// Р’С‹РІРѕРґРёС‚ СЌР»РµРјРµРЅС‚С‹ РјР°С‚СЂРёС†С‹
+procedure Write<T>(self: array [,] of T); extensionmethod;
+begin
+  for var i:=0 to self.GetLength(0)-1 do
+  for var j:=0 to self.GetLength(1)-1 do
+    PT4.Put(self[i,j]);
+end;
+
+/// Р’С‹РІРѕРґРёС‚ РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР° 
+/// РєРѕРјРјРµРЅС‚Р°СЂРёР№ cmt, СЂР°Р·РјРµСЂ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё Рё Р·РЅР°С‡РµРЅРёСЏ, 
+/// РїРѕР»СѓС‡РµРЅРЅС‹Рµ РёР· СЌР»РµРјРµРЅС‚РѕРІ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё 
+/// СЃ РїРѕРјРѕС‰СЊСЋ СѓРєР°Р·Р°РЅРЅРѕРіРѕ Р»СЏРјР±РґР°-РІС‹СЂР°Р¶РµРЅРёСЏ
+function System.Collections.Generic.IEnumerable<TSource>.Show
+  (cmt: string; selector: System.Func<TSource, string>): 
+  System.Collections.Generic.IEnumerable<TSource>;
+begin
+  var b := self.Select(selector).ToArray();
+  PT4.Show(cmt);
+  PT4.Show((b.Length + ':').PadLeft(3));
+  foreach var e in b do
+    PT4.Show(e);
+  PT4.ShowLine();
+  result := self; 
+end;
+
+/// Р’С‹РІРѕРґРёС‚ РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР° 
+/// СЂР°Р·РјРµСЂ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё Рё Р·РЅР°С‡РµРЅРёСЏ, 
+/// РїРѕР»СѓС‡РµРЅРЅС‹Рµ РёР· СЌР»РµРјРµРЅС‚РѕРІ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё 
+/// СЃ РїРѕРјРѕС‰СЊСЋ СѓРєР°Р·Р°РЅРЅРѕРіРѕ Р»СЏРјР±РґР°-РІС‹СЂР°Р¶РµРЅРёСЏ
+function System.Collections.Generic.IEnumerable<TSource>.Show
+  (selector: System.Func<TSource, string>): 
+  System.Collections.Generic.IEnumerable<TSource>;
+begin
+  result := self.Show('', selector); 
+end;
+
+/// Р’С‹РІРѕРґРёС‚ РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР° 
+/// РєРѕРјРјРµРЅС‚Р°СЂРёР№ cmt, СЂР°Р·РјРµСЂ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё Рё РµРµ СЌР»РµРјРµРЅС‚С‹
+function System.Collections.Generic.IEnumerable<TSource>.Show(cmt: string): 
+  System.Collections.Generic.IEnumerable<TSource>;
+begin
+  result := self;
+  var a := self.ToArray;
+  var s := '';
+  var t := '';
+  if a.Length > 0 then
+    t := a[0].GetType.Name;
+  if t = 'Double' then
+    if D > 0 then
+      s := '{0,0:f' + D + '}'
+    else
+      s := '{0,0:e}';
+  a.Show(cmt, e -> s = '' ? e.ToString() : 
+    string.Format(s, e).Replace(',', '.'));
+end;
+
+/// Р’С‹РІРѕРґРёС‚ РІ СЂР°Р·РґРµР»Рµ РѕС‚Р»Р°РґРєРё РѕРєРЅР° Р·Р°РґР°С‡РЅРёРєР° 
+/// СЂР°Р·РјРµСЂ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё Рё РµРµ СЌР»РµРјРµРЅС‚С‹.
+function System.Collections.Generic.IEnumerable<TSource>.Show(): 
+  System.Collections.Generic.IEnumerable<TSource>;
+begin
+  result := self.Show(''); 
+end;
+
+// == РљРѕРЅРµС† РґРѕРїРѕР»РЅРµРЅРёР№ Рє РІРµСЂСЃРёРё 4.14 ==
 
 initialization
   __InitModule;

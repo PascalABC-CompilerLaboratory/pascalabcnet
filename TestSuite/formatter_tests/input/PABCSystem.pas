@@ -1,4 +1,8 @@
-/// Стандартный модуль
+// Copyright (c) Ivan Bondarev, Stanislav Mihalkovich (for details please see \doc\copyright.txt)
+// This code is distributed under the GNU LGPL (for details please see \doc\license.txt)
+
+/// РЎС‚Р°РЅРґР°СЂС‚РЅС‹Р№ РјРѕРґСѓР»СЊ
+/// !! System unit
 unit PABCSystem;
 
  {$define PascalABC}
@@ -11,72 +15,80 @@ unit PABCSystem;
 {$reference 'System.dll'}
 {$reference 'mscorlib.dll'}
 {$reference 'System.Core.dll'}
+{$reference 'System.Numerics.dll'}
 
 interface
 
 uses
-  System, 
+  System.Runtime.InteropServices,
   System.IO, 
   //System.Reflection, 
   System.Collections, 
   System.Collections.Generic,
-  System.Runtime.InteropServices;
+  System;
 
 const
-  /// Максимальное значение типа shortint
+  /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° shortint
   MaxShortInt = shortint.MaxValue; 
-  /// Максимальное значение типа byte
+  /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° byte
   MaxByte = byte.MaxValue;
-  /// Максимальное значение типа smallint
+  /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° smallint
   MaxSmallInt = smallint.MaxValue;
-  /// Максимальное значение типа word
+  /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° word
   MaxWord = word.MaxValue;
-  /// Максимальное значение типа longword
+  /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° longword
   MaxLongWord = longword.MaxValue; 
-  /// Максимальное значение типа int64
+  /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° int64
   MaxInt64 = int64.MaxValue; 
-  /// Максимальное значение типа uint64
+  /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° uint64
   MaxUInt64 = uint64.MaxValue; 
-  /// Максимальное значение типа double
+  /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° double
   MaxDouble = real.MaxValue; 
-  /// Минимальное положительное значение типа double
+  /// РњРёРЅРёРјР°Р»СЊРЅРѕРµ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° double
   MinDouble = real.Epsilon;
-  /// Максимальное значение типа real
+  /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real
   MaxReal = real.MaxValue; 
-  /// Минимальное положительное значение типа real
+  /// РњРёРЅРёРјР°Р»СЊРЅРѕРµ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real
   MinReal = real.Epsilon;
-  /// Максимальное значение типа single
+  /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° single
   MaxSingle = single.MaxValue; 
-  /// Минимальное положительное значение типа single
+  /// РњРёРЅРёРјР°Р»СЊРЅРѕРµ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° single
   MinSingle = single.Epsilon;
   
-  /// Максимальное значение типа integer
+  /// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° integer
   MaxInt = integer.MaxValue;
-  /// Константа Pi
+  /// РљРѕРЅСЃС‚Р°РЅС‚Р° Pi
+  /// !! Pi constant
   Pi = 3.141592653589793;
-  /// Константа E
+  /// РљРѕРЅСЃС‚Р°РЅС‚Р° E
+  /// !! E constant
   E  = 2.718281828459045;
   END_OF_LINE_SYMBOL = #10;
-  /// Константа перехода на новую строку
+  /// РљРѕРЅСЃС‚Р°РЅС‚Р° РїРµСЂРµС…РѕРґР° РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ
+  /// !! The newline string defined for this environment.
   NewLine = System.Environment.NewLine;
 
 
 function RunTimeSizeOf(t: System.Type): integer;
 
-/// Содержит аргумены командой строки, с которыми была запущена программа
+/// РЎРѕРґРµСЂР¶РёС‚ Р°СЂРіСѓРјРµРЅС‹ РєРѕРјР°РЅРґРѕР№ СЃС‚СЂРѕРєРё, СЃ РєРѕС‚РѕСЂС‹РјРё Р±С‹Р»Р° Р·Р°РїСѓС‰РµРЅР° РїСЂРѕРіСЂР°РјРјР°
 var
   CommandLineArgs: array of string;
 
-//Маркер того, что это системный модуль
+///--
+var
+  __CONFIG__: Dictionary<string, object> := new Dictionary<string, object>;
+  
+//РњР°СЂРєРµСЂ С‚РѕРіРѕ, С‡С‚Рѕ СЌС‚Рѕ СЃРёСЃС‚РµРјРЅС‹Р№ РјРѕРґСѓР»СЊ
 ///--
 const
   __IS_SYSTEM_MODULE = true;
 
 type
-  /// Базовый тип объектов
+  /// Р‘Р°Р·РѕРІС‹Р№ С‚РёРї РѕР±СЉРµРєС‚РѕРІ
   object   = System.Object;
   
-  /// Базовый тип исключений
+  /// Р‘Р°Р·РѕРІС‹Р№ С‚РёРї РёСЃРєР»СЋС‡РµРЅРёР№
   exception = System.Exception;
   
   double   = System.Double;
@@ -85,52 +97,219 @@ type
   
   cardinal = System.UInt32;
   
-  /// Представляет 128-битное вещественное число
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ 128-Р±РёС‚РЅРѕРµ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ С‡РёСЃР»Рѕ
+  /// !! Represents a decimal number
   decimal  = System.Decimal;
   
-  //------------------------------------------------------------------------------
-  //Pointers
-  //------------------------------------------------------------------------------
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РїСЂРѕРёР·РІРѕР»СЊРЅРѕ Р±РѕР»СЊС€РѕРµ С†РµР»РѕРµ С‡РёСЃР»Рѕ
+  BigInteger = System.Numerics.BigInteger;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РєРѕСЂС‚РµР¶
+  Tuple = System.Tuple;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РґРёРЅР°РјРёС‡РµСЃРєРёР№ РјР°СЃСЃРёРІ 
+  List<T> = System.Collections.Generic.List<T>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ СЂРµР°Р»РёР·Р°С†РёРё РёРЅС‚РµСЂС„РµР№СЃР° IComparer
+  Comparer<T> = System.Collections.Generic.Comparer<T>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РјРЅРѕР¶РµСЃС‚РІРѕ Р·РЅР°С‡РµРЅРёР№
+  HashSet<T> = System.Collections.Generic.HashSet<T>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ Р°СЃСЃРѕС†РёР°С‚РёРІРЅС‹Р№ РјР°СЃСЃРёРІ (РЅР°Р±РѕСЂ РїР°СЂ РљР»СЋС‡-Р—РЅР°С‡РµРЅРёРµ), СЂРµР°Р»РёР·РѕРІР°РЅРЅС‹Р№ РЅР° Р±Р°Р·Рµ С…РµС€-С‚Р°Р±Р»РёС†С‹
+  Dictionary<Key,Value> = System.Collections.Generic.Dictionary<Key,Value>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РїР°СЂСѓ РљР»СЋС‡-Р—РЅР°С‡РµРЅРёРµ РґР»СЏ Р°СЃСЃРѕС†РёР°С‚РёРІРЅРѕРіРѕ РјР°СЃСЃРёРІР° 
+  KeyValuePair<Key,Value> = System.Collections.Generic.KeyValuePair<Key,Value>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РґРІСѓСЃРІСЏР·РЅС‹Р№ СЃРїРёСЃРѕРє
+  LinkedList<T> = System.Collections.Generic.LinkedList<T>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ СѓР·РµР» РґРІСѓСЃРІСЏР·РЅРѕРіРѕ СЃРїРёСЃРєР°
+  LinkedListNode<T> = System.Collections.Generic.LinkedListNode<T>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РѕС‡РµСЂРµРґСЊ - РЅР°Р±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ, СЂРµР°Р»РёР·РѕРІР°РЅРЅС‹С… РїРѕ РїСЂРёРЅС†РёРїСѓ "РїРµСЂРІС‹Р№ РІРѕС€РµР»-РїРµСЂРІС‹Р№ РІС‹С€РµР»"
+  Queue<T> = System.Collections.Generic.Queue<T>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ Р°СЃСЃРѕС†РёР°С‚РёРІРЅС‹Р№ РјР°СЃСЃРёРІ, СЂРµР°Р»РёР·РѕРІР°РЅРЅС‹Р№ РЅР° Р±Р°Р·Рµ Р±РёРЅР°СЂРЅРѕРіРѕ РґРµСЂРµРІР° РїРѕРёСЃРєР°
+  SortedDictionary<Key,Value> = System.Collections.Generic.SortedDictionary<Key,Value>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ Р°СЃСЃРѕС†РёР°С‚РёРІРЅС‹Р№ РјР°СЃСЃРёРІ (РЅР°Р±РѕСЂ РїР°СЂ РєР»СЋС‡-Р·РЅР°С‡РµРЅРёРµ), СЂРµР°Р»РёР·РѕРІР°РЅРЅС‹Р№ РЅР° Р±Р°Р·Рµ РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ РјР°СЃСЃРёРІР° РїР°СЂ
+  SortedList<T> = System.Collections.Generic.SortedList<T>;
+  
+  SortedSet<T> = System.Collections.Generic.SortedSet<T>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ СЃС‚РµРє - РЅР°Р±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ, СЂРµР°Р»РёР·РѕРІР°РЅРЅС‹С… РїРѕ РїСЂРёРЅС†РёРїСѓ "РїРѕСЃР»РµРґРЅРёР№ РІРѕС€РµР»-РїРµСЂРІС‹Р№ РІС‹С€РµР»"
+  Stack<T> = System.Collections.Generic.Stack<T>;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РёРЅС‚РµСЂС„РµР№СЃ, РїСЂРµРґРѕСЃС‚Р°РІР»СЏСЋС‰РёР№ РїРµСЂРµС‡РёСЃР»РёС‚РµР»СЊ РґР»СЏ РїРµСЂРµР±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё
+  IEnumerable<T> = System.Collections.Generic.IEnumerable<T>;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РїРµСЂРµР±РѕСЂР° СЌР»РµРјРµРЅС‚РѕРІ РєРѕР»Р»РµРєС†РёРё
+  IEnumerator<T> = System.Collections.Generic.IEnumerator<T>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ РґРІСѓС… СЌР»РµРјРµРЅС‚РѕРІ
+  IComparer<T> = System.Collections.Generic.IComparer<T>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РёР·РјРµРЅСЏРµРјСѓСЋ СЃС‚СЂРѕРєСѓ СЃРёРјРІРѕР»РѕРІ
+  StringBuilder = System.Text.StringBuilder;
+  
+  /// РўРёРї РєРѕРґРёСЂРѕРІРєРё СЃРёРјРІРѕР»РѕРІ  
+  Encoding = System.Text.Encoding;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РґРµР№СЃС‚РІРёРµ Р±РµР· РїР°СЂР°РјРµС‚СЂРѕРІ
+  Action0 = System.Action;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РґРµР№СЃС‚РІРёРµ СЃ РѕРґРЅРёРј РїР°СЂР°РјРµС‚СЂРѕРј
+  Action<T> = System.Action<T>;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РґРµР№СЃС‚РІРёРµ СЃ РґРІСѓРјСЏ РїР°СЂР°РјРµС‚СЂР°РјРё
+  Action2<T1,T2> = System.Action<T1,T2>;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РґРµР№СЃС‚РІРёРµ СЃ С‚СЂРµРјСЏ РїР°СЂР°РјРµС‚СЂР°РјРё
+  Action3<T1,T2,T3> = System.Action<T1,T2,T3>;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ С„СѓРЅРєС†РёСЋ Р±РµР· РїР°СЂР°РјРµС‚СЂРѕРІ
+  Func0<Res> = System.Func<Res>;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ С„СѓРЅРєС†РёСЋ СЃ РѕРґРЅРёРј РїР°СЂР°РјРµС‚СЂРѕРј
+  Func<T,Res> = System.Func<T,Res>;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ С„СѓРЅРєС†РёСЋ СЃ РґРІСѓРјСЏ РїР°СЂР°РјРµС‚СЂР°РјРё
+  Func2<T1,T2,Res> = System.Func<T1,T2,Res>;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ С„СѓРЅРєС†РёСЋ СЃ С‚СЂРµРјСЏ РїР°СЂР°РјРµС‚СЂР°РјРё
+  Func3<T1,T2,T3,Res> = System.Func<T1,T2,T3,Res>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ С„СѓРЅРєС†РёСЋ СЃ РѕРґРЅРёРј РїР°СЂР°РјРµС‚СЂРѕРј С†РµР»РѕРіРѕ С‚РёРїР°, РІРѕР·РІСЂР°С‰Р°СЋС‰СѓСЋ С†РµР»РѕРµ
+  IntFunc = Func<integer,integer>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ С„СѓРЅРєС†РёСЋ СЃ РѕРґРЅРёРј РїР°СЂР°РјРµС‚СЂРѕРј РІРµС‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‚РёРїР°, РІРѕР·РІСЂР°С‰Р°СЋС‰СѓСЋ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ
+  RealFunc = Func<real,real>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ С„СѓРЅРєС†РёСЋ СЃ РѕРґРЅРёРј РїР°СЂР°РјРµС‚СЂРѕРј СЃС‚СЂРѕРєРѕРІРѕРіРѕ С‚РёРїР°, РІРѕР·РІСЂР°С‰Р°СЋС‰СѓСЋ СЃС‚СЂРѕРєРѕРІРѕРµ
+  StringFunc = Func<string,string>;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ С„СѓРЅРєС†РёСЋ СЃ РѕРґРЅРёРј РїР°СЂР°РјРµС‚СЂРѕРј, РІРѕР·РІСЂР°С‰Р°СЋС‰СѓСЋ boolean 
+  Predicate<T> = System.Predicate<T>;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ С„СѓРЅРєС†РёСЋ СЃ РґРІСѓРјСЏ РїР°СЂР°РјРµС‚СЂР°РјРё, РІРѕР·РІСЂР°С‰Р°СЋС‰СѓСЋ boolean 
+  Predicate2<T1,T2> = System.Predicate<T1,T2>;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ С„СѓРЅРєС†РёСЋ СЃ С‚СЂРµРјСЏ РїР°СЂР°РјРµС‚СЂР°РјРё, РІРѕР·РІСЂР°С‰Р°СЋС‰СѓСЋ boolean 
+  Predicate3<T1,T2,T3> = System.Predicate<T1,T2,T3>;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ СЂРµРіСѓР»СЏСЂРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ
+  Regex = System.Text.RegularExpressions.Regex;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РёР· РѕС‚РґРµР»СЊРЅРѕРіРѕ СЃРѕРІРїР°РґРµРЅРёСЏ СЂРµРіСѓР»СЏСЂРЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ
+  Match = System.Text.RegularExpressions.Match;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РјРµС‚РѕРґ, РІС‹Р·С‹РІР°РµРјС‹Р№ РїСЂРё РѕР±РЅР°СЂСѓР¶РµРЅРёРё СЃРѕРІРїР°РґРµРЅРёСЏ РІ Regex.Replace
+  MatchEvaluator = System.Text.RegularExpressions.MatchEvaluator;
+
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РЅР°Р±РѕСЂ СѓСЃРїРµС€РЅС‹С… СЃРѕРІРїР°РґРµРЅРёР№ СЂРµРіСѓР»СЏСЂРЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ
+  MatchCollection = System.Text.RegularExpressions.MatchCollection;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РїР°СЂР°РјРµС‚СЂС‹ СЂРµРіСѓР»СЏСЂРЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ
+  RegexOptions = System.Text.RegularExpressions.RegexOptions;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РёР· РѕРґРЅРѕР№ РіСЂСѓРїРїС‹ РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё Regex.Match
+  RegexGroup = System.Text.RegularExpressions.Group;
+  
+  /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РёР· РЅР°Р±РѕСЂР° РіСЂСѓРїРї РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё Regex.Match
+  RegexGroupCollection = System.Text.RegularExpressions.GroupCollection;
+  
+    //------------------------------------------------------------------------------
+    //Pointers
+    //------------------------------------------------------------------------------
   
   //1                   //pointed to
-  PBoolean  = ^boolean; //bool
-  PByte     = ^byte;    //byte
+  PBoolean  = ^boolean;//bool
+  PByte     = ^byte;//byte
   PShortint = ^shortint;//sbyte
   //2
-  PChar     = ^char;    //char
+  PChar     = ^char;//char
   PSmallint = ^smallint;//short
-  PWord     = ^word;    //ushort
+  PWord     = ^word;//ushort
   //4
-  PPointer  = ^pointer; //void*
-  PInteger  = ^integer; //int32
+  PPointer  = ^pointer;//void*
+  PInteger  = ^integer;//int32
   PLongword = ^longword;//uint32
-  PLongint  = ^longint; //int64
+  PLongint  = ^longint;//int64
   //8
   PInt64    = ^int64;
-  PUInt64   = ^uint64;  //unit64
+  PUInt64   = ^uint64;//unit64
   
   //8
-  PSingle   = ^single;  //single
+  PSingle   = ^single;//single
   //16
-  PReal     = ^real;    //double
-  PDouble   = ^double;  //double  //ошибка, не сохранится, надо исправить
+  PReal     = ^real;//double
+  PDouble   = ^double;//double  //РѕС€РёР±РєР°, РЅРµ СЃРѕС…СЂР°РЅРёС‚СЃСЏ, РЅР°РґРѕ РёСЃРїСЂР°РІРёС‚СЊ
   //------------------------------------------------------------------------------
   ShortString = string[255];
   
-  /// Тип текстового файла
+  /// РўРёРї С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°
   Text = class
   private 
     fi: FileInfo;
     sr: StreamReader;
     sw: StreamWriter;
+  public 
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° integer, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°
+    function ReadInteger: integer;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°
+    function ReadReal: real;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° char, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°
+    function ReadChar: char;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° string, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°
+    function ReadString: string;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° boolean, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°
+    function ReadBoolean: boolean;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° integer, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+    function ReadlnInteger: integer;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+    function ReadlnReal: real;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° char, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+    function ReadlnChar: char;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° string, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+    function ReadlnString: string;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° boolean, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+    function ReadlnBoolean: boolean;
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» Р·РЅР°С‡РµРЅРёСЏ
+    procedure Write(params o: array of Object);
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ РІ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» Р·РЅР°С‡РµРЅРёСЏ Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+    procedure Writeln(params o: array of Object);
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† С„Р°Р№Р»Р°
+    function Eof: boolean;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† СЃС‚СЂРѕРєРё
+    function Eoln: boolean;
+    /// Р—Р°РєСЂС‹РІР°РµС‚ С„Р°Р№Р»
+    procedure Close;
+    /// РџСЂРѕРїСѓСЃРєР°РµС‚ РїСЂРѕР±РµР»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹, РїРѕСЃР»Рµ С‡РµРіРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† С„Р°Р№Р»Р°
+    function SeekEof: boolean;
+    /// РџСЂРѕРїСѓСЃРєР°РµС‚ РїСЂРѕР±РµР»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹, РїРѕСЃР»Рµ С‡РµРіРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† СЃС‚СЂРѕРєРё РІ С„Р°Р№Р»Рµ
+    function SeekEoln: boolean;
+    /// Р—Р°РїРёСЃС‹РІР°РµС‚ СЃРѕРґРµСЂР¶РёРјРѕРµ Р±СѓС„РµСЂР° С„Р°Р№Р»Р° РЅР° РґРёСЃРє
+    procedure Flush;
+    /// РЈРґР°Р»СЏРµС‚ С„Р°Р№Р»
+    procedure Erase;
+    /// РџРµСЂРµРёРјРµРЅРѕРІС‹РІР°РµС‚ С„Р°Р№Р», РґР°РІР°СЏ РµРјСѓ РёРјСЏ newname. 
+    procedure Rename(newname: string);
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ С„Р°Р№Р»Р°
+    function Name: string;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅРѕРµ РёРјСЏ С„Р°Р№Р»Р°
+    function FullName: string;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РІ РІРёРґРµ СЃС‚СЂРѕРєРё СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»Р° РѕС‚ С‚РµРєСѓС‰РµРіРѕ РїРѕР»РѕР¶РµРЅРёСЏ РґРѕ РєРѕРЅС†Р°
+    function ReadToEnd: string;
   end;
   
   TextFile = Text;
   
-  RangeException = class(SystemException) end; 
-  CommandLineArgumentOutOfRangeException = class(SystemException) end; 
+  RangeException = class(SystemException) end;
+  CommandLineArgumentOutOfRangeException = class(SystemException) end;
   
-  // Вспомогательный тип для диапазонного типа
+  // Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Р№ С‚РёРї РґР»СЏ РґРёР°РїР°Р·РѕРЅРЅРѕРіРѕ С‚РёРїР°
   ///--
   Diapason = record
     low, high: integer;
@@ -145,7 +324,7 @@ type
     public function GetHashCode(obj: System.Object): integer;
   end;
   
-  // Вспомогательный тип для множества
+  // Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Р№ С‚РёРї РґР»СЏ РјРЅРѕР¶РµСЃС‚РІР°
   ///-- 
   TypedSet = class (System.Collections.IEnumerable)
   private 
@@ -180,7 +359,7 @@ type
     function CompareLessEqual(s: TypedSet): boolean;
     function CompareGreater(s: TypedSet): boolean;
     function CompareGreaterEqual(s: TypedSet): boolean;
-    function GetEnumerator: IEnumerator;
+    function GetEnumerator: System.Collections.IEnumerator;
     function ToString: string; override;
   end;
 
@@ -193,10 +372,10 @@ function Union(s1, s2: TypedSet): TypedSet;
 ///--
 function Subtract(s1, s2: TypedSet): TypedSet;
 ///- Include(var s : set of T; el : T)
-///Добавляет елемент el во множество s
+///Р”РѕР±Р°РІР»СЏРµС‚ РµР»РµРјРµРЅС‚ el РІРѕ РјРЅРѕР¶РµСЃС‚РІРѕ s
 procedure Include(var s: TypedSet; el: object);
 ///- Exclude(var s : set of T; el : T)
-///Удаляет элемент el из множества s
+///РЈРґР°Р»СЏРµС‚ СЌР»РµРјРµРЅС‚ el РёР· РјРЅРѕР¶РµСЃС‚РІР° s
 procedure Exclude(var s: TypedSet; el: object);
 ///--
 function Intersect(s1, s2: TypedSet): TypedSet;
@@ -250,10 +429,25 @@ function ExecuteAssemlyIsDll: boolean;
 ///--
 type
   AbstractBinaryFile = class
+  private 
     fi: FileInfo;
     fs: FileStream;
     br: BinaryReader;
     bw: BinaryWriter;
+  public 
+    /// Р—Р°РєСЂС‹РІР°РµС‚ С„Р°Р№Р»
+    procedure Close;
+    /// РЈСЃРµРєР°РµС‚ РґРІРѕРёС‡РЅС‹Р№ С„Р°Р№Р», РѕС‚Р±СЂР°СЃС‹РІР°СЏ РІСЃРµ СЌР»РµРјРµРЅС‚С‹ СЃ РїРѕР·РёС†РёРё С„Р°Р№Р»РѕРІРѕРіРѕ СѓРєР°Р·Р°С‚РµР»СЏ
+    procedure Truncate;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† С„Р°Р№Р»Р°
+    function Eof: boolean;
+    /// РЈРґР°Р»СЏРµС‚ С„Р°Р№Р»
+    procedure Erase;
+    /// РџРµСЂРµРёРјРµРЅРѕРІС‹РІР°РµС‚ С„Р°Р№Р», РґР°РІР°СЏ РµРјСѓ РёРјСЏ newname. 
+    procedure Rename(newname: string);
+    ///- write(f: file; a,b,...)
+    /// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... РІ РґРІРѕРёС‡РЅС‹Р№ С„Р°Р№Р»
+    procedure Write(params vals: array of object);
   end;
 
 ///--
@@ -268,15 +462,27 @@ type
     constructor Create(ElementType: System.Type);
     constructor Create(ElementType: System.Type; offs: integer; params offsets: array of integer);
     function ToString: string; override;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ С„Р°Р№Р»РѕРІРѕРіРѕ СѓРєР°Р·Р°С‚РµР»СЏ РІ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅРѕРј С„Р°Р№Р»Рµ
+    function FilePos: int64;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅРѕРј С„Р°Р№Р»Рµ
+    function FileSize: int64;
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ С„Р°Р№Р»РѕРІРѕРіРѕ СѓРєР°Р·Р°С‚РµР»СЏ РІ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅРѕРј С„Р°Р№Р»Рµ РЅР° СЌР»РµРјРµРЅС‚ СЃ РЅРѕРјРµСЂРѕРј n  
+    procedure Seek(n: int64);
   end;
   
   ///--
   BinaryFile = sealed class(AbstractBinaryFile)
   public 
     function ToString: string; override;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ С„Р°Р№Р»РѕРІРѕРіРѕ СѓРєР°Р·Р°С‚РµР»СЏ РІ Р±РµСЃС‚РёРїРѕРІРѕРј С„Р°Р№Р»Рµ
+    function FilePos: int64;
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°Р№С‚ РІ Р±РµСЃС‚РёРїРѕРІРѕРј С„Р°Р№Р»Рµ
+    function FileSize: int64;
+    /// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ С„Р°Р№Р»РѕРІРѕРіРѕ СѓРєР°Р·Р°С‚РµР»СЏ РІ Р±РµСЃС‚РёРїРѕРІРѕРј С„Р°Р№Р»Рµ РЅР° Р±Р°Р№С‚ СЃ РЅРѕРјРµСЂРѕРј n  
+    procedure Seek(n: int64);
   end;
   
-  /// Интерфейс подсистемы ввода/вывода
+  /// РРЅС‚РµСЂС„РµР№СЃ РїРѕРґСЃРёСЃС‚РµРјС‹ РІРІРѕРґР°/РІС‹РІРѕРґР°
   IOSystem = interface
     function peek: integer;
     function read_symbol: char;
@@ -300,18 +506,20 @@ type
   end;
   
   IOStandardSystem = class(IOSystem)
+    state := 0; // 0 - РЅРµС‚ СЃРёРјРІРѕР»Р° РІ Р±СѓС„РµСЂРµ char, 1 - РµСЃС‚СЊ СЃРёРјРІРѕР» РІ Р±СѓС„РµСЂРµ char
+    sym: integer;  // Р±СѓС„РµСЂ РІ 1 СЃРёРјРІРѕР» РґР»СЏ РјРѕРґРµР»РёСЂРѕРІР°РЅРёСЏ Peek РІ РєРѕРЅСЃРѕР»Рё
   public 
-    function peek: integer;          virtual;
-    function read_symbol: char;      virtual;
-    procedure read(var x: integer);  virtual; 
+    function peek: integer;          virtual; // РёСЃРїРѕР»СЊР·СѓРµС‚ state Рё sym
+    function read_symbol: char;      virtual; // РёСЃРїРѕР»СЊР·СѓРµС‚ state Рё sym 
+    procedure read(var x: integer);  virtual;
     procedure read(var x: real);     virtual;
     procedure read(var x: char);     virtual;
-    procedure read(var x: string);   virtual; 
+    procedure read(var x: string);   virtual;
     procedure read(var x: byte);     virtual;
-    procedure read(var x: shortint); virtual; 
-    procedure read(var x: smallint); virtual; 
+    procedure read(var x: shortint); virtual;
+    procedure read(var x: smallint); virtual;
     procedure read(var x: word);     virtual;
-    procedure read(var x: longword); virtual; 
+    procedure read(var x: longword); virtual;
     procedure read(var x: int64);    virtual;
     procedure read(var x: uint64);   virtual;
     procedure read(var x: single);   virtual;
@@ -323,7 +531,7 @@ type
   end;
   
   ///--
-  GCHandlersController = class(IEnumerable)
+  GCHandlersController = class(System.Collections.IEnumerable)
   private 
     Counters, Handlers: Hashtable;
   public 
@@ -331,10 +539,10 @@ type
     procedure Add(obj: Object);
     procedure Remove(obj: Object);
     function GetCounter(obj: Object): integer;
-    function GetEnumerator: IEnumerator;
+    function GetEnumerator: System.Collections.IEnumerator;
   end;
   
-  ///Базовый класс для исключений, бросаемых при создании инстанции generic-типа
+  ///Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ РёСЃРєР»СЋС‡РµРЅРёР№, Р±СЂРѕСЃР°РµРјС‹С… РїСЂРё СЃРѕР·РґР°РЅРёРё РёРЅСЃС‚Р°РЅС†РёРё generic-С‚РёРїР°
   BadGenericInstanceParameterException = class(Exception)
   protected 
     InstanceType: System.Type;
@@ -342,19 +550,19 @@ type
     constructor Create(ActualParameterType: System.Type);
   end;
   
-  ///Бросается если тип непригоден для указателей
+  ///Р‘СЂРѕСЃР°РµС‚СЃСЏ РµСЃР»Рё С‚РёРї РЅРµРїСЂРёРіРѕРґРµРЅ РґР»СЏ СѓРєР°Р·Р°С‚РµР»РµР№
   CanNotUseTypeForPointersException = class(BadGenericInstanceParameterException)
   public 
     function ToString: string; override;
   end;
   
-  ///Бросается если тип непригоден для типизированных файлов
+  ///Р‘СЂРѕСЃР°РµС‚СЃСЏ РµСЃР»Рё С‚РёРї РЅРµРїСЂРёРіРѕРґРµРЅ РґР»СЏ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅС‹С… С„Р°Р№Р»РѕРІ
   CanNotUseTypeForTypedFilesException = class(BadGenericInstanceParameterException)
   public 
     function ToString: string; override;
   end;
   
-  ///Бросается если тип непригоден для бинарных файлов
+  ///Р‘СЂРѕСЃР°РµС‚СЃСЏ РµСЃР»Рё С‚РёРї РЅРµРїСЂРёРіРѕРґРµРЅ РґР»СЏ Р±РёРЅР°СЂРЅС‹С… С„Р°Р№Р»РѕРІ
   CanNotUseTypeForFilesException = class(BadGenericInstanceParameterException)
   public 
     function ToString: string; override;
@@ -374,56 +582,79 @@ function GetResourceStream(ResourceFileName: string): Stream;
 //                  read - readln
 // -----------------------------------------------------
 ///- read(a,b,...)
-/// Вводит значения a,b,... с клавиатуры
-procedure read;
+/// Р’РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+procedure Read;
 ///--
-procedure read(var x: integer);
+procedure Read(var x: integer);
 ///--
-procedure read(var x: real);
+procedure Read(var x: real);
 ///--
-procedure read(var x: char);
+procedure Read(var x: char);
 ///--
-procedure read(var x: string);
+procedure Read(var x: string);
 ///--
-procedure read(var x: byte);
+procedure Read(var x: byte);
 ///--
-procedure read(var x: shortint);
+procedure Read(var x: shortint);
 ///--
-procedure read(var x: smallint);
+procedure Read(var x: smallint);
 ///--
-procedure read(var x: word);
+procedure Read(var x: word);
 ///--
-procedure read(var x: longword);
+procedure Read(var x: longword);
 ///--
-procedure read(var x: int64);
+procedure Read(var x: int64);
 ///--
-procedure read(var x: uint64);
+procedure Read(var x: uint64);
 ///--
-procedure read(var x: single);
+procedure Read(var x: single);
 ///--
-procedure read(var x: boolean);
+procedure Read(var x: boolean);
 
-/// Возвращает значение типа integer, введенное с клавиатуры
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° integer, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
 function ReadInteger: integer;
-/// Возвращает значение типа real, введенное с клавиатуры
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
 function ReadReal: real;
-/// Возвращает значение типа char, введенное с клавиатуры
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° char, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
 function ReadChar: char;
-/// Возвращает значение типа string, введенное с клавиатуры
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° string, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
 function ReadString: string;
-/// Возвращает значение типа boolean, введенное с клавиатуры
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° boolean, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
 function ReadBoolean: boolean;
 
-/// Возвращает значение типа integer, введенное с клавиатуры, и переходит на следующую строку ввода
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° integer, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ РІРІРѕРґР°
 function ReadlnInteger: integer;
-/// Возвращает значение типа real, введенное с клавиатуры, и переходит на следующую строку ввода
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ РІРІРѕРґР°
 function ReadlnReal: real;
-/// Возвращает значение типа char, введенное с клавиатуры, и переходит на следующую строку ввода
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° char, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ РІРІРѕРґР°
 function ReadlnChar: char;
-/// Возвращает значение типа string, введенное с клавиатуры, и переходит на следующую строку ввода
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° string, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ РІРІРѕРґР°
 function ReadlnString: string;
-/// Возвращает значение типа boolean, введенное с клавиатуры, и переходит на следующую строку ввода
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° boolean, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ РІРІРѕРґР°
 function ReadlnBoolean: boolean;
+
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° integer, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadInteger(prompt: string): integer;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadReal(prompt: string): real;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° char, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadChar(prompt: string): char;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° string, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadString(prompt: string): string;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° boolean, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadBoolean(prompt: string): boolean;
+
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° integer, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ РІРІРѕРґР°
+function ReadlnInteger(prompt: string): integer;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ РІРІРѕРґР°
+function ReadlnReal(prompt: string): real;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° char, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ РІРІРѕРґР°
+function ReadlnChar(prompt: string): char;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° string, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ РІРІРѕРґР°
+function ReadlnString(prompt: string): string;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° boolean, РІРІРµРґРµРЅРЅРѕРµ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ РІРІРѕРґР°
+function ReadlnBoolean(prompt: string): boolean;
+
 
 ///--
 procedure ReadShortString(var s: string; n: integer);
@@ -431,57 +662,70 @@ procedure ReadShortString(var s: string; n: integer);
 procedure ReadShortStringFromFile(f: Text; var s: string; n: integer);
 
 ///- readln(a,b,...)
-/// Вводит значения a,b,... с клавиатуры и осуществляет переход на следующую строку
-procedure readln;
+/// Р’РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... СЃ РєР»Р°РІРёР°С‚СѓСЂС‹ Рё РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+procedure Readln;
 
 ///- read(f,a,b,...)
-/// Вводит значения a,b,... из файла f
-procedure read(f: Text);
+/// Р’РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... РёР· С„Р°Р№Р»Р° f
+procedure Read(f: Text);
 ///--
-procedure read(f: Text; var x: integer);
+procedure Read(f: Text; var x: integer);
 ///--
-procedure read(f: Text; var x: real);
+procedure Read(f: Text; var x: real);
 ///--
-procedure read(f: Text; var x: char);
+procedure Read(f: Text; var x: char);
 ///--
-procedure read(f: Text; var x: string);
+procedure Read(f: Text; var x: string);
 ///--
-procedure read(f: Text; var x: byte);
+procedure Read(f: Text; var x: byte);
 ///--
-procedure read(f: Text; var x: shortint);
+procedure Read(f: Text; var x: shortint);
 ///--
-procedure read(f: Text; var x: smallint);
+procedure Read(f: Text; var x: smallint);
 ///--
-procedure read(f: Text; var x: word);
+procedure Read(f: Text; var x: word);
 ///--
-procedure read(f: Text; var x: longword);
+procedure Read(f: Text; var x: longword);
 ///--
-procedure read(f: Text; var x: int64);
+procedure Read(f: Text; var x: int64);
 ///--
-procedure read(f: Text; var x: uint64);
+procedure Read(f: Text; var x: uint64);
 ///--
-procedure read(f: Text; var x: single);
+procedure Read(f: Text; var x: single);
 ///--
-procedure read(f: Text; var x: boolean);
+procedure Read(f: Text; var x: boolean);
 
 ///- readln(f: Text; a,b,...)
-/// Вводит значения a,b,... из текстового файла f и осуществляет переход на следующую строку
-procedure readln(f: Text);
+/// Р’РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° f Рё РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+procedure Readln(f: Text);
+///--
+procedure Readln(f: Text; var x: string);
 
-/// Возвращает значение типа integer, введенное из текстового файла f
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° integer, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° f
 function ReadInteger(f: Text): integer;
-/// Возвращает значение типа real, введенное из текстового файла f
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° f
 function ReadReal(f: Text): real;
-/// Возвращает значение типа char, введенное из текстового файла f
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° char, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° f
 function ReadChar(f: Text): char;
-/// Возвращает значение типа string, введенное из текстового файла f
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° string, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° f
 function ReadString(f: Text): string;
-/// Возвращает значение типа boolean, введенное из текстового файла f
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° boolean, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° f
 function ReadBoolean(f: Text): boolean;
 
-/// Возвращает True, если достигнут конец строки
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° integer, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° f, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+function ReadlnInteger(f: Text): integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° real, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° f, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+function ReadlnReal(f: Text): real;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° char, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° f, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+function ReadlnChar(f: Text): char;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° string, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° f, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+function ReadlnString(f: Text): string;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° boolean, РІРІРµРґРµРЅРЅРѕРµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° f, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ
+function ReadlnBoolean(f: Text): boolean;
+
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† СЃС‚СЂРѕРєРё
 function Eoln: boolean;
-/// Возвращает True, если достигнут конец файла
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† С„Р°Р№Р»Р°
 function Eof: boolean;
 
 ///--
@@ -496,13 +740,13 @@ type
     p: pointer;
     function ToString: string; override;
     constructor(ptr: pointer);
-  end;  
+  end;
 
 // -----------------------------------------------------
 //                  write - writeln
 // -----------------------------------------------------
 ///- write(a,b,...)
-/// Выводит значения a,b,... на экран
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... РЅР° СЌРєСЂР°РЅ
 procedure write;
 ///--
 procedure write(obj: object);
@@ -512,7 +756,9 @@ procedure write(obj1, obj2: object);
 procedure write(params args: array of object);
 
 ///- writeln(a,b,...)
-/// Выводит значения a,b,... на экран и осуществляет переход на новую строку
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... РЅР° СЌРєСЂР°РЅ Рё РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ
+///!!- writeln(a,b,...)
+/// Writes a,b,... to standart output stream and appends newline
 procedure writeln;
 ///--
 procedure writeln(obj: object);
@@ -524,7 +770,7 @@ procedure writeln(obj1, obj2: object);
 procedure writeln(params args: array of object);
 
 ///- write(f: Text; a,b,...)
-/// Выводит значения a,b,... в текстовый файл f
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... РІ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» f
 procedure write(f: Text);
 ///--
 procedure write(f: Text; val: object);
@@ -532,96 +778,161 @@ procedure write(f: Text; val: object);
 procedure write(f: Text; params args: array of object);
 
 ///- writeln(f: Text; a,b,...)
-/// Выводит значения a,b,... в текстовый файл f и осуществляет переход на новую строку
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... РІ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» f Рё РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure writeln(f: Text);
 ///--
 procedure writeln(f: Text; val: object);
 ///--
 procedure writeln(f: Text; params args: array of object);
 
-/// Выводит значения args согласно форматной строке formatstr
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ args СЃРѕРіР»Р°СЃРЅРѕ С„РѕСЂРјР°С‚РЅРѕР№ СЃС‚СЂРѕРєРµ formatstr
 procedure WriteFormat(formatstr: string; params args: array of object);
-/// Выводит значения args согласно форматной строке formatstr и осуществляет переход на новую строку
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ args СЃРѕРіР»Р°СЃРЅРѕ С„РѕСЂРјР°С‚РЅРѕР№ СЃС‚СЂРѕРєРµ formatstr Рё РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure WritelnFormat(formatstr: string; params args: array of object);
-/// Выводит значения args в текстовый файл f согласно форматной строке formatstr
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ args РІ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» f СЃРѕРіР»Р°СЃРЅРѕ С„РѕСЂРјР°С‚РЅРѕР№ СЃС‚СЂРѕРєРµ formatstr
 procedure WriteFormat(f: Text; formatstr: string; params args: array of object);
-/// Выводит значения args в текстовый файл f согласно форматной строке formatstr
-///и осуществляет переход на новую строку
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ args РІ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» f СЃРѕРіР»Р°СЃРЅРѕ С„РѕСЂРјР°С‚РЅРѕР№ СЃС‚СЂРѕРєРµ formatstr
+///Рё РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ
 procedure WritelnFormat(f: Text; formatstr: string; params args: array of object);
+
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ s РЅР° СЌРєСЂР°РЅ
+procedure Print(s: string);
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ args РЅР° СЌРєСЂР°РЅ, РІС‹РІРѕРґСЏ РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїСЂРѕР±РµР»
+procedure Print(params args: array of object);
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ args РЅР° СЌРєСЂР°РЅ, РІС‹РІРѕРґСЏ РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїСЂРѕР±РµР», Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕС‡РєСѓ
+procedure Println(params args: array of object);
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ args РІ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» f, РІС‹РІРѕРґСЏ РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїСЂРѕР±РµР»
+procedure Print(f: Text; params args: array of object);
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ args РІ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» f, РІС‹РІРѕРґСЏ РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїСЂРѕР±РµР», Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕС‡РєСѓ
+procedure Println(f: Text; params args: array of object);
 
 // -----------------------------------------------------
 //                  Text files
 // -----------------------------------------------------
-/// Связывает файловую переменную f с именем файла name
+/// РЎРІСЏР·С‹РІР°РµС‚ С„Р°Р№Р»РѕРІСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ f СЃ РёРјРµРЅРµРј С„Р°Р№Р»Р° name
 procedure Assign(f: Text; name: string);
-/// Связывает файловую переменную f с именем файла name
+/// РЎРІСЏР·С‹РІР°РµС‚ С„Р°Р№Р»РѕРІСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ f СЃ РёРјРµРЅРµРј С„Р°Р№Р»Р° name
 procedure AssignFile(f: Text; name: string);
-/// Закрывает файл f
+/// Р—Р°РєСЂС‹РІР°РµС‚ С„Р°Р№Р» f
 procedure Close(f: Text);
-/// Закрывает файл f
+/// Р—Р°РєСЂС‹РІР°РµС‚ С„Р°Р№Р» f
 procedure CloseFile(f: Text);
-/// Открывает текстовый файл f на чтение
+/// РћС‚РєСЂС‹РІР°РµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» f РЅР° С‡С‚РµРЅРёРµ
 procedure Reset(f: Text);
-/// Открывает текстовый файл f на запись, при этом обнуляя его содержимое. Если файл существовал, он обнуляется
+/// РЎРІСЏР·С‹РІР°РµС‚ С„Р°Р№Р»РѕРІСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ f СЃ РёРјРµРЅРµРј С„Р°Р№Р»Р° name Рё РѕС‚РєСЂС‹РІР°РµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» РЅР° С‡С‚РµРЅРёРµ
+procedure Reset(f: Text; name: string);
+/// РћС‚РєСЂС‹РІР°РµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» f РЅР° Р·Р°РїРёСЃСЊ, РїСЂРё СЌС‚РѕРј РѕР±РЅСѓР»СЏСЏ РµРіРѕ СЃРѕРґРµСЂР¶РёРјРѕРµ. Р•СЃР»Рё С„Р°Р№Р» СЃСѓС‰РµСЃС‚РІРѕРІР°Р», РѕРЅ РѕР±РЅСѓР»СЏРµС‚СЃСЏ
 procedure Rewrite(f: Text);
-/// Открывает текстовый f файл на дополнение
+/// РЎРІСЏР·С‹РІР°РµС‚ С„Р°Р№Р»РѕРІСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ f СЃ РёРјРµРЅРµРј С„Р°Р№Р»Р° name Рё РѕС‚РєСЂС‹РІР°РµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» f РЅР° Р·Р°РїРёСЃСЊ, РїСЂРё СЌС‚РѕРј РѕР±РЅСѓР»СЏСЏ РµРіРѕ СЃРѕРґРµСЂР¶РёРјРѕРµ
+procedure Rewrite(f: Text; name: string);
+/// РћС‚РєСЂС‹РІР°РµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ f С„Р°Р№Р» РЅР° РґРѕРїРѕР»РЅРµРЅРёРµ
 procedure Append(f: Text);
-/// Возвращает True, если достигнут конец файла f
+/// РЎРІСЏР·С‹РІР°РµС‚ С„Р°Р№Р»РѕРІСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ f СЃ РёРјРµРЅРµРј С„Р°Р№Р»Р° name Рё РѕС‚РєСЂС‹РІР°РµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» РЅР° РґРѕРїРѕР»РЅРµРЅРёРµ
+procedure Append(f: Text; name: string);
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» СЃ РёРјРµРЅРµРј fname, РѕС‚РєСЂС‹С‚С‹Р№ РЅР° С‡С‚РµРЅРёРµ
+function OpenRead(fname: string): Text;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» СЃ РёРјРµРЅРµРј fname, РѕС‚РєСЂС‹С‚С‹Р№ РЅР° Р·Р°РїРёСЃСЊ
+function OpenWrite(fname: string): Text;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» СЃ РёРјРµРЅРµРј fname, РѕС‚РєСЂС‹С‚С‹Р№ РЅР° РґРѕРїРѕР»РЅРµРЅРёРµ
+function OpenAppend(fname: string): Text;
+
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† С„Р°Р№Р»Р° f
+///!! Returns True if the file-pointer has reached the end of the file
 function Eof(f: Text): boolean;
-/// Возвращает True, если достигнут конец строки в файле f
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† СЃС‚СЂРѕРєРё РІ С„Р°Р№Р»Рµ f
 function Eoln(f: Text): boolean;
-/// Пропускает пробельные символы, после чего возвращает True, если достигнут конец файла f
+/// РџСЂРѕРїСѓСЃРєР°РµС‚ РїСЂРѕР±РµР»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹, РїРѕСЃР»Рµ С‡РµРіРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† С„Р°Р№Р»Р° f
 function SeekEof(f: Text): boolean;
-/// Пропускает пробельные символы, после чего возвращает True, если достигнут конец строки в файле f
+/// РџСЂРѕРїСѓСЃРєР°РµС‚ РїСЂРѕР±РµР»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹, РїРѕСЃР»Рµ С‡РµРіРѕ РІРѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† СЃС‚СЂРѕРєРё РІ С„Р°Р№Р»Рµ f
 function SeekEoln(f: Text): boolean;
-/// Записывает содержимое буфера файла на диск
+/// Р—Р°РїРёСЃС‹РІР°РµС‚ СЃРѕРґРµСЂР¶РёРјРѕРµ Р±СѓС„РµСЂР° С„Р°Р№Р»Р° РЅР° РґРёСЃРє
 procedure Flush(f: Text);
-/// Удаляет файл, связанный с файловой переменной f
+/// РЈРґР°Р»СЏРµС‚ С„Р°Р№Р», СЃРІСЏР·Р°РЅРЅС‹Р№ СЃ С„Р°Р№Р»РѕРІРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№ f
 procedure Erase(f: Text);
-/// Переименовывает файл, связаный с файловой переменной f, давая ему имя newname. 
+/// РџРµСЂРµРёРјРµРЅРѕРІС‹РІР°РµС‚ С„Р°Р№Р», СЃРІСЏР·Р°РЅС‹Р№ СЃ С„Р°Р№Р»РѕРІРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№ f, РґР°РІР°СЏ РµРјСѓ РёРјСЏ newname. 
 procedure Rename(f: Text; newname: string);
 ///--
 procedure TextFileInit(var f: Text);
+
+/// РЎС‡РёС‚С‹РІР°РµС‚ СЃС‚СЂРѕРєРё РёР· С„Р°Р№Р»Р° Рё РїСЂРµРІСЂР°С‰Р°РµС‚ РёС… РІ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЃС‚СЂРѕРє
+function ReadLines(path: string): sequence of string;
+/// РЎС‡РёС‚С‹РІР°РµС‚ СЃС‚СЂРѕРєРё РёР· С„Р°Р№Р»Р° СЃ РєРѕРґРёСЂРѕРІРєРѕР№ en Рё РїСЂРµРІСЂР°С‰Р°РµС‚ РёС… РІ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЃС‚СЂРѕРє 
+function ReadLines(path: string; en: Encoding): sequence of string;
+/// РЎС‡РёС‚С‹РІР°РµС‚ СЃС‚СЂРѕРєРё РёР· С„Р°Р№Р»Р° РІ РјР°СЃСЃРёРІ СЃС‚СЂРѕРє
+function ReadAllLines(path: string): array of string;
+/// РЎС‡РёС‚С‹РІР°РµС‚ СЃС‚СЂРѕРєРё РёР· С„Р°Р№Р»Р° СЃ РєРѕРґРёСЂРѕРІРєРѕР№ en РІ РјР°СЃСЃРёРІ СЃС‚СЂРѕРє 
+function ReadAllLines(path: string; en: Encoding): array of string;
+/// РЎС‡РёС‚С‹РІР°РµС‚ СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»Р° РІ СЃС‚СЂРѕРєСѓ
+function ReadAllText(path: string): string;
+/// РЎС‡РёС‚С‹РІР°РµС‚ СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»Р° СЃ РєРѕРґРёСЂРѕРІРєРѕР№ en РІ СЃС‚СЂРѕРєСѓ
+function ReadAllText(path: string; en: Encoding): string;
+/// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ С„Р°Р№Р», Р·Р°РїРёСЃС‹РІР°РµС‚ РІ РЅРµРіРѕ СЃС‚СЂРѕРєРё РёР· РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+procedure WriteLines(path: string; ss: sequence of string);
+/// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ С„Р°Р№Р» СЃ РєРѕРґРёСЂРѕРІРєРѕР№ en, Р·Р°РїРёСЃС‹РІР°РµС‚ РІ РЅРµРіРѕ СЃС‚СЂРѕРєРё РёР· РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё 
+procedure WriteLines(path: string; ss: sequence of string; en: Encoding);
+/// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ С„Р°Р№Р», Р·Р°РїРёСЃС‹РІР°РµС‚ РІ РЅРµРіРѕ СЃС‚СЂРѕРєРё РёР· РјР°СЃСЃРёРІР°
+procedure WriteAllLines(path: string; ss: array of string);
+/// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ С„Р°Р№Р» СЃ РєРѕРґРёСЂРѕРІРєРѕР№ en, Р·Р°РїРёСЃС‹РІР°РµС‚ РІ РЅРµРіРѕ СЃС‚СЂРѕРєРё РёР· РјР°СЃСЃРёРІР°  
+procedure WriteAllLines(path: string; ss: array of string; en: Encoding);
+/// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ С„Р°Р№Р», Р·Р°РїРёСЃС‹РІР°РµС‚ РІ РЅРµРіРѕ СЃРѕРґРµСЂР¶РёРјРѕРµ СЃС‚СЂРѕРєРё 
+procedure WriteAllText(path: string; s: string);
+/// РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ С„Р°Р№Р» СЃ РєРѕРґРёСЂРѕРІРєРѕР№ en, Р·Р°РїРёСЃС‹РІР°РµС‚ РІ РЅРµРіРѕ СЃРѕРґРµСЂР¶РёРјРѕРµ СЃС‚СЂРѕРєРё 
+procedure WriteAllText(path: string; s: string; en: Encoding);
+
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёРјРµРЅ С„Р°Р№Р»РѕРІ РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ РїСѓС‚Рё, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС… С€Р°Р±Р»РѕРЅСѓ РїРѕРёСЃРєР° 
+function EnumerateFiles(path: string; searchPattern: string := '*.*'): sequence of string;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёРјРµРЅ С„Р°Р№Р»РѕРІ РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ РїСѓС‚Рё, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС… С€Р°Р±Р»РѕРЅСѓ РїРѕРёСЃРєР°, РІРєР»СЋС‡Р°СЏ РїРѕРґРєР°С‚Р°Р»РѕРіРё 
+function EnumerateAllFiles(path: string; searchPattern: string := '*.*'): sequence of string;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёРјРµРЅ РєР°С‚Р°Р»РѕРіРѕРІ РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ РїСѓС‚Рё
+function EnumerateDirectories(path: string): sequence of string;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёРјРµРЅ РєР°С‚Р°Р»РѕРіРѕРІ РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ РїСѓС‚Рё, РІРєР»СЋС‡Р°СЏ РїРѕРґРєР°С‚Р°Р»РѕРіРё
+function EnumerateAllDirectories(path: string): sequence of string;
 
 // -----------------------------------------------------
 //                  Abstract binary files
 // -----------------------------------------------------
 ///- Assign(f: file of T; name: string)
-/// Связывает файловую переменную f с именем файла name
+/// РЎРІСЏР·С‹РІР°РµС‚ С„Р°Р№Р»РѕРІСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ f СЃ РёРјРµРЅРµРј С„Р°Р№Р»Р° name
 procedure Assign(f: AbstractBinaryFile; name: string);
 ///- AssignFile(f: file of T; name: string)
-/// Связывает файловую переменную f с именем файла name
+/// РЎРІСЏР·С‹РІР°РµС‚ С„Р°Р№Р»РѕРІСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ f СЃ РёРјРµРЅРµРј С„Р°Р№Р»Р° name
 procedure AssignFile(f: AbstractBinaryFile; name: string);
 ///- Close(f: file of T)
-/// Закрывает файл f
+/// Р—Р°РєСЂС‹РІР°РµС‚ С„Р°Р№Р» f
 procedure Close(f: AbstractBinaryFile);
 ///- CloseFile(f: file of T)
-/// Закрывает файл f
+/// Р—Р°РєСЂС‹РІР°РµС‚ С„Р°Р№Р» f
 procedure CloseFile(f: AbstractBinaryFile);
 ///- Reset(f: file of T)
-/// Открывает двоичный файл f на чтение и запись
+/// РћС‚РєСЂС‹РІР°РµС‚ РґРІРѕРёС‡РЅС‹Р№ С„Р°Р№Р» f РЅР° С‡С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ
 procedure Reset(f: AbstractBinaryFile);
+///- Reset(f: file of T; name: string)
+/// РЎРІСЏР·С‹РІР°РµС‚ С„Р°Р№Р»РѕРІСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ f СЃ РёРјРµРЅРµРј С„Р°Р№Р»Р° name Рё РѕС‚РєСЂС‹РІР°РµС‚ РґРІРѕРёС‡РЅС‹Р№ С„Р°Р№Р» f РЅР° С‡С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ
+procedure Reset(f: AbstractBinaryFile; name: string);
 ///- Rewrite(f: file of T)
-/// Открывает двоичный файл f на чтение и запись, при этом обнуляя его содержимое. Если файл существовал, он обнуляется
+/// РћС‚РєСЂС‹РІР°РµС‚ РґРІРѕРёС‡РЅС‹Р№ С„Р°Р№Р» f РЅР° С‡С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ, РїСЂРё СЌС‚РѕРј РѕР±РЅСѓР»СЏСЏ РµРіРѕ СЃРѕРґРµСЂР¶РёРјРѕРµ. Р•СЃР»Рё С„Р°Р№Р» СЃСѓС‰РµСЃС‚РІРѕРІР°Р», РѕРЅ РѕР±РЅСѓР»СЏРµС‚СЃСЏ
 procedure Rewrite(f: AbstractBinaryFile);
+///- Rewrite(f: file of T)
+/// РЎРІСЏР·С‹РІР°РµС‚ С„Р°Р№Р»РѕРІСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ f СЃ РёРјРµРЅРµРј С„Р°Р№Р»Р° name Рё РѕС‚РєСЂС‹РІР°РµС‚ РґРІРѕРёС‡РЅС‹Р№ С„Р°Р№Р» РЅР° С‡С‚РµРЅРёРµ Рё Р·Р°РїРёСЃСЊ, РїСЂРё СЌС‚РѕРј РѕР±РЅСѓР»СЏСЏ РµРіРѕ СЃРѕРґРµСЂР¶РёРјРѕРµ
+procedure Rewrite(f: AbstractBinaryFile; name: string);
 ///- Truncate(f: file of T)
-/// Усекает двоичный файл f, отбрасывая все элементы с позиции файлового указателя
+/// РЈСЃРµРєР°РµС‚ РґРІРѕРёС‡РЅС‹Р№ С„Р°Р№Р» f, РѕС‚Р±СЂР°СЃС‹РІР°СЏ РІСЃРµ СЌР»РµРјРµРЅС‚С‹ СЃ РїРѕР·РёС†РёРё С„Р°Р№Р»РѕРІРѕРіРѕ СѓРєР°Р·Р°С‚РµР»СЏ
 procedure Truncate(f: AbstractBinaryFile);
 ///- Eof(f: file of T)
-/// Возвращает True, если достигнут конец файла f
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† С„Р°Р№Р»Р° f
 function Eof(f: AbstractBinaryFile): boolean;
 ///- Erase(f: file of T)
-/// Удаляет файл, связанный с файловой переменной f
+/// РЈРґР°Р»СЏРµС‚ С„Р°Р№Р», СЃРІСЏР·Р°РЅРЅС‹Р№ СЃ С„Р°Р№Р»РѕРІРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№ f
 procedure Erase(f: AbstractBinaryFile);
 ///- Rename(f: file of T; newname: string)
-/// Переименовывает файл, связаный с файловой переменной f, давая ему имя newname. 
+/// РџРµСЂРµРёРјРµРЅРѕРІС‹РІР°РµС‚ С„Р°Р№Р», СЃРІСЏР·Р°РЅС‹Р№ СЃ С„Р°Р№Р»РѕРІРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№ f, РґР°РІР°СЏ РµРјСѓ РёРјСЏ newname. 
 procedure Rename(f: AbstractBinaryFile; newname: string);
 
 ///- write(f: file of T; a,b,...)
-/// Выводит значения a,b,... в типизированный файл f
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... РІ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅС‹Р№ С„Р°Р№Р» f
 //procedure Write(f: AbstractBinaryFile; val: object; arr: boolean); 
 ///- write(f: file; a,b,...)
-/// Выводит значения a,b,... в нетипизированный файл f
+/// Р’С‹РІРѕРґРёС‚ Р·РЅР°С‡РµРЅРёСЏ a,b,... РІ РЅРµС‚РёРїРёР·РёСЂРѕРІР°РЅРЅС‹Р№ С„Р°Р№Р» f
 procedure Write(f: AbstractBinaryFile; params vals: array of object);
 ///--
 procedure Writeln(f: AbstractBinaryFile);
@@ -634,13 +945,13 @@ procedure Writeln(f: AbstractBinaryFile; params vals: array of object);
 //                  Typed files
 // -----------------------------------------------------
 ///- FilePos(f : file of T): int64
-/// Возвращает текущую позицию файлового указателя в типизированном файле f 
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ С„Р°Р№Р»РѕРІРѕРіРѕ СѓРєР°Р·Р°С‚РµР»СЏ РІ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅРѕРј С„Р°Р№Р»Рµ f 
 function FilePos(f: TypedFile): int64;
 ///- FileSize(f : file of T): int64
-/// Возвращает количество элементов в типизированном файле f 
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅРѕРј С„Р°Р№Р»Рµ f 
 function FileSize(f: TypedFile): int64;
 ///- Seek(f : file of T; n : int64)
-/// Устанавливает текущую позицию файлового указателя в типизированном файле f на элемент с номером n  
+/// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ С„Р°Р№Р»РѕРІРѕРіРѕ СѓРєР°Р·Р°С‚РµР»СЏ РІ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅРѕРј С„Р°Р№Р»Рµ f РЅР° СЌР»РµРјРµРЅС‚ СЃ РЅРѕРјРµСЂРѕРј n  
 procedure Seek(f: TypedFile; n: int64);
 ///--
 procedure TypedFileInit(var f: TypedFile; ElementType: System.Type);
@@ -655,13 +966,13 @@ function TypedFileRead(f: TypedFile): object;
 //                  Binary files
 // -----------------------------------------------------
 ///- FilePos(f : file): int64
-/// Возвращает текущую позицию файлового указателя в нетипизированном файле f 
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ С„Р°Р№Р»РѕРІРѕРіРѕ СѓРєР°Р·Р°С‚РµР»СЏ РІ РЅРµС‚РёРїРёР·РёСЂРѕРІР°РЅРЅРѕРј С„Р°Р№Р»Рµ f 
 function FilePos(f: BinaryFile): int64;
 ///- FileSize(f : file): int64
-/// Возвращает количество байт в нетипизированном файле f 
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°Р№С‚ РІ РЅРµС‚РёРїРёР·РёСЂРѕРІР°РЅРЅРѕРј С„Р°Р№Р»Рµ f 
 function FileSize(f: BinaryFile): int64;
 ///- Seek(f : file; n : int64)
-/// Устанавливает текущую позицию файлового указателя в нетипизированном файле f на байт с номером n  
+/// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ С„Р°Р№Р»РѕРІРѕРіРѕ СѓРєР°Р·Р°С‚РµР»СЏ РІ РЅРµС‚РёРїРёР·РёСЂРѕРІР°РЅРЅРѕРј С„Р°Р№Р»Рµ f РЅР° Р±Р°Р№С‚ СЃ РЅРѕРјРµСЂРѕРј n  
 procedure Seek(f: BinaryFile; n: int64);
 ///--
 procedure BinaryFileInit(var f: BinaryFile);
@@ -671,227 +982,287 @@ function BinaryFileRead(var f: BinaryFile; ElementType: System.Type): object;
 // -----------------------------------------------------
 //                Operating System routines
 // -----------------------------------------------------
-/// Возвращает количество параметров командной строки
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР°СЂР°РјРµС‚СЂРѕРІ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё
 function ParamCount: integer;
-/// Возвращает i-тый параметр командной строки
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ i-С‚С‹Р№ РїР°СЂР°РјРµС‚СЂ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё
 function ParamStr(i: integer): string;
-/// Возвращает текущий каталог
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСѓС‰РёР№ РєР°С‚Р°Р»РѕРі
 function GetDir: string;
-/// Меняет текущий каталог
+/// РњРµРЅСЏРµС‚ С‚РµРєСѓС‰РёР№ РєР°С‚Р°Р»РѕРі
 procedure ChDir(s: string);
-/// Создает каталог
+/// РЎРѕР·РґР°РµС‚ РєР°С‚Р°Р»РѕРі
 procedure MkDir(s: string);
-/// Удаляет каталог
+/// РЈРґР°Р»СЏРµС‚ РєР°С‚Р°Р»РѕРі
 procedure RmDir(s: string);
 
-/// Создает каталог. Возвращает True, если каталог успешно создан
+/// РЎРѕР·РґР°РµС‚ РєР°С‚Р°Р»РѕРі. Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РєР°С‚Р°Р»РѕРі СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅ
 function CreateDir(s: string): boolean;
-/// Удаляет файл. Если файл не может быть удален, то возвращает False
+/// РЈРґР°Р»СЏРµС‚ С„Р°Р№Р». Р•СЃР»Рё С„Р°Р№Р» РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СѓРґР°Р»РµРЅ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚ False
 function DeleteFile(s: string): boolean;
-/// Возвращает текущий каталог
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСѓС‰РёР№ РєР°С‚Р°Р»РѕРі
 function GetCurrentDir: string;
-/// Удаляет каталог. Возвращает True, если каталог успешно удален
+/// РЈРґР°Р»СЏРµС‚ РєР°С‚Р°Р»РѕРі. Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РєР°С‚Р°Р»РѕРі СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅ
 function RemoveDir(s: string): boolean;
-/// Переименовывает файл name, давая ему новое имя newname. Возвращает True, если файл успешно переименован
+/// РџРµСЂРµРёРјРµРЅРѕРІС‹РІР°РµС‚ С„Р°Р№Р» name, РґР°РІР°СЏ РµРјСѓ РЅРѕРІРѕРµ РёРјСЏ newname. Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё С„Р°Р№Р» СѓСЃРїРµС€РЅРѕ РїРµСЂРµРёРјРµРЅРѕРІР°РЅ
 function RenameFile(name, newname: string): boolean;
-/// Устанавивает текущий каталог. Возвращает True, если каталог успешно удален
+/// РЈСЃС‚Р°РЅР°РІРёРІР°РµС‚ С‚РµРєСѓС‰РёР№ РєР°С‚Р°Р»РѕРі. Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё РєР°С‚Р°Р»РѕРі СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅ
 function SetCurrentDir(s: string): boolean;
 
-/// Изменяет расширение файла с именем name на newext
+/// РР·РјРµРЅСЏРµС‚ СЂР°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р° СЃ РёРјРµРЅРµРј name РЅР° newext
 function ChangeFileNameExtension(name, newext: string): string;
-/// Возвращает True, если файл с именем name существует
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё С„Р°Р№Р» СЃ РёРјРµРЅРµРј name СЃСѓС‰РµСЃС‚РІСѓРµС‚
 function FileExists(name: string): boolean;
 
-/// Выводит в специальном окне стек вызовов подпрограмм если условие не выполняется
+/// Р’С‹РІРѕРґРёС‚ РІ СЃРїРµС†РёР°Р»СЊРЅРѕРј РѕРєРЅРµ СЃС‚РµРє РІС‹Р·РѕРІРѕРІ РїРѕРґРїСЂРѕРіСЂР°РјРј РµСЃР»Рё СѓСЃР»РѕРІРёРµ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
 procedure Assert(cond: boolean);
-/// Выводит в специальном окне диагностическое сообщение mes и стек вызовов подпрограмм если условие не выполняется
+/// Р’С‹РІРѕРґРёС‚ РІ СЃРїРµС†РёР°Р»СЊРЅРѕРј РѕРєРЅРµ РґРёР°РіРЅРѕСЃС‚РёС‡РµСЃРєРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ mes Рё СЃС‚РµРє РІС‹Р·РѕРІРѕРІ РїРѕРґРїСЂРѕРіСЂР°РјРј РµСЃР»Рё СѓСЃР»РѕРІРёРµ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
 procedure Assert(cond: boolean; mes: string);
 
-/// Возвращает свободное место в байтах на диске с именем diskname
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РІ Р±Р°Р№С‚Р°С… РЅР° РґРёСЃРєРµ СЃ РёРјРµРЅРµРј diskname
 function DiskFree(diskname: string): int64;
-/// Возвращает размер в байтах на диске с именем diskname
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂР°Р·РјРµСЂ РІ Р±Р°Р№С‚Р°С… РЅР° РґРёСЃРєРµ СЃ РёРјРµРЅРµРј diskname
 function DiskSize(diskname: string): int64;
-/// Возвращает свободное место в байтах на диске disk. disk=0 - текущий диск, disk=1 - диск A: , disk=2 - диск B: и т.д.
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РІ Р±Р°Р№С‚Р°С… РЅР° РґРёСЃРєРµ disk. disk=0 - С‚РµРєСѓС‰РёР№ РґРёСЃРє, disk=1 - РґРёСЃРє A: , disk=2 - РґРёСЃРє B: Рё С‚.Рґ.
 function DiskFree(disk: integer): int64;
-/// Возвращает размер в байтах на диске disk. disk=0 - текущий диск, disk=1 - диск A: , disk=2 - диск B: и т.д.
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂР°Р·РјРµСЂ РІ Р±Р°Р№С‚Р°С… РЅР° РґРёСЃРєРµ disk. disk=0 - С‚РµРєСѓС‰РёР№ РґРёСЃРє, disk=1 - РґРёСЃРє A: , disk=2 - РґРёСЃРє B: Рё С‚.Рґ.
 function DiskSize(disk: integer): int64;
-/// Возвращает количество миллисекунд с момента начала работы программы
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РјРёР»Р»РёСЃРµРєСѓРЅРґ СЃ РјРѕРјРµРЅС‚Р° РЅР°С‡Р°Р»Р° СЂР°Р±РѕС‚С‹ РїСЂРѕРіСЂР°РјРјС‹
 function Milliseconds: integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РјРёР»Р»РёСЃРµРєСѓРЅРґ СЃ РјРѕРјРµРЅС‚Р° РїРѕСЃР»РµРґРЅРµРіРѕ РІС‹Р·РѕРІР° Milliseconds РёР»Рё MillisecondsDelta 
+function MillisecondsDelta: integer;
+
+/// Р—Р°РІРµСЂС€Р°РµС‚ СЂР°Р±РѕС‚Сѓ РїСЂРѕРіСЂР°РјРјС‹
+procedure Halt;
+/// Р—Р°РІРµСЂС€Р°РµС‚ СЂР°Р±РѕС‚Сѓ РїСЂРѕРіСЂР°РјРјС‹, РІРѕР·РІСЂР°С‰Р°СЏ РєРѕРґ РѕС€РёР±РєРё exitCode
+procedure Halt(exitCode: integer);
+
+/// Р”Р»СЏ СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚Рё СЃ Pascal ABC. РќРµ РІС‹РїРѕР»РЅСЏРµС‚ РЅРёРєР°РєРёС… РґРµР№СЃС‚РІРёР№
+procedure cls;
+
+// РќРµРїРѕРЅСЏС‚РЅРѕ, С‡С‚Рѕ РґРµР»Р°С‚СЊ РїРѕСЃР»Рµ С‚Р°РєРѕР№ РїР°СѓР·С‹. РЈР±СЂР°Р» (SS)
+//procedure Pause;
+/// Р”РµР»Р°РµС‚ РїР°СѓР·Сѓ РЅР° ms РјРёР»Р»РёСЃРµРєСѓРЅРґ
+procedure Sleep(ms: integer);
+/// Р’РѕР·РІР°С‰Р°РµС‚ РёРјСЏ Р·Р°РїСѓС‰РµРЅРЅРѕРіРѕ .exe-С„Р°Р№Р»Р°
+function GetEXEFileName: string;
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СѓРєР°Р·Р°С‚РµР»СЊ Рє СЃС‚СЂРѕРєРѕРІРѕРјСѓ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЋ
+function PointerToString(p: pointer): string;
+
+/// Р—Р°РїСѓСЃРєР°РµС‚ РїСЂРѕРіСЂР°РјРјСѓ РёР»Рё РґРѕРєСѓРјРµРЅС‚ СЃ РёРјРµРЅРµРј filename 
+procedure Exec(filename: string);
+/// Р—Р°РїСѓСЃРєР°РµС‚ РїСЂРѕРіСЂР°РјРјСѓ РёР»Рё РґРѕРєСѓРјРµРЅС‚ СЃ РёРјРµРЅРµРј filename Рё РїР°СЂР°РјРµС‚СЂР°РјРё РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё args
+procedure Exec(filename: string; args: string);
+/// Р—Р°РїСѓСЃРєР°РµС‚ РїСЂРѕРіСЂР°РјРјСѓ РёР»Рё РґРѕРєСѓРјРµРЅС‚ СЃ РёРјРµРЅРµРј filename 
+procedure Execute(filename: string);
+/// Р—Р°РїСѓСЃРєР°РµС‚ РїСЂРѕРіСЂР°РјРјСѓ РёР»Рё РґРѕРєСѓРјРµРЅС‚ СЃ РёРјРµРЅРµРј filename Рё РїР°СЂР°РјРµС‚СЂР°РјРё РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё args
+procedure Execute(filename: string; args: string);
 
 // -----------------------------------------------------
 //                File name routines
 // -----------------------------------------------------
-/// Выделяет имя файла из полного имени файла fname
+/// Р’С‹РґРµР»СЏРµС‚ РёРјСЏ С„Р°Р№Р»Р° РёР· РїРѕР»РЅРѕРіРѕ РёРјРµРЅРё С„Р°Р№Р»Р° fname
 function ExtractFileName(fname: string): string;
-/// Выделяет расширение из полного имени файла fname
+/// Р’С‹РґРµР»СЏРµС‚ СЂР°СЃС€РёСЂРµРЅРёРµ РёР· РїРѕР»РЅРѕРіРѕ РёРјРµРЅРё С„Р°Р№Р»Р° fname
 function ExtractFileExt(fname: string): string;
-/// Выделяет путь из полного имени файла fname
+/// Р’С‹РґРµР»СЏРµС‚ РїСѓС‚СЊ РёР· РїРѕР»РЅРѕРіРѕ РёРјРµРЅРё С„Р°Р№Р»Р° fname
 function ExtractFilePath(fname: string): string;
-/// Выделяет имя диска и путь из полного имени файла fname
+/// Р’С‹РґРµР»СЏРµС‚ РёРјСЏ РґРёСЃРєР° Рё РїСѓС‚СЊ РёР· РїРѕР»РЅРѕРіРѕ РёРјРµРЅРё С„Р°Р№Р»Р° fname
 function ExtractFileDir(fname: string): string;
-/// Выделяет путь из полного имени файла fname
+/// Р’С‹РґРµР»СЏРµС‚ РїСѓС‚СЊ РёР· РїРѕР»РЅРѕРіРѕ РёРјРµРЅРё С„Р°Р№Р»Р° fname
 function ExtractFileDrive(fname: string): string;
-/// Возвращает полное имя файла fname
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅРѕРµ РёРјСЏ С„Р°Р№Р»Р° fname
 function ExpandFileName(fname: string): string;
 
 // -----------------------------------------------------
 //                Mathematical routines
 // -----------------------------------------------------
-/// Возвращает знак числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°Рє С‡РёСЃР»Р° x
+function Sign(x: shortint): integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°Рє С‡РёСЃР»Р° x
+function Sign(x: smallint): integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°Рє С‡РёСЃР»Р° x
 function Sign(x: integer): integer;
-/// Возвращает знак числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°Рє С‡РёСЃР»Р° x
+function Sign(x: BigInteger): integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°Рє С‡РёСЃР»Р° x
 function Sign(x: longword): integer;
-/// Возвращает знак числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°Рє С‡РёСЃР»Р° x
 function Sign(x: int64): integer;
-/// Возвращает знак числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°Рє С‡РёСЃР»Р° x
 function Sign(x: uint64): integer;
-/// Возвращает знак числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°Рє С‡РёСЃР»Р° x
 function Sign(x: real): integer;
-/// Возвращает модуль числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРѕРґСѓР»СЊ С‡РёСЃР»Р° x
 function Abs(x: integer): integer;
-/// Возвращает модуль числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРѕРґСѓР»СЊ С‡РёСЃР»Р° x
+function Abs(x: BigInteger): BigInteger;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРѕРґСѓР»СЊ С‡РёСЃР»Р° x
 function Abs(x: longword): longword;
-/// Возвращает модуль числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРѕРґСѓР»СЊ С‡РёСЃР»Р° x
 function Abs(x: int64): int64;
-/// Возвращает модуль числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРѕРґСѓР»СЊ С‡РёСЃР»Р° x
 function Abs(x: uint64): uint64;
-/// Возвращает модуль числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРѕРґСѓР»СЊ С‡РёСЃР»Р° x
 function Abs(x: real): real;
-/// Возвращает синус числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРёРЅСѓСЃ С‡РёСЃР»Р° x
 function Sin(x: real): real;
-/// Возвращает гиперболический синус числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РіРёРїРµСЂР±РѕР»РёС‡РµСЃРєРёР№ СЃРёРЅСѓСЃ С‡РёСЃР»Р° x
 function Sinh(x: real): real;
-/// Возвращает косинус числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕСЃРёРЅСѓСЃ С‡РёСЃР»Р° x
+/// !! Returns the cosine of number x
 function Cos(x: real): real;
-/// Возвращает гиперболический косинус числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РіРёРїРµСЂР±РѕР»РёС‡РµСЃРєРёР№ РєРѕСЃРёРЅСѓСЃ С‡РёСЃР»Р° x
 function Cosh(x: real): real;
-/// Возвращает тангенс числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚Р°РЅРіРµРЅСЃ С‡РёСЃР»Р° x
 function Tan(x: real): real;
-/// Возвращает гиперболический тангенс числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РіРёРїРµСЂР±РѕР»РёС‡РµСЃРєРёР№ С‚Р°РЅРіРµРЅСЃ С‡РёСЃР»Р° x
 function Tanh(x: real): real;
-/// Возвращает арксинус числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р°СЂРєСЃРёРЅСѓСЃ С‡РёСЃР»Р° x
 function ArcSin(x: real): real;
-/// Возвращает арккосинус числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р°СЂРєРєРѕСЃРёРЅСѓСЃ С‡РёСЃР»Р° x
 function ArcCos(x: real): real;
-/// Возвращает арктангенс числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р°СЂРєС‚Р°РЅРіРµРЅСЃ С‡РёСЃР»Р° x
 function ArcTan(x: real): real;
-/// Возвращает экспоненту числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЌРєСЃРїРѕРЅРµРЅС‚Сѓ С‡РёСЃР»Р° x
 function Exp(x: real): real;
-/// Возвращает натуральный логарифм числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°С‚СѓСЂР°Р»СЊРЅС‹Р№ Р»РѕРіР°СЂРёС„Рј С‡РёСЃР»Р° x
 function Ln(x: real): real;
-/// Возвращает логарифм числа x по основанию 2
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р»РѕРіР°СЂРёС„Рј С‡РёСЃР»Р° x РїРѕ РѕСЃРЅРѕРІР°РЅРёСЋ 2
 function Log2(x: real): real;
-/// Возвращает десятичный логарифм числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµСЃСЏС‚РёС‡РЅС‹Р№ Р»РѕРіР°СЂРёС„Рј С‡РёСЃР»Р° x
 function Log10(x: real): real;
-/// Возвращает логарифм числа x по основанию base
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р»РѕРіР°СЂРёС„Рј С‡РёСЃР»Р° x РїРѕ РѕСЃРЅРѕРІР°РЅРёСЋ base
 function LogN(base, x: real): real;
-/// Возвращает квадратный корень числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРІР°РґСЂР°С‚РЅС‹Р№ РєРѕСЂРµРЅСЊ С‡РёСЃР»Р° x
 function Sqrt(x: real): real;
-/// Возвращает квадрат числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРІР°РґСЂР°С‚ С‡РёСЃР»Р° x
 function Sqr(x: integer): int64;
-/// Возвращает квадрат числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРІР°РґСЂР°С‚ С‡РёСЃР»Р° x
+function Sqr(x: BigInteger): BigInteger;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРІР°РґСЂР°С‚ С‡РёСЃР»Р° x
 function Sqr(x: longword): uint64;
-/// Возвращает квадрат числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРІР°РґСЂР°С‚ С‡РёСЃР»Р° x
 function Sqr(x: int64): int64;
-/// Возвращает квадрат числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРІР°РґСЂР°С‚ С‡РёСЃР»Р° x
 function Sqr(x: uint64): uint64;
-/// Возвращает квадрат числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРІР°РґСЂР°С‚ С‡РёСЃР»Р° x
 function Sqr(x: real): real;
-/// Возвращает x в степени y
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ x РІ СЃС‚РµРїРµРЅРё y
 function Power(x, y: real): real;
-/// Возвращает x, округленное до ближайшего целого
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ x РІ СЃС‚РµРїРµРЅРё y
+function Power(x, y: integer): real;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ x РІ СЃС‚РµРїРµРЅРё y
+function Power(x: BigInteger; y: integer): BigInteger;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ x, РѕРєСЂСѓРіР»РµРЅРЅРѕРµ РґРѕ Р±Р»РёР¶Р°Р№С€РµРіРѕ С†РµР»РѕРіРѕ
 function Round(x: real): integer;
-/// Возвращает целую часть числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ С†РµР»СѓСЋ С‡Р°СЃС‚СЊ С‡РёСЃР»Р° x
 function Trunc(x: real): integer;
-/// Возвращает целую часть числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ С†РµР»СѓСЋ С‡Р°СЃС‚СЊ С‡РёСЃР»Р° x
 function Int(x: real): real;
-/// Возвращает дробную часть числа x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґСЂРѕР±РЅСѓСЋ С‡Р°СЃС‚СЊ С‡РёСЃР»Р° x
 function Frac(x: real): real;
-/// Возвращает наибольшее целое <= x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°РёР±РѕР»СЊС€РµРµ С†РµР»РѕРµ <= x
 function Floor(x: real): integer;
-/// Возвращает наименьшее целое >= x
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°РёРјРµРЅСЊС€РµРµ С†РµР»РѕРµ >= x
 function Ceil(x: real): integer;
-/// Переводит радианы в градусы
+/// РџРµСЂРµРІРѕРґРёС‚ СЂР°РґРёР°РЅС‹ РІ РіСЂР°РґСѓСЃС‹
 function RadToDeg(x: real): real;
-/// Переводит градусы в радианы
+/// РџРµСЂРµРІРѕРґРёС‚ РіСЂР°РґСѓСЃС‹ РІ СЂР°РґРёР°РЅС‹
 function DegToRad(x: real): real;
 
-/// Инициализирует датчик псевдослучайных чисел
+/// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РґР°С‚С‡РёРє РїСЃРµРІРґРѕСЃР»СѓС‡Р°Р№РЅС‹С… С‡РёСЃРµР»
 procedure Randomize;
-/// Инициализирует датчик псевдослучайных чисел, используя значение seed. При одном и том же seed генерируются одинаковые псевдослучайные последовательности
+/// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РґР°С‚С‡РёРє РїСЃРµРІРґРѕСЃР»СѓС‡Р°Р№РЅС‹С… С‡РёСЃРµР», РёСЃРїРѕР»СЊР·СѓСЏ Р·РЅР°С‡РµРЅРёРµ seed. РџСЂРё РѕРґРЅРѕРј Рё С‚РѕРј Р¶Рµ seed РіРµРЅРµСЂРёСЂСѓСЋС‚СЃСЏ РѕРґРёРЅР°РєРѕРІС‹Рµ РїСЃРµРІРґРѕСЃР»СѓС‡Р°Р№РЅС‹Рµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
 procedure Randomize(seed: integer);
-/// Возвращает случайное целое в диапазоне от 0 до maxValue-1
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»СѓС‡Р°Р№РЅРѕРµ С†РµР»РѕРµ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 0 РґРѕ maxValue-1
 function Random(maxValue: integer): integer;
-/// Возвращает случайное целое в диапазоне от a до b
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»СѓС‡Р°Р№РЅРѕРµ С†РµР»РѕРµ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ a РґРѕ b
 function Random(a, b: integer): integer;
-/// Возвращает случайное вещественное в диапазоне [0..1)
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»СѓС‡Р°Р№РЅРѕРµ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ РІ РґРёР°РїР°Р·РѕРЅРµ [0..1)
 function Random: real;
 
-/// Возвращает максимальное из чисел a,b
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
+function Max(a, b: byte): byte;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
+function Max(a, b: shortint): shortint;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
+function Max(a, b: smallint): smallint;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
+function Max(a, b: word): word;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
 function Max(a, b: integer): integer;
-/// Возвращает максимальное из чисел a,b
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
+function Max(a, b: BigInteger): BigInteger;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
 function Max(a, b: longword): longword;
-/// Возвращает максимальное из чисел a,b
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
 function Max(a, b: int64): int64;
-/// Возвращает максимальное из чисел a,b
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
 function Max(a, b: uint64): uint64;
-/// Возвращает максимальное из чисел a,b
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
 function Max(a, b: real): real;
-/// Возвращает минимальное из чисел a,b
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
+function Min(a, b: byte): byte;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
+function Min(a, b: shortint): shortint;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
+function Min(a, b: word): word;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
+function Min(a, b: smallint): smallint;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
 function Min(a, b: integer): integer;
-/// Возвращает минимальное из чисел a,b
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
+function Min(a, b: BigInteger): BigInteger;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
 function Min(a, b: longword): longword;
-/// Возвращает минимальное из чисел a,b
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
 function Min(a, b: int64): int64;
-/// Возвращает минимальное из чисел a,b
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
 function Min(a, b: uint64): uint64;
-/// Возвращает минимальное из чисел a,b
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРёРЅРёРјР°Р»СЊРЅРѕРµ РёР· С‡РёСЃРµР» a,b
 function Min(a, b: real): real;
-/// Возвращает True, если i нечетно
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё i РЅРµС‡РµС‚РЅРѕ
 function Odd(i: integer): boolean;
-/// Возвращает True, если i нечетно
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё i РЅРµС‡РµС‚РЅРѕ
+function Odd(i: BigInteger): boolean;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё i РЅРµС‡РµС‚РЅРѕ
 function Odd(i: longword): boolean;
-/// Возвращает True, если i нечетно
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё i РЅРµС‡РµС‚РЅРѕ
 function Odd(i: int64): boolean;
-/// Возвращает True, если i нечетно
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True, РµСЃР»Рё i РЅРµС‡РµС‚РЅРѕ
 function Odd(i: uint64): boolean;
-
-///- Low(i: array): integer
-function Low(i: System.Array): integer;
-///- High(i: array): integer
-function High(i: System.Array): integer;
 
 // -----------------------------------------------------
 //                Char and String manipulation
 // -----------------------------------------------------
-/// Преобразует код в символ в кодировке Windows
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ РєРѕРґ РІ СЃРёРјРІРѕР» РІ РєРѕРґРёСЂРѕРІРєРµ Windows
 function Chr(a: byte): char;
-/// Преобразует символ в код в кодировке Windows
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃРёРјРІРѕР» РІ РєРѕРґ РІ РєРѕРґРёСЂРѕРІРєРµ Windows
 function Ord(a: char): byte;
-/// Возвращает порядковый номер значения a
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ Р·РЅР°С‡РµРЅРёСЏ a
 function Ord(a: integer): integer;
-/// Возвращает порядковый номер значения a
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ Р·РЅР°С‡РµРЅРёСЏ a
 function Ord(a: longword): longword;
-/// Возвращает порядковый номер значения a
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ Р·РЅР°С‡РµРЅРёСЏ a
 function Ord(a: int64): int64;
-/// Возвращает порядковый номер значения a
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ Р·РЅР°С‡РµРЅРёСЏ a
 function Ord(a: uint64): uint64;
-/// Возвращает порядковый номер значения a
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ Р·РЅР°С‡РµРЅРёСЏ a
 function Ord(a: boolean): integer;
-/// Преобразует код в символ в кодировке Unicode
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ РєРѕРґ РІ СЃРёРјРІРѕР» РІ РєРѕРґРёСЂРѕРІРєРµ Unicode
 function ChrUnicode(a: word): char;
-/// Преобразует символ в код в кодировке Unicode
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃРёРјРІРѕР» РІ РєРѕРґ РІ РєРѕРґРёСЂРѕРІРєРµ Unicode
 function OrdUnicode(a: char): word;
-/// Преобразует символ в верхний регистр
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃРёРјРІРѕР» РІ РІРµСЂС…РЅРёР№ СЂРµРіРёСЃС‚СЂ
 function UpperCase(ch: char): char;
-/// Преобразует символ в нижний регистр
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃРёРјРІРѕР» РІ РЅРёР¶РЅРёР№ СЂРµРіРёСЃС‚СЂ
 function LowerCase(ch: char): char;
-/// Преобразует символ в верхний регистр
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃРёРјРІРѕР» РІ РІРµСЂС…РЅРёР№ СЂРµРіРёСЃС‚СЂ
 function UpCase(ch: char): char;
-/// Преобразует символ в нижний регистр
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃРёРјРІРѕР» РІ РЅРёР¶РЅРёР№ СЂРµРіРёСЃС‚СЂ
 function LowCase(ch: char): char;
 
-/// Преобразует целое значение i к строковому представлению и записывает результат в s
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ С†РµР»РѕРµ Р·РЅР°С‡РµРЅРёРµ i Рє СЃС‚СЂРѕРєРѕРІРѕРјСѓ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІ s
 procedure Str(i: integer; var s: string);
 ///--
 procedure Str(i: longword; var s: string);
@@ -899,121 +1270,133 @@ procedure Str(i: longword; var s: string);
 procedure Str(i: int64; var s: string);
 ///--
 procedure Str(i: uint64; var s: string);
-/// Преобразует вещественное значение r к строковому представлению и записывает результат в s
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ r Рє СЃС‚СЂРѕРєРѕРІРѕРјСѓ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІ s
 procedure Str(r: real; var s: string);
-/// Преобразует вещественное значение r к строковому представлению и записывает результат в s
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ r Рє СЃС‚СЂРѕРєРѕРІРѕРјСѓ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІ s
 procedure Str(r: single; var s: string);
 ///--
 procedure Str(s1: string; var s: string);
-/// Возвращает позицию подстроки subs в строке s. Если не найдена, возвращает 0 
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР·РёС†РёСЋ РїРѕРґСЃС‚СЂРѕРєРё subs РІ СЃС‚СЂРѕРєРµ s. Р•СЃР»Рё РЅРµ РЅР°Р№РґРµРЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0 
 function Pos(subs, s: string): integer;
-/// Возвращает позицию подстроки subs в строке s начиная с позиции from. Если не найдена, возвращает 0 
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР·РёС†РёСЋ РїРѕРґСЃС‚СЂРѕРєРё subs РІ СЃС‚СЂРѕРєРµ s РЅР°С‡РёРЅР°СЏ СЃ РїРѕР·РёС†РёРё from. Р•СЃР»Рё РЅРµ РЅР°Р№РґРµРЅР°, РІРѕР·РІСЂР°С‰Р°РµС‚ 0 
 function PosEx(subs, s: string; from: integer := 1): integer;
-/// Возвращает длину строки 
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР»РёРЅСѓ СЃС‚СЂРѕРєРё 
 function Length(s: string): integer;
-/// Устанавливает длину строки s равной n
+/// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РґР»РёРЅСѓ СЃС‚СЂРѕРєРё s СЂР°РІРЅРѕР№ n
 procedure SetLength(var s: string; n: integer);
 ///--
 procedure SetLengthForShortString(var s: string; n, sz: integer);
-/// Вставляет подстроку source в строку s с позиции index
+/// Р’СЃС‚Р°РІР»СЏРµС‚ РїРѕРґСЃС‚СЂРѕРєСѓ source РІ СЃС‚СЂРѕРєСѓ s СЃ РїРѕР·РёС†РёРё index
 procedure Insert(source: string; var s: string; index: integer);
 ///--
 procedure InsertInShortString(source: string; var s: string; index, n: integer);
-/// Удаляет из строки s count символов с позиции index
+/// РЈРґР°Р»СЏРµС‚ РёР· СЃС‚СЂРѕРєРё s count СЃРёРјРІРѕР»РѕРІ СЃ РїРѕР·РёС†РёРё index
 procedure Delete(var s: string; index, count: integer);
-/// Возвращает подстроку строки s длины count с позиции index
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕРґСЃС‚СЂРѕРєСѓ СЃС‚СЂРѕРєРё s РґР»РёРЅС‹ count СЃ РїРѕР·РёС†РёРё index
 function Copy(s: string; index, count: integer): string;
 ///-Concat(s1,s2,...): string 
-/// Возвращает строку, являющуюся результатом слияния строк s1,s2,...
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ, СЏРІР»СЏСЋС‰СѓСЋСЃСЏ СЂРµР·СѓР»СЊС‚Р°С‚РѕРј СЃР»РёСЏРЅРёСЏ СЃС‚СЂРѕРє s1,s2,...
 function Concat(params strs: array of string): string;
-/// Возвращает строку, являющуюся результатом слияния строк s1 и s2
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ, СЏРІР»СЏСЋС‰СѓСЋСЃСЏ СЂРµР·СѓР»СЊС‚Р°С‚РѕРј СЃР»РёСЏРЅРёСЏ СЃС‚СЂРѕРє s1 Рё s2
 function Concat(s1, s2: string): string;
-/// Возвращает строку в нижнем регистре
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ РІ РЅРёР¶РЅРµРј СЂРµРіРёСЃС‚СЂРµ
 function LowerCase(s: string): string;
-/// Возвращает строку в верхнем регистре
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ РІ РІРµСЂС…РЅРµРј СЂРµРіРёСЃС‚СЂРµ
 function UpperCase(s: string): string;
-/// Возвращает строку, состоящую из count символов ch
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ, СЃРѕСЃС‚РѕСЏС‰СѓСЋ РёР· count СЃРёРјРІРѕР»РѕРІ ch
 function StringOfChar(ch: char; count: integer): string;
-/// Возвращает инвертированную строку
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРЅРІРµСЂС‚РёСЂРѕРІР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 function ReverseString(s: string): string;
-/// Сравнивает строки. Возвращает значение < 0 если s1<s2, > 0 если s1>s2 и = 0 если s1=s2
+/// РЎСЂР°РІРЅРёРІР°РµС‚ СЃС‚СЂРѕРєРё. Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ < 0 РµСЃР»Рё s1<s2, > 0 РµСЃР»Рё s1>s2 Рё = 0 РµСЃР»Рё s1=s2
 function CompareStr(s1, s2: string): integer;
-/// Возвращает первые count символов строки s
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРІС‹Рµ count СЃРёРјРІРѕР»РѕРІ СЃС‚СЂРѕРєРё s
 function LeftStr(s: string; count: integer): string;
-/// Возвращает последние count символов строки s
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРЅРёРµ count СЃРёРјРІРѕР»РѕРІ СЃС‚СЂРѕРєРё s
 function RightStr(s: string; count: integer): string;
 
-/// Возвращает строку с удаленными начальными и конечными пробелами
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ СЃ СѓРґР°Р»РµРЅРЅС‹РјРё РЅР°С‡Р°Р»СЊРЅС‹РјРё Рё РєРѕРЅРµС‡РЅС‹РјРё РїСЂРѕР±РµР»Р°РјРё
 function Trim(s: string): string;
-/// Возвращает строку с удаленными начальными пробелами
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ СЃ СѓРґР°Р»РµРЅРЅС‹РјРё РЅР°С‡Р°Р»СЊРЅС‹РјРё РїСЂРѕР±РµР»Р°РјРё
 function TrimLeft(s: string): string;
-/// Возвращает строку с удаленными конечными пробелами
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ СЃ СѓРґР°Р»РµРЅРЅС‹РјРё РєРѕРЅРµС‡РЅС‹РјРё РїСЂРѕР±РµР»Р°РјРё
 function TrimRight(s: string): string;
 
-/// Преобразует строковое представление целого числа к числовому значению
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ
 function StrToInt(s: string): integer;
-/// Преобразует строковое представление целого числа к числовому значению
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ
 function StrToInt64(s: string): int64;
-/// Преобразует строковое представление вещественного числа к числовому значению
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ
 function StrToFloat(s: string): real;
-/// Преобразует строковое представление s целого числа к числовому значению и записывает его в value. При невозможности преобразования возвращается False
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ value. РџСЂРё РЅРµРІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ False
 function TryStrToInt(s: string; var value: integer): boolean;
-/// Преобразует строковое представление s целого числа к числовому значению и записывает его в value. При невозможности преобразования возвращается False
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ value. РџСЂРё РЅРµРІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ False
 function TryStrToInt64(s: string; var value: int64): boolean;
-/// Преобразует строковое представление s вещественного числа к числовому значению и записывает его в value. При невозможности преобразования возвращается False
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s РІРµС‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ value. РџСЂРё РЅРµРІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ False
 function TryStrToFloat(s: string; var value: real): boolean;
-/// Преобразует строковое представление s вещественного числа к числовому значению и записывает его в value. При невозможности преобразования возвращается False
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s РІРµС‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ value. РџСЂРё РЅРµРІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ False
 function TryStrToFloat(s: string; var value: single): boolean;
+/// РЎС‡РёС‚С‹РІР°РµС‚ С†РµР»РѕРµ РёР· СЃС‚СЂРѕРєРё
+function ReadIntegerFromString(s: string; var from: integer): integer;
+/// РЎС‡РёС‚С‹РІР°РµС‚ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ РёР· СЃС‚СЂРѕРєРё
+function ReadRealFromString(s: string; var from: integer): real;
+/// РЎС‡РёС‚С‹РІР°РµС‚ РёР· СЃС‚СЂРѕРєРё РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЃРёРјРІРѕР»РѕРІ РґРѕ РїСЂРѕР±РµР»СЊРЅРѕРіРѕ СЃРёРјРІРѕР»Р°
+function ReadWordFromString(s: string; var from: integer): string;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ True РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РєРѕРЅРµС† СЃС‚СЂРѕРєРё РёР»Рё РІ СЃС‚СЂРѕРєРµ РѕСЃС‚Р°Р»РёСЃСЊ С‚РѕР»СЊРєРѕ РїСЂРѕР±РµР»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹ Рё False РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ
+function StringIsEmpty(s: string; var from: integer): boolean;
+/// РЎС‡РёС‚С‹РІР°РµС‚ С†РµР»РѕРµ РёР· СЃС‚СЂРѕРєРё. Р’РѕР·РІСЂР°С‰Р°РµС‚ True РµСЃР»Рё СЃС‡РёС‚С‹РІР°РЅРёРµ СѓРґР°С‡РЅРѕ Рё False РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ
+function TryReadIntegerFromString(s: string; var from: integer; var res: integer): boolean;
+/// РЎС‡РёС‚С‹РІР°РµС‚ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ РёР· СЃС‚СЂРѕРєРё. Р’РѕР·РІСЂР°С‰Р°РµС‚ True РµСЃР»Рё СЃС‡РёС‚С‹РІР°РЅРёРµ СѓРґР°С‡РЅРѕ Рё False РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ
+function TryReadRealFromString(s: string; var from: integer; var res: real): boolean;
 
-/// Преобразует строковое представление s целого числа к числовому значению и записывает его в переменную value. Если преобразование успешно, то err=0, иначе err>0
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ value. Р•СЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ, С‚Рѕ err=0, РёРЅР°С‡Рµ err>0
 procedure Val(s: string; var value: integer; var err: integer);
-/// Преобразует строковое представление s целого числа к числовому значению и записывает его в переменную value. Если преобразование успешно, то err=0, иначе err>0
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ value. Р•СЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ, С‚Рѕ err=0, РёРЅР°С‡Рµ err>0
 procedure Val(s: string; var value: shortint; var err: integer);
-/// Преобразует строковое представление s целого числа к числовому значению и записывает его в переменную value. Если преобразование успешно, то err=0, иначе err>0
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ value. Р•СЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ, С‚Рѕ err=0, РёРЅР°С‡Рµ err>0
 procedure Val(s: string; var value: smallint; var err: integer);
-/// Преобразует строковое представление s целого числа к числовому значению и записывает его в переменную value. Если преобразование успешно, то err=0, иначе err>0
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ value. Р•СЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ, С‚Рѕ err=0, РёРЅР°С‡Рµ err>0
 procedure Val(s: string; var value: int64; var err: integer);
-/// Преобразует строковое представление s целого числа к числовому значению и записывает его в переменную value. Если преобразование успешно, то err=0, иначе err>0
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ value. Р•СЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ, С‚Рѕ err=0, РёРЅР°С‡Рµ err>0
 procedure Val(s: string; var value: byte; var err: integer);
-/// Преобразует строковое представление s целого числа к числовому значению и записывает его в переменную value. Если преобразование успешно, то err=0, иначе err>0
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ value. Р•СЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ, С‚Рѕ err=0, РёРЅР°С‡Рµ err>0
 procedure Val(s: string; var value: word; var err: integer);
-/// Преобразует строковое представление s целого числа к числовому значению и записывает его в переменную value. Если преобразование успешно, то err=0, иначе err>0
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ value. Р•СЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ, С‚Рѕ err=0, РёРЅР°С‡Рµ err>0
 procedure Val(s: string; var value: longword; var err: integer);
-/// Преобразует строковое представление s целого числа к числовому значению и записывает его в переменную value. Если преобразование успешно, то err=0, иначе err>0
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s С†РµР»РѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ value. Р•СЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ, С‚Рѕ err=0, РёРЅР°С‡Рµ err>0
 procedure Val(s: string; var value: uint64; var err: integer);
-/// Преобразует строковое представление s вещественного числа к числовому значению и записывает его в переменную value. Если преобразование успешно, то err=0, иначе err>0
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s РІРµС‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ value. Р•СЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ, С‚Рѕ err=0, РёРЅР°С‡Рµ err>0
 procedure Val(s: string; var value: real; var err: integer);
-/// Преобразует строковое представление s вещественного числа к числовому значению и записывает его в переменную value. Если преобразование успешно, то err=0, иначе err>0
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ s РІРµС‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‡РёСЃР»Р° Рє С‡РёСЃР»РѕРІРѕРјСѓ Р·РЅР°С‡РµРЅРёСЋ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ value. Р•СЃР»Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ, С‚Рѕ err=0, РёРЅР°С‡Рµ err>0
 procedure Val(s: string; var value: single; var err: integer);
 
-/// Преобразует целое число к строковому представлению
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ С†РµР»РѕРµ С‡РёСЃР»Рѕ Рє СЃС‚СЂРѕРєРѕРІРѕРјСѓ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЋ
 function IntToStr(a: integer): string;
-/// Преобразует целое число к строковому представлению
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ С†РµР»РѕРµ С‡РёСЃР»Рѕ Рє СЃС‚СЂРѕРєРѕРІРѕРјСѓ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЋ
 function IntToStr(a: int64): string;
-/// Преобразует вещественное число к строковому представлению
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ С‡РёСЃР»Рѕ Рє СЃС‚СЂРѕРєРѕРІРѕРјСѓ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЋ
 function FloatToStr(a: real): string;
 
-/// Возвращает отформатированную строку, построенную по форматной строке fmtstr и списку форматиуемых параметров pars
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ, РїРѕСЃС‚СЂРѕРµРЅРЅСѓСЋ РїРѕ С„РѕСЂРјР°С‚РЅРѕР№ СЃС‚СЂРѕРєРµ fmtstr Рё СЃРїРёСЃРєСѓ С„РѕСЂРјР°С‚РёСѓРµРјС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ pars
 function Format(fmtstr: string; params pars: array of object): string;
 
 // -----------------------------------------------------
 //                Common Routines
 // -----------------------------------------------------
-/// Увеличивает значение переменной i на 1
+/// РЈРІРµР»РёС‡РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№ i РЅР° 1
 procedure Inc(var i: integer);
-/// Увеличивает значение переменной i на n
+/// РЈРІРµР»РёС‡РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№ i РЅР° n
 procedure Inc(var i: integer; n: integer);
-/// Уменьшает значение переменной i на 1
+/// РЈРјРµРЅСЊС€Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№ i РЅР° 1
 procedure Dec(var i: integer);
-/// Уменьшает значение переменной i на n
+/// РЈРјРµРЅСЊС€Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№ i РЅР° n
 procedure Dec(var i: integer; n: integer);
-/// Увеличивает код символа c на 1
+/// РЈРІРµР»РёС‡РёРІР°РµС‚ РєРѕРґ СЃРёРјРІРѕР»Р° c РЅР° 1
 procedure Inc(var c: char);
-/// Увеличивает код символа c на n
+/// РЈРІРµР»РёС‡РёРІР°РµС‚ РєРѕРґ СЃРёРјРІРѕР»Р° c РЅР° n
 procedure Inc(var c: char; n: integer);
-/// Уменьшает код символа c на 1
+/// РЈРјРµРЅСЊС€Р°РµС‚ РєРѕРґ СЃРёРјРІРѕР»Р° c РЅР° 1
 procedure Dec(var c: char);
-/// Уменьшает код символа c на n
+/// РЈРјРµРЅСЊС€Р°РµС‚ РєРѕРґ СЃРёРјРІРѕР»Р° c РЅР° n
 procedure Dec(var c: char; n: integer);
 ///--
 procedure Inc(var b: byte);
@@ -1028,98 +1411,184 @@ procedure Dec(var f: boolean);
 
 //------------------------------------------------------------------------------
 //PRED-SUCC
-/// Возвращает следующее за x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»РµРґСѓСЋС‰РµРµ Р·Р° x Р·РЅР°С‡РµРЅРёРµ
 function succ(x: integer): integer;
-/// Возвращает следующее за x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»РµРґСѓСЋС‰РµРµ Р·Р° x Р·РЅР°С‡РµРЅРёРµ
 function succ(x: boolean): boolean;
-/// Возвращает следующее за x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»РµРґСѓСЋС‰РµРµ Р·Р° x Р·РЅР°С‡РµРЅРёРµ
 function succ(x: byte): byte;
-/// Возвращает следующее за x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»РµРґСѓСЋС‰РµРµ Р·Р° x Р·РЅР°С‡РµРЅРёРµ
 function succ(x: shortint): shortint;
-/// Возвращает следующее за x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»РµРґСѓСЋС‰РµРµ Р·Р° x Р·РЅР°С‡РµРЅРёРµ
 function succ(x: smallint): smallint;
-/// Возвращает следующее за x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»РµРґСѓСЋС‰РµРµ Р·Р° x Р·РЅР°С‡РµРЅРёРµ
 function succ(x: word): word;
-/// Возвращает следующее за x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»РµРґСѓСЋС‰РµРµ Р·Р° x Р·РЅР°С‡РµРЅРёРµ
 function succ(x: longword): longword;
-/// Возвращает следующее за x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»РµРґСѓСЋС‰РµРµ Р·Р° x Р·РЅР°С‡РµРЅРёРµ
 function succ(x: int64): int64;
-/// Возвращает следующее за x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»РµРґСѓСЋС‰РµРµ Р·Р° x Р·РЅР°С‡РµРЅРёРµ
 function succ(x: uint64): uint64;
-/// Возвращает следующее за x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»РµРґСѓСЋС‰РµРµ Р·Р° x Р·РЅР°С‡РµРЅРёРµ
 function succ(x: char): char;
-/// Возвращает предшествующее x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРµ x Р·РЅР°С‡РµРЅРёРµ
 function pred(x: boolean): boolean;
-/// Возвращает предшествующее x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРµ x Р·РЅР°С‡РµРЅРёРµ
 function pred(x: byte): byte;
-/// Возвращает предшествующее x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРµ x Р·РЅР°С‡РµРЅРёРµ
 function pred(x: shortint): shortint;
-/// Возвращает предшествующее x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРµ x Р·РЅР°С‡РµРЅРёРµ
 function pred(x: smallint): smallint;
-/// Возвращает предшествующее x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРµ x Р·РЅР°С‡РµРЅРёРµ
 function pred(x: word): word;
-/// Возвращает предшествующее x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРµ x Р·РЅР°С‡РµРЅРёРµ
 function pred(x: integer): integer;
-/// Возвращает предшествующее x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРµ x Р·РЅР°С‡РµРЅРёРµ
 function pred(x: longword): longword;
-/// Возвращает предшествующее x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРµ x Р·РЅР°С‡РµРЅРёРµ
 function pred(x: int64): int64;
-/// Возвращает предшествующее x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРµ x Р·РЅР°С‡РµРЅРёРµ
 function pred(x: uint64): uint64;
-/// Возвращает предшествующее x значение
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС€РµСЃС‚РІСѓСЋС‰РµРµ x Р·РЅР°С‡РµРЅРёРµ
 function pred(x: char): char;
-// -----------------------------------------------------
-//                Linq Ext
-// -----------------------------------------------------
-/// Возвращает последовательность целых от a до b
-function Range(a,b: integer): IEnumerable<integer>;
 
-//------------------------------------------------------------------------------
+/// РњРµРЅСЏРµС‚ РјРµСЃС‚Р°РјРё Р·РЅР°С‡РµРЅРёСЏ РґРІСѓС… РїРµСЂРµРјРµРЅРЅС‹С…
+procedure Swap<T>(var a, b: T);
 
-/// Возвращает длину динамического массива
+// -----------------------------------------------------
+//                Dynamic arrays
+// -----------------------------------------------------
+///- Low(i: array): integer
+function Low(i: System.Array): integer;
+///- High(i: array): integer
+function High(i: System.Array): integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР»РёРЅСѓ РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ РјР°СЃСЃРёРІР°
 function Length(a: &Array): integer;
-/// Возвращает длину динамического массива по размерности dim
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР»РёРЅСѓ РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ РјР°СЃСЃРёРІР° РїРѕ СЂР°Р·РјРµСЂРЅРѕСЃС‚Рё dim
 function Length(a: &Array; dim: integer): integer;
-/// Завершает работу программы
-procedure Halt;
-/// Завершает работу программы, возвращая код ошибки exitCode
-procedure Halt(exitCode: integer);
-
-/// Для совместимости с Pascal ABC. Не выполняет никаких действий
-procedure cls;
-
-// Непонятно, что делать после такой паузы. Убрал (SS)
-//procedure Pause;
-/// Делает паузу на ms миллисекунд
-procedure Sleep(ms: integer);
-/// Возващает имя запущенного .exe-файла
-function GetEXEFileName: string;
-/// Преобразует указатель к строковому представлению
-function PointerToString(p: pointer): string;
-
-/// Создаёт копию динамического массива
+/// РЎРѕР·РґР°С‘С‚ РєРѕРїРёСЋ РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ РјР°СЃСЃРёРІР°
 function Copy(a: &Array): &Array;
+/// РЎРѕСЂС‚РёСЂСѓРµС‚ РґРёРЅР°РјРёС‡РµСЃРєРёР№ РјР°СЃСЃРёРІ РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ
+procedure Sort<T>(a: array of T);
+/// РЎРѕСЂС‚РёСЂСѓРµС‚ СЃРїРёСЃРѕРє РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ
+procedure Sort<T>(l: List<T>);
+/// РР·РјРµРЅСЏРµС‚ РїРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ РІ РґРёРЅР°РјРёС‡РµСЃРєРѕРј РјР°СЃСЃРёРІРµ РЅР° РїСЂРѕС‚РёРІРѕРїРѕР»РѕР¶РЅС‹Р№
+procedure Reverse<T>(a: array of T);
+/// РР·РјРµРЅСЏРµС‚ РїРѕСЂСЏРґРѕРє СЌР»РµРјРµРЅС‚РѕРІ РЅР° РїСЂРѕС‚РёРІРѕРїРѕР»РѕР¶РЅС‹Р№ РІ РґРёР°РїР°Р·РѕРЅРµ РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ РјР°СЃСЃРёРІР° РґР»РёРЅС‹ length РЅР°С‡РёРЅР°СЏ СЃ РёРЅРґРµРєСЃР° index
+procedure Reverse<T>(a: array of T; index,length: integer);
 
 //function Copy<T>(a: array of T): array of T;
 ///--
 function CopyWithSize(source, dest: &Array): &Array;
 
-/// Меняет местами значения двух переменных
-procedure Swap<T>(var a, b: T);
+// -----------------------------------------------------
+//              Sequences and dynamic arrays
+// -----------------------------------------------------
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ С†РµР»С‹С… РѕС‚ a РґРѕ b
+function Range(a,b: integer): sequence of integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЃРёРјРІРѕР»РѕРІ РѕС‚ c1 РґРѕ c2
+function Range(c1,c2: char): sequence of char;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РІРµС‰РµСЃС‚РІРµРЅРЅС‹С… РІ С‚РѕС‡РєР°С… СЂР°Р·Р±РёРµРЅРёСЏ РѕС‚СЂРµР·РєР° [a,b] РЅР° n СЂР°РІРЅС‹С… С‡Р°СЃС‚РµР№
+function Range(a,b: real; n: integer): sequence of real;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ С†РµР»С‹С… РѕС‚ a РґРѕ b СЃ С€Р°РіРѕРј step
+function Range(a,b,step: integer): sequence of integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ СЂР°Р·РјРµСЂР° n, Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ СЃР»СѓС‡Р°Р№РЅС‹РјРё С†РµР»С‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
+function ArrRandom(n: integer := 10; a: integer := 0; b: integer := 100): array of integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ СЂР°Р·РјРµСЂР° n, Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ СЃР»СѓС‡Р°Р№РЅС‹РјРё С†РµР»С‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
+function ArrRandomInteger(n: integer := 10; a: integer := 0; b: integer := 100): array of integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ СЂР°Р·РјРµСЂР° n, Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ СЃР»СѓС‡Р°Р№РЅС‹РјРё РІРµС‰РµСЃС‚РІРµРЅРЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
+function ArrRandomReal(n: integer := 10; a: real := 0; b: real := 10): array of real;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· n СЃР»СѓС‡Р°Р№РЅС‹С… С†РµР»С‹С… СЌР»РµРјРµРЅС‚РѕРІ
+function SeqRandom(n: integer := 10; a: integer := 0; b: integer := 100): sequence of integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· n СЃР»СѓС‡Р°Р№РЅС‹С… РІРµС‰РµСЃС‚РІРµРЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ
+function SeqRandomReal(n: integer := 10; a: real := 0; b: real := 10): sequence of real;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ, Р·Р°РїРѕР»РЅРµРЅРЅС‹Р№ СѓРєР°Р·Р°РЅРЅС‹РјРё СЌР»РµРјРµРЅС‚Р°РјРё
+function Arr<T>(params a: array of T): array of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СѓРєР°Р·Р°РЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ
+function Seq<T>(params a: array of T): sequence of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· count СЌР»РµРјРµРЅС‚РѕРІ, Р·Р°РїРѕР»РЅРµРЅРЅС‹С… Р·РЅР°С‡РµРЅРёСЏРјРё f(i)
+function ArrGen<T>(count: integer; f: integer -> T): array of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· count СЌР»РµРјРµРЅС‚РѕРІ, Р·Р°РїРѕР»РЅРµРЅРЅС‹С… Р·РЅР°С‡РµРЅРёСЏРјРё f(i), РЅР°С‡РёРЅР°СЏ СЃ i=from
+function ArrGen<T>(count: integer; f: integer -> T; from: integer): array of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· count СЌР»РµРјРµРЅС‚РѕРІ, РЅР°С‡РёРЅР°СЋС‰РёС…СЃСЏ СЃ first, СЃ С„СѓРЅРєС†РёРµР№ next РїРµСЂРµС…РѕРґР° РѕС‚ РїСЂРµРґС‹РґСѓС‰РµРіРѕ Рє СЃР»РµРґСѓСЋС‰РµРјСѓ 
+function ArrGen<T>(count: integer; first: T; next: T -> T): array of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· count СЌР»РµРјРµРЅС‚РѕРІ, РЅР°С‡РёРЅР°СЋС‰РёС…СЃСЏ СЃ first Рё second, СЃ С„СѓРЅРєС†РёРµР№ next РїРµСЂРµС…РѕРґР° РѕС‚ РґРІСѓС… РїСЂРµРґС‹РґСѓС‰РёС… Рє СЃР»РµРґСѓСЋС‰РµРјСѓ 
+function ArrGen<T>(count: integer; first,second: T; next: (T,T) -> T): array of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· count СЌР»РµРјРµРЅС‚РѕРІ, Р·Р°РїРѕР»РЅРµРЅРЅС‹С… Р·РЅР°С‡РµРЅРёСЏРјРё f(i)
+function SeqGen<T>(count: integer; f: integer -> T): sequence of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· count СЌР»РµРјРµРЅС‚РѕРІ, Р·Р°РїРѕР»РЅРµРЅРЅС‹С… Р·РЅР°С‡РµРЅРёСЏРјРё f(i), РЅР°С‡РёРЅР°СЏ СЃ i=from
+function SeqGen<T>(count: integer; f: integer -> T; from: integer): sequence of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· count СЌР»РµРјРµРЅС‚РѕРІ, РЅР°С‡РёРЅР°СЋС‰СѓСЋСЃСЏ СЃ first, СЃ С„СѓРЅРєС†РёРµР№ next РїРµСЂРµС…РѕРґР° РѕС‚ РїСЂРµРґС‹РґСѓС‰РµРіРѕ Рє СЃР»РµРґСѓСЋС‰РµРјСѓ 
+function SeqGen<T>(count: integer; first: T; next: T -> T): sequence of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· count СЌР»РµРјРµРЅС‚РѕРІ, РЅР°С‡РёРЅР°СЋС‰СѓСЋСЃСЏ СЃ first Рё second, СЃ С„СѓРЅРєС†РёРµР№ next РїРµСЂРµС…РѕРґР° РѕС‚ РґРІСѓС… РїСЂРµРґС‹РґСѓС‰РёС… Рє СЃР»РµРґСѓСЋС‰РµРјСѓ 
+function SeqGen<T>(count: integer; first,second: T; next: (T,T) -> T): sequence of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЌР»РµРјРµРЅС‚РѕРІ СЃ РЅР°С‡Р°Р»СЊРЅС‹Рј Р·РЅР°С‡РµРЅРёРµРј first, С„СѓРЅРєС†РёРµР№ next РїРµСЂРµС…РѕРґР° РѕС‚ РїСЂРµРґС‹РґСѓС‰РµРіРѕ Рє СЃР»РµРґСѓСЋС‰РµРјСѓ Рё СѓСЃР»РѕРІРёРµРј pred РїСЂРѕРґРѕР»Р¶РµРЅРёСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё 
+function SeqWhile<T>(first: T; next: T -> T; pred: T -> boolean): sequence of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЌР»РµРјРµРЅС‚РѕРІ, РЅР°С‡РёРЅР°СЋС‰СѓСЋСЃСЏ СЃ first Рё second, СЃ С„СѓРЅРєС†РёРµР№ next РїРµСЂРµС…РѕРґР° РѕС‚ РґРІСѓС… РїСЂРµРґС‹РґСѓС‰РёС… Рє СЃР»РµРґСѓСЋС‰РµРјСѓ Рё СѓСЃР»РѕРІРёРµРј pred РїСЂРѕРґРѕР»Р¶РµРЅРёСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё 
+function SeqWhile<T>(first,second: T; next: (T,T) -> T; pred: T -> boolean): sequence of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· count СЌР»РµРјРµРЅС‚РѕРІ x 
+function ArrFill<T>(count: integer; x: T): array of T;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· count СЌР»РµРјРµРЅС‚РѕРІ x 
+function SeqFill<T>(count: integer; x: T): sequence of T;
 
-/// Запускает программу или документ с именем filename 
-procedure Exec(filename: string);
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°С‚СЂРёС†Сѓ СЂР°Р·РјРµСЂР° m x n, Р·Р°РїРѕР»РЅРµРЅРЅСѓСЋ СЃР»СѓС‡Р°Р№РЅС‹РјРё С†РµР»С‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
+function MatrixRandom(m: integer := 5; n: integer := 5; a: integer := 0; b: integer := 100): array [,] of integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°С‚СЂРёС†Сѓ СЂР°Р·РјРµСЂР° m x n, Р·Р°РїРѕР»РЅРµРЅРЅСѓСЋ СЃР»СѓС‡Р°Р№РЅС‹РјРё РІРµС‰РµСЃС‚РІРµРЅРЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
+function MatrixRandomReal(m: integer := 5; n: integer := 5; a: integer := 0; b: integer := 10): array [,] of real;
 
-/// Запускает программу или документ с именем filename и параметрами командной строки args
-procedure Exec(filename: string; args: string);
 
-/// Запускает программу или документ с именем filename 
-procedure Execute(filename: string);
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· n С†РµР»С‹С…, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadArrInteger(n: integer): array of integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· n РІРµС‰РµСЃС‚РІРµРЅРЅС‹С…, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadArrReal(n: integer): array of real;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· n СЃС‚СЂРѕРє, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadArrString(n: integer): array of string;
 
-/// Запускает программу или документ с именем filename и параметрами командной строки args
-procedure Execute(filename: string; args: string);
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· n С†РµР»С‹С…, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadArrInteger(const prompt: string; n: integer): array of integer;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· n РІРµС‰РµСЃС‚РІРµРЅРЅС‹С…, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadArrReal(const prompt: string; n: integer): array of real;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РјР°СЃСЃРёРІ РёР· n СЃС‚СЂРѕРє, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadArrString(const prompt: string; n: integer): array of string;
 
-// Вспомогательные подпрограммы. Из раздела интерфейса не убирать! 
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· n С†РµР»С‹С…, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadSeqInteger(n: integer): sequence of integer;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· n РІРµС‰РµСЃС‚РІРµРЅРЅС‹С…, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadSeqReal(n: integer): sequence of real;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· n СЃС‚СЂРѕРє, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadSeqString(n: integer): sequence of string;
+
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· n С†РµР»С‹С…, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadSeqInteger(const prompt: string; n: integer): sequence of integer;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· n РІРµС‰РµСЃС‚РІРµРЅРЅС‹С…, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadSeqReal(const prompt: string; n: integer): sequence of real;
+/// Р’С‹РІРѕРґРёС‚ РїСЂРёРіР»Р°С€РµРЅРёРµ Рє РІРІРѕРґСѓ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёР· n СЃС‚СЂРѕРє, РІРІРµРґРµРЅРЅС‹С… СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+function ReadSeqString(const prompt: string; n: integer): sequence of string;
+// -----------------------------------------------------
+//                       Tuples
+// -----------------------------------------------------
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕСЂС‚РµР¶ РёР· 2 СЌР»РµРјРµРЅС‚РѕРІ
+function Rec<T1,T2>(x1: T1; x2: T2): Tuple<T1,T2>;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕСЂС‚РµР¶ РёР· 3 СЌР»РµРјРµРЅС‚РѕРІ
+function Rec<T1,T2,T3>(x1: T1; x2: T2; x3: T3): Tuple<T1,T2,T3>;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕСЂС‚РµР¶ РёР· 4 СЌР»РµРјРµРЅС‚РѕРІ
+function Rec<T1,T2,T3,T4>(x1: T1; x2: T2; x3: T3; x4: T4): Tuple<T1,T2,T3,T4>;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕСЂС‚РµР¶ РёР· 5 СЌР»РµРјРµРЅС‚РѕРІ
+function Rec<T1,T2,T3,T4,T5>(x1: T1; x2: T2; x3: T3; x4: T4; x5: T5): Tuple<T1,T2,T3,T4,T5>;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕСЂС‚РµР¶ РёР· 6 СЌР»РµРјРµРЅС‚РѕРІ
+function Rec<T1,T2,T3,T4,T5,T6>(x1: T1; x2: T2; x3: T3; x4: T4; x5: T5; x6: T6): Tuple<T1,T2,T3,T4,T5,T6>;
+// -----------------------------------------------------
+//                Dict
+// -----------------------------------------------------
+
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃР»РѕРІР°СЂСЊ РїР°СЂ СЌР»РµРјРµРЅС‚РѕРІ
+function Dict<TKey, TVal>(params pairs: array of KeyValuePair<TKey, TVal>): Dictionary<TKey, TVal>;
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїР°СЂСѓ СЌР»РµРјРµРЅС‚РѕРІ
+function KV<TKey, TVal>(key: TKey; value: TVal): KeyValuePair<TKey, TVal>;
+
+//------------------------------------------------------------------------------
+
+// Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РїРѕРґРїСЂРѕРіСЂР°РјРјС‹. РР· СЂР°Р·РґРµР»Р° РёРЅС‚РµСЂС„РµР№СЃР° РЅРµ СѓР±РёСЂР°С‚СЊ! 
 ///--
 function FormatValue(value: object; NumOfChars: integer): string;
 ///--
@@ -1133,41 +1602,40 @@ procedure StringDefaultPropertySet(var s: string; index: integer; c: char);
 
 //procedure InitShortString(var s: ShortString; Length: integer);
 
-///Проверяет возможность использования указателей на тип T
+///РџСЂРѕРІРµСЂСЏРµС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ СѓРєР°Р·Р°С‚РµР»РµР№ РЅР° С‚РёРї T
 procedure CheckCanUsePointerOnType(T: System.Type);
-///Проверяет возможность записи типа T в файл
+///РџСЂРѕРІРµСЂСЏРµС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р·Р°РїРёСЃРё С‚РёРїР° T РІ С„Р°Р№Р»
 procedure CheckCanUseTypeForBinaryFiles(T: System.Type);
-///Проверяет возможность создания file of T
+///РџСЂРѕРІРµСЂСЏРµС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃРѕР·РґР°РЅРёСЏ file of T
 procedure CheckCanUseTypeForTypedFiles(T: System.Type);
-///Определяет специальные типы
+///РћРїСЂРµРґРµР»СЏРµС‚ СЃРїРµС†РёР°Р»СЊРЅС‹Рµ С‚РёРїС‹
 function RuntimeDetermineType(T: System.Type): byte;
-///Возвращает объект класса в зависимости от значения kind
+///Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚ РєР»Р°СЃСЃР° РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ Р·РЅР°С‡РµРЅРёСЏ kind
 function RuntimeInitialize(kind: byte; variable: object): object;
-///Вычисление размера типа на этапе выполнения
+///Р’С‹С‡РёСЃР»РµРЅРёРµ СЂР°Р·РјРµСЂР° С‚РёРїР° РЅР° СЌС‚Р°РїРµ РІС‹РїРѕР»РЅРµРЅРёСЏ
 function GetRuntimeSize<T>: integer;
-///Возвращает копию динамического массива
-//function Copy1<T>(a: array of T): array of T;
-///Возвращает строку для вывода в write
-function _ObjectToString(obj: object): string;
+///Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ РґР»СЏ РІС‹РІРѕРґР° РІ write
+function _ObjectToString(o: object): string;
 
 //------------------------------------------------------------------------------
 // WINAPI
-// Использование этих функций вводит платформенную зависимость. Желательно обойти
+// РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЌС‚РёС… С„СѓРЅРєС†РёР№ РІРІРѕРґРёС‚ РїР»Р°С‚С„РѕСЂРјРµРЅРЅСѓСЋ Р·Р°РІРёСЃРёРјРѕСЃС‚СЊ. Р–РµР»Р°С‚РµР»СЊРЅРѕ РѕР±РѕР№С‚Рё
 ///--
 function WINAPI_TerminateProcess(Handle: IntPtr; ExitCode: integer): boolean;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // OpenMPSupport
-procedure omp_set_nested(nested:integer);
-function omp_get_nested:integer;
-var OMP_NESTED:boolean:=false;
+procedure omp_set_nested(nested: integer);
+function omp_get_nested: integer;
+var
+  OMP_NESTED: boolean := false;
 //------------------------------------------------------------------------------
 
 var
-  /// Определяет текущую систему ввода-вывода
+  /// РћРїСЂРµРґРµР»СЏРµС‚ С‚РµРєСѓС‰СѓСЋ СЃРёСЃС‚РµРјСѓ РІРІРѕРґР°-РІС‹РІРѕРґР°
   CurrentIOSystem: IOSystem;
-  /// Принимает значение True, если приложение имеет консольное окно
+  /// РџСЂРёРЅРёРјР°РµС‚ Р·РЅР°С‡РµРЅРёРµ True, РµСЃР»Рё РїСЂРёР»РѕР¶РµРЅРёРµ РёРјРµРµС‚ РєРѕРЅСЃРѕР»СЊРЅРѕРµ РѕРєРЅРѕ
   IsConsoleApplication: boolean;
   ///--
   RedirectIOInDebugMode := False;
@@ -1175,10 +1643,12 @@ var
   ExecuteBeforeProcessTerminateIn__Mode: procedure(e: Exception);
   //GCHandlersForReferencePointers := new GCHandlersController;
   ///--
-  ExitCode := 0;  //TODO Сделать возврат в Main
+  ExitCode := 0;//TODO РЎРґРµР»Р°С‚СЊ РІРѕР·РІСЂР°С‚ РІ Main
 
 ///--
 procedure __InitModule__;
+///--
+procedure __InitPABCSystem;
 ///--
 procedure __FinalizeModule__;
 
@@ -1192,19 +1662,43 @@ var
   DefaultOrdChrEncoding := System.Text.Encoding.GetEncoding(1251);
   __one_char := new char[1];
   __one_byte := new byte[1];
-  StartTime: DateTime; // Для Milliseconds
-
+  StartTime: DateTime;// Р”Р»СЏ Milliseconds
+  
 const
-  WRITELN_IN_BINARYFILE_ERROR_MESSAGE = 'Операция Writeln не применима к бинарным файлам';
+  WRITELN_IN_BINARYFILE_ERROR_MESSAGE = 'РћРїРµСЂР°С†РёСЏ Writeln РЅРµ РїСЂРёРјРµРЅРёРјР° Рє Р±РёРЅР°СЂРЅС‹Рј С„Р°Р№Р»Р°Рј!!Writeln is not applicable to binary files';
   InternalNullBasedArrayName = 'NullBasedArray';
-  FILE_NOT_ASSIGNED = 'Для файловой переменной не выполнена процедура Assign';
-  FILE_NOT_OPENED = 'Файл не открыт';
-  RANGE_ERROR_MESSAGE = 'Выход за границы диапазона';
-  EOF_FOR_TEXT_WRITEOPENED = 'Функция Eof не может быть вызвана для текстового файла, открытого на запись';
-  EOLN_FOR_TEXT_WRITEOPENED = 'Функция Eoln не может быть вызвана для текстового файла, открытого на запись';
-  SEEKEOF_FOR_TEXT_WRITEOPENED = 'Функция SeekEof не может быть вызвана для текстового файла, открытого на запись';
-  SEEKEOLN_FOR_TEXT_WRITEOPENED = 'Функция SeekEoln не может быть вызвана для текстового файла, открытого на запись';
+  FILE_NOT_ASSIGNED = 'Р”Р»СЏ С„Р°Р№Р»РѕРІРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№ РЅРµ РІС‹Р·РІР°РЅР° РїСЂРѕС†РµРґСѓСЂР° Assign!!File is not assigned';
+  FILE_NOT_OPENED = 'Р¤Р°Р№Р» РЅРµ РѕС‚РєСЂС‹С‚!!File is not opened';
+  FILE_NOT_OPENED_FOR_READING = 'Р¤Р°Р№Р» РЅРµ РѕС‚РєСЂС‹С‚ РЅР° С‡С‚РµРЅРёРµ!!File is not opened for reading';
+  FILE_NOT_OPENED_FOR_WRITING = 'Р¤Р°Р№Р» РЅРµ РѕС‚РєСЂС‹С‚ РЅР° Р·Р°РїРёСЃСЊ!!File is not opened for writing';
+  RANGE_ERROR_MESSAGE = 'Р’С‹С…РѕРґ Р·Р° РіСЂР°РЅРёС†С‹ РґРёР°РїР°Р·РѕРЅР°!!Out of range';
+  EOF_FOR_TEXT_WRITEOPENED = 'Р¤СѓРЅРєС†РёСЏ Eof РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹Р·РІР°РЅР° РґР»СЏ С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°, РѕС‚РєСЂС‹С‚РѕРіРѕ РЅР° Р·Р°РїРёСЃСЊ!!Eof function can''t be called for file, opened on writing';
+  EOLN_FOR_TEXT_WRITEOPENED = 'Р¤СѓРЅРєС†РёСЏ Eoln РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹Р·РІР°РЅР° РґР»СЏ С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°, РѕС‚РєСЂС‹С‚РѕРіРѕ РЅР° Р·Р°РїРёСЃСЊ!!Eoln function can''t be called for file, opened on writing';
+  SEEKEOF_FOR_TEXT_WRITEOPENED = 'Р¤СѓРЅРєС†РёСЏ SeekEof РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹Р·РІР°РЅР° РґР»СЏ С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°, РѕС‚РєСЂС‹С‚РѕРіРѕ РЅР° Р·Р°РїРёСЃСЊ!!SeekEof function can''t be called for file, opened on writing';
+  SEEKEOLN_FOR_TEXT_WRITEOPENED = 'Р¤СѓРЅРєС†РёСЏ SeekEoln РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹Р·РІР°РЅР° РґР»СЏ С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р°, РѕС‚РєСЂС‹С‚РѕРіРѕ РЅР° Р·Р°РїРёСЃСЊ!!SeekEoln function can''t be called for file, opened on writing';
   BAD_TYPE_IN_RUNTIMESIZEOF = 'Bad Type in RunTimeSizeOf';
+  PARAMETER_COUNT_MUST_BE_GREATER_0 = 'РџР°СЂР°РјРµС‚СЂ count РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ > 0!!Parameter count must be > 0';
+  PARAMETER_COUNT_MUST_BE_GREATER_1 = 'РџР°СЂР°РјРµС‚СЂ count РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ > 1!!Parameter count must be > 1';
+
+function GetCurrentLocale: string;
+begin
+  var locale: object;
+  if __CONFIG__.TryGetValue('locale', locale) then
+    Result := locale as string
+  else
+    Result := 'ru';
+end;  
+
+function GetTranslation(message: string): string;
+begin
+  var cur_locale := GetCurrentLocale();
+  var arr := message.Split(new string[1]('!!'),StringSplitOptions.None);
+  if (cur_locale = 'en') and (arr.Length > 1) then
+    Result := arr[1]
+  else
+    Result := arr[0]
+end;
+
 //------------------------------------------------------------------------------
 // WINAPI
 
@@ -1215,12 +1709,18 @@ function WINAPI_AllocConsole: longword; external 'kernel32.dll' name 'AllocConso
 
 var
   console_alloc: boolean := false;
+  curr_time := DateTime.Now;
 
 //------------------------------------------------------------------------------
 
 // -----------------------------------------------------
 //                  Internal functions
 // -----------------------------------------------------
+
+function IsWDE: boolean;
+begin
+  Result := AppDomain.CurrentDomain.GetData('_RedirectIO_SpecialArgs') <> nil;
+end;
 
 [System.Security.SecuritySafeCriticalAttribute]
 procedure AllocConsole;
@@ -1291,7 +1791,7 @@ begin
   begin
     fi := t.GetField(InternalNullBasedArrayName);
     if fi = nil then 
-      raise new SystemException(BAD_TYPE_IN_RUNTIMESIZEOF);
+      raise new SystemException(GetTranslation(BAD_TYPE_IN_RUNTIMESIZEOF));
     elem := Activator.CreateInstance(t);
     NullBasedArray := GetNullBasedArray(elem);
     
@@ -1474,7 +1974,7 @@ begin
       on e: System.Exception do
       begin
         Result := nil;
-        Exit;
+        //Exit;
       end;
     end;
   end;
@@ -1675,8 +2175,6 @@ begin
   ht := tmp_ht;
 end;
 
-
-
 procedure TypedSet.IncludeElement(elem: object);
 var
   diap: Diapason;
@@ -1768,11 +2266,10 @@ end;
 procedure TypedSet.AssignSetFrom(s: TypedSet);
 begin
   ht := s.ht.Clone() as Hashtable;
-  //copy_ht := s.ht;
   Clip;
 end;
 
-function TypedSet.GetEnumerator: IEnumerator;
+function TypedSet.GetEnumerator: System.Collections.IEnumerator;
 begin
   Result := ht.Keys.GetEnumerator; 
 end;
@@ -1780,14 +2277,14 @@ end;
 function FormatStr(obj: object): string;
 begin
   if (obj.GetType = typeof(char)) or (obj.GetType = typeof(string)) then
-    Result := '''' + string.Format(System.Globalization.NumberFormatInfo.InvariantInfo, '{0}', obj) + ''''
+    Result := '''' + string.Format(System.Globalization.NumberFormatInfo.InvariantInfo, '{0}', new object[](obj)) + ''''
   else
-    Result := string.Format(System.Globalization.NumberFormatInfo.InvariantInfo, '{0}', obj)
+    Result := string.Format(System.Globalization.NumberFormatInfo.InvariantInfo, '{0}', new object[](obj))
 end;
 
 function TypedSet.ToString: string;
 var
-  i: IEnumerator;
+  i: System.Collections.IEnumerator;
   lst: ArrayList;
 begin
   i := GetEnumerator;
@@ -1808,12 +2305,10 @@ begin
   while i.MoveNext do
     if not (i.Current is IComparable) then
     begin
-      //if IsInDiapason(i.Current) then
       result := (added ? result + ',' : '') + FormatStr(i.Current);
       added := true;
     end
     else
-    //if IsInDiapason(i.Current) then
     begin
       if (t <> nil) and (t <> i.Current.GetType) then
       begin
@@ -1929,7 +2424,7 @@ begin
     result := integer(Counters[obj]);      
 end;
 
-function GCHandlersController.GetEnumerator: IEnumerator;
+function GCHandlersController.GetEnumerator: System.Collections.IEnumerator;
 begin
   result := Counters.Keys.GetEnumerator; 
 end;
@@ -2004,7 +2499,7 @@ end;
 [System.Diagnostics.DebuggerStepThrough]
 function Subtract(s1, s2: TypedSet): TypedSet;
 var
-  en: IEnumerator;
+  en: System.Collections.IEnumerator;
 begin
   //Result := new TypedSet();
   Result := s1.CloneSet;
@@ -2037,7 +2532,7 @@ end;
 [System.Diagnostics.DebuggerStepThrough]  
 function Union(s1, s2: TypedSet): TypedSet;
 var
-  en: IEnumerator;
+  en: System.Collections.IEnumerator;
 begin
   Result := s1.CloneSet;
   en := s2.ht.GetEnumerator();
@@ -2048,7 +2543,7 @@ end;
 [System.Diagnostics.DebuggerStepThrough]  
 function Intersect(s1, s2: TypedSet): TypedSet;
 var
-  en: IEnumerator;
+  en: System.Collections.IEnumerator;
 begin
   Result := new TypedSet();
   en := s1.ht.GetEnumerator();
@@ -2074,7 +2569,7 @@ end;
 [System.Diagnostics.DebuggerStepThrough]  
 function CompareSetEquals(s1, s2: TypedSet): boolean;
 var
-  en: IEnumerator;
+  en: System.Collections.IEnumerator;
   equals: boolean := true;
 begin
   if s1.ht.Count <> s2.ht.Count then
@@ -2130,7 +2625,7 @@ end;
 [System.Diagnostics.DebuggerStepThrough]  
 function CompareSetLess(s1, s2: TypedSet): boolean;
 var
-  en: IEnumerator;
+  en: System.Collections.IEnumerator;
   less: boolean := true;
 begin
   en := s1.ht.GetEnumerator();
@@ -2164,7 +2659,7 @@ end;
 [System.Diagnostics.DebuggerStepThrough]  
 function CompareSetGreaterEqual(s1, s2: TypedSet): boolean;
 var
-  en: IEnumerator;
+  en: System.Collections.IEnumerator;
   greater: boolean := true;
 begin
   en := s2.ht.GetEnumerator();
@@ -2183,7 +2678,7 @@ end;
 [System.Diagnostics.DebuggerStepThrough]  
 function CompareSetLessEqual(s1, s2: TypedSet): boolean;
 var
-  en: IEnumerator;
+  en: System.Collections.IEnumerator;
   less: boolean := true;
 begin
   en := s1.ht.GetEnumerator();
@@ -2203,7 +2698,7 @@ end;
 function CompareSetGreater(s1, s2: TypedSet): boolean;
 var
   greater: boolean := true;
-  en: IEnumerator;
+  en: System.Collections.IEnumerator;
 begin
   en := s2.ht.GetEnumerator();
   en.Reset();
@@ -2234,6 +2729,143 @@ begin
 end;
 
 //------------------------------------------------------------------------------
+// StructuredObjectToString
+//------------------------------------------------------------------------------
+
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРЅС‹Р№ РІ РїРѕСЃР»РµРґРЅРµРј РїРѕС‚РѕРјРєРµ ToString РёР»Рё nil РµСЃР»Рё ToString РѕРїСЂРµРґРµР»РµРЅ РІ Object
+function RedefinedToString(o: object): System.Reflection.MethodInfo;
+begin
+  var t := o.GetType;
+  var meth: System.Reflection.MethodInfo := nil;
+  while t<>typeof(Object) do
+  begin
+    meth := t.GetMethod('ToString',System.Reflection.BindingFlags.Public or
+                System.Reflection.BindingFlags.Instance or 
+                System.Reflection.BindingFlags.DeclaredOnly,nil,new System.Type[0],nil);
+    if meth<>nil then 
+      break;
+    t := t.BaseType;            
+  end;
+  if (t=typeof(Object)) or (t=typeof(System.ValueType)) then
+    Result := nil
+  else Result := meth;   
+end;
+
+function ArrNToString(a: System.Array; indexes: array of integer; i: integer): string; forward;
+
+function StructuredObjectToString(o: Object; n: integer := 0): string;
+const 
+  nmax = 100;
+  nmax1 = 50;
+begin
+  if o is System.Reflection.Pointer then
+    Result := PointerToString(System.Reflection.Pointer.Unbox(o))
+  else if o=nil then
+    Result := 'nil' 
+  else if (o.GetType = typeof(real)) or (o.GetType = typeof(decimal)) or (o.GetType = typeof(single)) then
+    Result := FormatFloatNumber(o.ToString)
+  else if (o.GetType.IsPrimitive) or (o.GetType = typeof(string)) then
+    Result := o.ToString
+  else if o is System.Array then
+  begin
+    var a := o as System.Array;  
+    Result := ArrNToString(a,new integer[a.Rank],0); 
+  end
+  else if o is System.Collections.IEnumerable then
+  begin
+    var sb := new StringBuilder();
+    var g := (o as System.Collections.IEnumerable).GetEnumerator();
+    
+    var isdictorset := o.GetType.Name.Equals('Dictionary`2') or o.GetType.Name.Equals('SortedDictionary`2') or (o.GetType=typeof(TypedSet)) or o.GetType.Name.Equals('HashSet`1') or o.GetType.Name.Equals('SortedSet`1');
+    if isdictorset then
+      sb.Append('{')
+    else sb.Append('[');
+    if g.MoveNext() then
+      sb.Append(StructuredObjectToString(g.Current,n+1));
+    var cnt := 1;  
+    while g.MoveNext() and (cnt<nmax) do 
+    begin
+      sb.Append(',');
+      sb.Append(StructuredObjectToString(g.Current,n+1));
+      cnt += 1;
+    end;
+    if cnt >= nmax then 
+      sb.Append(',...');
+
+    if isdictorset then
+      sb.Append('}')
+    else sb.Append(']');
+    Result := sb.ToString;
+  end
+  else if o.GetType.Name.StartsWith('$pascal_array') then
+  begin
+    var t := o.GetType;
+    var f := t.GetField('NullBasedArray');
+    Result := StructuredObjectToString(f.GetValue(o));
+  end
+  else
+  begin
+    var q := RedefinedToString(o);
+    var gg := o.GetType.FullName.StartsWith('System.Tuple');
+    var gg1 := o.GetType.Name.StartsWith('KeyValuePair');
+    if (q<>nil) and q.IsVirtual and not gg and not gg1 then
+      Result := o.ToString
+    else 
+    begin
+      var t := o.GetType;
+      var sb := new System.Text.StringBuilder();
+      sb.Append('(');
+      if n>nmax1 then
+        sb.Append('....')
+      else 
+        while t<>typeof(object) do
+        begin
+          var ff := t.GetFields(System.Reflection.BindingFlags.Public or System.Reflection.BindingFlags.Instance or System.Reflection.BindingFlags.DeclaredOnly);
+          var pp := t.GetProperties(System.Reflection.BindingFlags.Public or System.Reflection.BindingFlags.Instance or System.Reflection.BindingFlags.DeclaredOnly);
+  
+          for var i:=ff.Length-1 downto 0 do
+            sb.Insert(1,StructuredObjectToString(ff[i].GetValue(o),n+1)+',');
+    
+          for var i:=pp.Length-1 downto 0 do
+            sb.Insert(1,StructuredObjectToString(pp[i].GetValue(o, nil),n+1)+',');
+    
+          t := t.BaseType;
+        end; 
+      if sb.Length>1 then 
+        sb.Length := sb.Length-1;
+      sb.Append(')');
+      Result := sb.ToString;
+    end;
+  end;
+end;
+
+function ArrNToString(a: System.Array; indexes: array of integer; i: integer): string;
+const nmax = 100;
+begin
+  var sb := new StringBuilder;
+  if i=a.Rank then
+    sb.Append(StructuredObjectToString(a.GetValue(indexes)))
+  else
+  begin
+    sb.Append('[');
+    for var k:=0 to a.GetLength(i)-1 do
+    begin
+      indexes[i] := k;
+      sb.Append(ArrNToString(a,indexes,i+1));
+      if (k>=nmax-1) and (k<a.GetLength(i)-1) then 
+      begin
+        sb.Append(',...');
+        break
+      end
+      else if k<a.GetLength(i)-1 then
+        sb.Append(',');            
+    end;
+    sb.Append(']');
+  end;
+  Result := sb.ToString;
+end;
+
+//------------------------------------------------------------------------------
 // Extension methods for String
 //------------------------------------------------------------------------------
 procedure string.operator+=(var left: string; right: string);
@@ -2260,6 +2892,679 @@ function string.operator>=(left, right: string): boolean;
 begin
   result := string.CompareOrdinal(left, right) >= 0;
 end;
+
+/// РџРѕРІС‚РѕСЂСЏРµС‚ СЃС‚СЂРѕРєСѓ str n СЂР°Р·
+function string.operator*(str: string; n: integer): string;
+begin
+  var sb := new StringBuilder;
+  for var i:=1 to n do
+    sb.Append(str);
+  result := sb.ToString;
+end;
+
+/// РџРѕРІС‚РѕСЂСЏРµС‚ СЃС‚СЂРѕРєСѓ str n СЂР°Р·
+function string.operator*(n: integer; str: string): string;
+begin
+  var sb := new StringBuilder;
+  for var i:=1 to n do
+    sb.Append(str);
+  result := sb.ToString;
+end;
+
+/// РџРѕРІС‚РѕСЂСЏРµС‚ СЃРёРјРІРѕР» c n СЂР°Р·
+function char.operator*(c: char; n: integer): string;
+begin
+  var sb := new StringBuilder;
+  for var i:=1 to n do
+    sb.Append(c);
+  result := sb.ToString;
+end;
+
+/// РџРѕРІС‚РѕСЂСЏРµС‚ СЃРёРјРІРѕР» c n СЂР°Р·
+function char.operator*(n: integer; c: char): string;
+begin
+  var sb := new StringBuilder;
+  for var i:=1 to n do
+    sb.Append(c);
+  result := sb.ToString;
+end;
+
+/// Р”РѕР±Р°РІР»СЏРµС‚ Рє СЃС‚СЂРѕРєРµ str СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ С‡РёСЃР»Р° n
+function string.operator+(str: string; n: integer): string;
+begin
+  result := str + n.ToString;
+end;
+
+/// Р”РѕР±Р°РІР»СЏРµС‚ Рє СЃС‚СЂРѕРєРµ str СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ С‡РёСЃР»Р° n
+function string.operator+(n: integer; str: string): string;
+begin
+  result := n.ToString + str;
+end;
+
+/// Р”РѕР±Р°РІР»СЏРµС‚ Рє СЃС‚СЂРѕРєРµ str СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ С‡РёСЃР»Р° r
+function string.operator+(str: string; r: real): string;
+begin
+  result := str + r.ToString(nfi);
+end;
+
+/// Р”РѕР±Р°РІР»СЏРµС‚ Рє СЃС‚СЂРѕРєРµ str СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ С‡РёСЃР»Р° r
+function string.operator+(r: real; str: string): string;
+begin
+  result := r.ToString(nfi) + str;
+end;
+
+procedure string.operator+=(var left: string; right: integer);
+begin
+  left := left + right.ToString;
+end;
+
+procedure string.operator+=(var left: string; right: real);
+begin
+  left := left + right.ToString(nfi);
+end;
+
+procedure string.operator*=(var left: string; n: integer);
+begin
+  var sb := new StringBuilder;
+  for var i:=1 to n do
+    sb.Append(left);
+  left := sb.ToString;
+end;
+
+
+/// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРЅРІРµСЂСЃРёСЋ СЃС‚СЂРѕРєРё
+function string.Inverse(): string;
+begin
+  var sb := new System.Text.StringBuilder(Self.Length);
+  for var i:= Self.Length downto 1 do
+    sb.Append(Self[i]);
+  Result := sb.ToString;
+end;
+
+//------------------------------------------------------------------------------
+// Extension methods for BigInteger
+//------------------------------------------------------------------------------
+procedure BigInteger.operator+=(var p: BigInteger; q: BigInteger);
+begin
+  p := p + q;
+end;
+
+procedure BigInteger.operator*=(var p: BigInteger; q: BigInteger);
+begin
+  p := p * q;
+end;
+
+procedure BigInteger.operator-=(var p: BigInteger; q: BigInteger);
+begin
+  p := p - q;
+end;
+
+function BigInteger.operator div(p,q: BigInteger): BigInteger;
+begin
+  Result := BigInteger.Divide(p,q);
+end;
+
+function BigInteger.operator mod(p,q: BigInteger): BigInteger;
+begin
+  Result := BigInteger.Remainder(p,q);
+end;
+
+{function BigInteger.operator-(p: BigInteger): BigInteger;
+begin
+  Result := BigInteger.Negate(p)
+end;
+
+function BigInteger.operator+(p: BigInteger): BigInteger;
+begin
+  Result := p
+end;
+
+function BigInteger.operator+(p,q: BigInteger): BigInteger;
+begin
+  Result := BigInteger.Add(p,q);
+end;}
+//------------------------------------------------------------------------------
+// Extension methods for IEnumerable<T>
+//------------------------------------------------------------------------------
+/// Р’С‹РІРѕРґРёС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РЅР° СЌРєСЂР°РЅ, РёСЃРїРѕР»СЊР·СѓСЏ delim РІ РєР°С‡РµСЃС‚РІРµ СЂР°Р·РґРµР»РёС‚РµР»СЏ
+function Print<T>(self: sequence of T; delim: string): sequence of T; extensionmethod;
+begin
+  var g := Self.GetEnumerator();
+  if g.MoveNext() then
+    write(g.Current);
+  while g.MoveNext() do
+    if delim<>'' then
+      write(delim, g.Current)
+    else write(g.Current);
+  Result := Self;  
+end;
+
+/// Р’С‹РІРѕРґРёС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РЅР° СЌРєСЂР°РЅ, РёСЃРїРѕР»СЊР·СѓСЏ РїСЂРѕР±РµР» РІ РєР°С‡РµСЃС‚РІРµ СЂР°Р·РґРµР»РёС‚РµР»СЏ
+function Print<T>(self: sequence of T): sequence of T; extensionmethod;
+begin
+  Result := Self.Print(' ');  
+end;
+
+/// Р’С‹РІРѕРґРёС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РЅР° СЌРєСЂР°РЅ, РёСЃРїРѕР»СЊР·СѓСЏ delim РІ РєР°С‡РµСЃС‚РІРµ СЂР°Р·РґРµР»РёС‚РµР»СЏ, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ
+function Println<T>(self: sequence of T; delim: string): sequence of T; extensionmethod;
+begin
+  Self.Print(delim);
+  Writeln;
+  Result := Self;  
+end;
+
+/// Р’С‹РІРѕРґРёС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РЅР° СЌРєСЂР°РЅ, РёСЃРїРѕР»СЊР·СѓСЏ РїСЂРѕР±РµР» РєР°С‡РµСЃС‚РІРµ СЂР°Р·РґРµР»РёС‚РµР»СЏ, Рё РїРµСЂРµС…РѕРґРёС‚ РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ
+function Println<T>(self: sequence of T): sequence of T; extensionmethod;
+begin
+  Result := Self.Println(' ');  
+end;
+
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЌР»РµРјРµРЅС‚С‹ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё РІ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ, РїРѕСЃР»Рµ С‡РµРіРѕ РѕР±СЉРµРґРёРЅСЏРµС‚ РёС… РІ СЃС‚СЂРѕРєСѓ, РёСЃРїРѕР»СЊР·СѓСЏ delim РІ РєР°С‡РµСЃС‚РІРµ СЂР°Р·РґРµР»РёС‚РµР»СЏ
+function System.Collections.Generic.IEnumerable<T>.JoinIntoString(delim: string): string;
+begin
+  var g := Self.GetEnumerator();
+  var sb := new System.Text.StringBuilder('');
+  if g.MoveNext() then
+    sb.Append(g.Current.ToString());
+  while g.MoveNext() do 
+    sb.Append(delim + g.Current.ToString());
+  Result := sb.ToString;  
+end;
+
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЌР»РµРјРµРЅС‚С‹ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё РІ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ, РїРѕСЃР»Рµ С‡РµРіРѕ РѕР±СЉРµРґРёРЅСЏРµС‚ РёС… РІ СЃС‚СЂРѕРєСѓ, РёСЃРїРѕР»СЊР·СѓСЏ РїСЂРѕР±РµР» РІ РєР°С‡РµСЃС‚РІРµ СЂР°Р·РґРµР»РёС‚РµР»СЏ
+function System.Collections.Generic.IEnumerable<T>.JoinIntoString(): string;
+begin
+  Result := Self.JoinIntoString(' ');  
+end;
+
+/// РџСЂРёРјРµРЅСЏРµС‚ РґРµР№СЃС‚РІРёРµ Рє РєР°Р¶РґРѕРјСѓ СЌР»РµРјРµРЅС‚Сѓ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+procedure &ForEach<T>(self: sequence of T; action: T -> ()); extensionmethod;
+begin
+  foreach x: T in Self do
+    action(x);
+end;
+
+function Ident<T>(x: T): T;
+begin
+  Result := x;
+end;
+
+function Sorted<T>(self: sequence of T): sequence of T; extensionmethod;
+begin
+  Result := Self.OrderBy(Ident&<T>);
+end;
+
+/// РћР±СЉРµРґРёРЅСЏРµС‚ РґРІРµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+function System.Collections.Generic.IEnumerable<T>.operator+(a,b: sequence of T): sequence of T;
+begin
+  Result := a.Concat(b);
+end;
+
+/// РћР±СЉРµРґРёРЅСЏРµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ a Рё Р·РЅР°С‡РµРЅРёРµ b
+function System.Collections.Generic.IEnumerable<T>.operator+(a: sequence of T; b: T): sequence of T;
+begin
+  Result := a.Concat(new T[1](b));
+end;
+
+/// РћР±СЉРµРґРёРЅСЏРµС‚ Р·РЅР°С‡РµРЅРёРµ b Рё РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ a 
+function System.Collections.Generic.IEnumerable<T>.operator+(b: T; a: sequence of T): sequence of T;
+begin
+  Result := new T[1](b);
+  Result := Result.Concat(a);
+end;
+
+/// Р’РѕР·РІСЂР°С‰Р°Рµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ a, РїРѕРІС‚РѕСЂРµРЅРЅСѓСЋ n СЂР°Р· 
+function System.Collections.Generic.IEnumerable<T>.operator*(a: sequence of T; n: integer): sequence of T;
+begin
+  Result := System.Linq.Enumerable.Empty&<T>();
+  for var i:=1 to n do
+    Result := Result.Concat(a);
+end;
+
+/// Р’РѕР·РІСЂР°С‰Р°Рµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ a, РїРѕРІС‚РѕСЂРµРЅРЅСѓСЋ n СЂР°Р· 
+function System.Collections.Generic.IEnumerable<T>.operator*(n: integer; a: sequence of T): sequence of T;
+begin
+  Result := a*n;
+end;
+
+/// РћР±СЉРµРґРёРЅСЏРµС‚ РґРІР° РјР°СЃСЃРёРІР°
+function operator+<T>(a, b: array of T): array of T; extensionmethod;
+begin
+  Result := new T[a.Length+b.Length];
+  a.CopyTo(Result,0);
+  b.CopyTo(Result,a.Length);
+end;
+
+// -----------------------------------------------------
+//                Sequences
+// -----------------------------------------------------
+function Range(self: integer): sequence of integer; extensionmethod;
+begin
+  Result := Range(1,self);  
+end;
+
+function Range(a, b: integer): sequence of integer;
+begin
+  Result := System.Linq.Enumerable.Range(a, b - a + 1);
+end;
+
+function Range(c1,c2: char): sequence of char;
+begin
+  Result := Range(integer(c1),integer(c2)).Select(x->ChrUnicode(x));
+end;
+
+type AB = class
+  a,b,h: real;
+  n: integer;
+  constructor(aa,bb: real; nn: integer);
+  begin
+    n := nn;
+    a := aa; b := bb;
+    h := (b-a)/n;
+  end;
+  function F(x: integer): real;
+  begin
+    Result := a + (b-a)/n*x;
+  end;
+end;
+
+function Range(a,b: real; n: integer): sequence of real;
+begin
+  var ab1 := new AB(a,b,n);
+  Result := Range(0,n).Select(ab1.F)
+end;
+
+type
+  ArithmSeq = auto class
+    a,step: integer;
+    function f(x: integer): integer;
+    begin
+      Result := x*step+a;
+    end;
+  end;
+
+function Range(a, b, step: integer): sequence of integer;
+begin
+  var n := (b-a) div step + 1;
+  var ar := new ArithmSeq(a,step);
+  Result := System.Linq.Enumerable.Range(0, n).Select(ar.f);
+end;
+
+function ArrRandom(n: integer; a: integer; b: integer): array of integer;
+begin
+  Result := new integer[n];
+  for var i:=0 to Result.Length-1 do
+    Result[i] := Random(a,b);
+end;
+
+function ArrRandomInteger(n: integer; a: integer; b: integer): array of integer;
+begin
+  Result := ArrRandom(n,a,b);
+end;
+
+function ArrRandomReal(n: integer; a: real; b: real): array of real;
+begin
+  Result := new real[n];
+  for var i:=0 to Result.Length-1 do
+    Result[i] := Random()*(b-a)+a;
+end;
+
+function SeqRandom(n: integer; a: integer; b: integer): sequence of integer;
+begin
+  Result := Range(1,n).Select(i->Random(a,b))
+end;
+
+function SeqRandomReal(n: integer; a: real; b: real): sequence of real;
+begin
+  Result := Range(1,n).Select(i->Random()*(b-a)+a)
+end;
+
+function Arr<T>(params a: array of T): array of T;
+begin
+  Result := new T[a.Length];
+  System.Array.Copy(a,Result,a.Length);
+end;
+
+function Seq<T>(params a: array of T): sequence of T;
+begin
+  var res := new T[a.Length];
+  System.Array.Copy(a,res,a.Length);
+  Result := res;
+end;
+
+type
+  SeqGenClass<T> = class
+    first: T;
+    next: Func<T,T>;
+    count: integer;
+    constructor (f: T; n: Func<T,T>; c: integer);
+    begin
+      first := f;
+      next := n;
+      count := c;
+    end;
+    
+    function lam(x: integer): T;
+    begin
+      Result := first; first := next(first);
+    end;
+    
+    function f(): sequence of T;
+    begin
+      Result := Range(1,count).Select(lam)
+    end;
+  end;
+  
+  SeqGenClass2<T> = class
+    first,second: T;
+    next: Func2<T,T,T>;
+    count: integer;
+    constructor (f,s: T; n: Func2<T,T,T>; c: integer);
+    begin
+      first := f;
+      second := s;
+      next := n;
+      count := c;
+    end;
+    
+    function lam(x: integer): T;
+    begin
+      Result := first; first := second; second := next(Result,first); 
+    end;
+    
+    function f(): sequence of T;
+    begin
+      Result := Range(1,count).Select(lam)
+    end;
+  end;
+  
+  SeqWhileClass<T> = class
+    first: T; 
+    next: Func<T,T>; 
+    pred: Func<T,boolean>;
+    constructor (f: T; n: Func<T,T>; p: Func<T,boolean>);
+    begin
+      first := f;
+      next := n;
+      pred := p;
+    end;
+
+    function lam(x: integer): T;
+    begin
+      Result := first; first := next(first); 
+    end;
+
+    function f(): sequence of T;
+    begin
+      Result := Range(1,1000000000).Select(lam).TakeWhile(pred);
+    end;
+  end;
+  
+  SeqWhileClass2<T> = class
+    first,second: T; 
+    next: Func2<T,T,T>; 
+    pred: Func<T,boolean>;
+    constructor (f,s: T; n: Func2<T,T,T>; p: Func<T,boolean>);
+    begin
+      first := f;
+      second := s;
+      next := n;
+      pred := p;
+    end;
+    
+    function lam(x: integer): T;
+    begin
+      Result := first; first := second; second := next(Result,first);  
+    end;
+    
+    function f(): sequence of T;
+    begin
+      Result := Range(1,1000000000).Select(lam).TakeWhile(pred);
+    end;
+  end;
+
+function SeqGen<T>(count: integer; first: T; next: T -> T): sequence of T;
+begin
+  if count<1 then
+    raise new System.ArgumentOutOfRangeException('count',count,GetTranslation(PARAMETER_COUNT_MUST_BE_GREATER_0));
+  var tt := new SeqGenClass<T>(first,next,count);
+  Result := tt.f();
+end;  
+
+function SeqGen<T>(count: integer; first,second: T; next: (T,T) -> T): sequence of T;
+begin
+  if count<1 then
+    raise new System.ArgumentOutOfRangeException('count',count,GetTranslation(PARAMETER_COUNT_MUST_BE_GREATER_0));
+  var tt := new SeqGenClass2<T>(first,second,next,count);
+  Result := tt.f();
+end;  
+
+function SeqWhile<T>(first: T; next: T -> T; pred: T -> boolean): sequence of T;
+begin
+  var tt := new SeqWhileClass<T>(first,next,pred);
+  Result := tt.f();
+end;  
+
+function SeqWhile<T>(first,second: T; next: (T,T) -> T; pred: T -> boolean): sequence of T;
+begin
+  var tt := new SeqWhileClass2<T>(first,second,next,pred);
+  Result := tt.f();
+end;
+
+function ArrGen<T>(count: integer; first: T; next: T -> T): array of T;
+begin
+  if count<1 then
+    raise new System.ArgumentOutOfRangeException('count',count,GetTranslation(PARAMETER_COUNT_MUST_BE_GREATER_0));
+  var a := new T[count];
+  a[0] := first;
+  for var i:=1 to a.Length-1 do
+    a[i] := next(a[i-1]);
+  Result := a;
+end;
+
+function ArrGen<T>(count: integer; first,second: T; next: (T,T) -> T): array of T;
+begin
+  if count<2 then
+    raise new System.ArgumentOutOfRangeException('count',count,GetTranslation(PARAMETER_COUNT_MUST_BE_GREATER_1));
+  var a := new T[count];
+  a[0] := first;
+  a[1] := second;
+  for var i:=2 to a.Length-1 do
+    a[i] := next(a[i-2],a[i-1]);
+  Result := a;
+end;
+
+{function ListWhile<T>(first: T; next: Func<T,T>; pred: Predicate<T>): List<T>;
+begin
+  var a := new List<T>;
+  var x := first;
+  while pred(x) do
+  begin
+    a.Add(x);
+    x := next(x);
+  end;
+  Result := a;
+end;
+
+function ListWhile<T>(first,second: T; next: Func2<T,T,T>; pred: Predicate<T>): List<T>;
+begin
+  var a := new List<T>;
+  var x := first;
+  var y := second;
+  while pred(x) do
+  begin
+    a.Add(x);
+    var z := next(x,y);
+    x := y;
+    y := z;
+  end;
+  Result := a;
+end;}
+
+function ArrFill<T>(count: integer; x: T): array of T;
+begin
+  Result := System.Linq.Enumerable.Repeat(x,count).ToArray();
+end;
+
+function ArrGen<T>(count: integer; f: integer -> T; from: integer): array of T;
+begin
+  Result := Range(from,count+from-1).Select(f).ToArray()
+end;
+
+function ArrGen<T>(count: integer; f: integer -> T): array of T;
+begin
+  Result := Range(0,count-1).Select(f).ToArray()
+end;
+
+function SeqFill<T>(count: integer; x: T): sequence of T;
+begin
+  Result := System.Linq.Enumerable.Repeat(x,count);
+end;
+
+function SeqGen<T>(count: integer; f: integer -> T; from: integer): sequence of T;
+begin
+  Result := Range(from,count+from-1).Select(f)
+end;
+
+function SeqGen<T>(count: integer; f: integer -> T): sequence of T;
+begin
+  Result := Range(0,count-1).Select(f)
+end;
+
+function MatrixRandom(m: integer; n: integer; a: integer; b: integer): array [,] of integer;
+begin
+  Result := new integer[m,n];
+  for var i:=0 to Result.GetLength(0)-1 do
+  for var j:=0 to Result.GetLength(1)-1 do
+    Result[i,j] := Random(a,b);
+end;
+
+function MatrixRandomReal(m: integer; n: integer; a: integer; b: integer): array [,] of real;
+begin
+  Result := new real[m,n];
+  for var i:=0 to Result.GetLength(0)-1 do
+  for var j:=0 to Result.GetLength(1)-1 do
+    Result[i,j] := Random()*(b-a) + a;
+end;
+
+
+function ReadArrInteger(n: integer): array of integer;
+begin
+  Result := new integer[n];
+  for var i:=0 to Result.Length-1 do
+    Result[i] := ReadInteger;
+end;
+
+function ReadArrInteger(const prompt: string; n: integer): array of integer;
+begin
+  Print(prompt);
+  Result := ReadArrInteger(n);
+end;
+
+function ReadArrReal(n: integer): array of real;
+begin
+  Result := new real[n];
+  for var i:=0 to Result.Length-1 do
+    Result[i] := ReadReal;
+end;
+
+function ReadArrReal(const prompt: string; n: integer): array of real;
+begin
+  Print(prompt);
+  Result := ReadArrReal(n);
+end;
+
+function ReadArrString(n: integer): array of string;
+begin
+  Result := new string[n];
+  for var i:=0 to Result.Length-1 do
+    Result[i] := ReadString;
+end;
+
+function ReadArrString(const prompt: string; n: integer): array of string;
+begin
+  Print(prompt);
+  Result := ReadArrString(n);
+end;
+
+function ReadSeqInteger(n: integer): sequence of integer;
+begin
+  Result := Range(1,n).Select(i->ReadInteger());
+end;
+
+function ReadSeqInteger(const prompt: string; n: integer): sequence of integer;
+begin
+  Print(prompt);
+  Result := ReadSeqInteger(n);
+end;
+
+function ReadSeqReal(n: integer): sequence of real;
+begin
+  Result := Range(1,n).Select(i->ReadReal());
+end;
+
+function ReadSeqReal(const prompt: string; n: integer): sequence of real;
+begin
+  Print(prompt);
+  Result := ReadSeqReal(n);
+end;
+
+function ReadSeqString(n: integer): sequence of string;
+begin
+  Result := Range(1,n).Select(i->ReadString());
+end;
+
+function ReadSeqString(const prompt: string; n: integer): sequence of string;
+begin
+  Print(prompt);
+  Result := ReadSeqString(n);
+end;
+
+
+function Rec<T1,T2>(x1: T1; x2: T2): Tuple<T1,T2>;
+begin
+  Result := Tuple.Create(x1,x2);
+end;
+
+function Rec<T1,T2,T3>(x1: T1; x2: T2; x3: T3): Tuple<T1,T2,T3>;
+begin
+  Result := Tuple.Create(x1,x2,x3);
+end;
+
+function Rec<T1,T2,T3,T4>(x1: T1; x2: T2; x3: T3; x4: T4): Tuple<T1,T2,T3,T4>;
+begin
+  Result := Tuple.Create(x1,x2,x3,x4);
+end;
+
+function Rec<T1,T2,T3,T4,T5>(x1: T1; x2: T2; x3: T3; x4: T4; x5: T5): Tuple<T1,T2,T3,T4,T5>;
+begin
+  Result := Tuple.Create(x1,x2,x3,x4,x5);
+end;
+
+function Rec<T1,T2,T3,T4,T5,T6>(x1: T1; x2: T2; x3: T3; x4: T4; x5: T5; x6: T6): Tuple<T1,T2,T3,T4,T5,T6>;
+begin
+  Result := Tuple.Create(x1,x2,x3,x4,x5,x6);
+end;
+
+function System.Collections.Generic.IDictionary<Key,Value>.Get(K: Key): Value;
+begin
+  var b := Self.TryGetValue(K,Result);
+  if not b then 
+    Result := default(Value);
+end;
+
+function Dict<TKey, TVal>(params pairs: array of KeyValuePair<TKey, TVal>): Dictionary<TKey, TVal>;
+begin
+  Result := new Dictionary<TKey, TVal>();
+  for var i := 0 to pairs.Length - 1 do
+    Result.Add(pairs[i].Key, pairs[i].Value);
+end;
+
+function KV<TKey, TVal>(key: TKey; value: TVal): KeyValuePair<TKey, TVal>;
+begin
+  Result := new KeyValuePair<TKey, TVal>(key, value);
+end;
+
 //------------------------------------------------------------------------------
 
 [System.Diagnostics.DebuggerStepThrough]
@@ -2323,7 +3628,7 @@ begin
   Result := sb.ToString;
 end;}
 
-function read_lexem: string; // SSM 08.03.11 - пытаюсь исправить с peekом ситуацию с вводом '1 hello'. Должно работать
+function read_lexem: string;// SSM 08.03.11 - РїС‹С‚Р°СЋСЃСЊ РёСЃРїСЂР°РІРёС‚СЊ СЃ peekРѕРј СЃРёС‚СѓР°С†РёСЋ СЃ РІРІРѕРґРѕРј '1 hello'. Р”РѕР»Р¶РЅРѕ СЂР°Р±РѕС‚Р°С‚СЊ
 var
   c: char;
   sb: System.Text.StringBuilder;
@@ -2335,7 +3640,7 @@ begin
   repeat
     sb.Append(c);
     c := char(CurrentIOSystem.peek);
-    if char.IsWhiteSpace(c) or (c = char(-1)) then // char(-1) - Ctrl-Z во входном потоке
+    if char.IsWhiteSpace(c) or (c = char(-1)) then // char(-1) - Ctrl-Z РІРѕ РІС…РѕРґРЅРѕРј РїРѕС‚РѕРєРµ
       break;
     c := CurrentIOSystem.read_symbol;
   until False; // accumulate nonspaces
@@ -2349,9 +3654,9 @@ var
   sb: System.Text.StringBuilder;
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.sr = nil then 
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED_FOR_READING));
   repeat
     i := f.sr.Read();
   until not char.IsWhiteSpace(char(i)); // pass spaces
@@ -2377,14 +3682,30 @@ function IOStandardSystem.peek: integer;
 begin
   if not console_alloc then
     AllocConsole;
-  Result := Console.In.Peek();
+// SSM 29.11.14  
+  if state = 1 then // РІ sym - СЃРёРјРІРѕР», СЃС‡РёС‚Р°РЅРЅС‹Р№ РїСЂРµРґС‹РґСѓС‰РёРј Peek
+    Result := sym
+  else // РІ sym РЅРёС‡РµРіРѕ РЅРµС‚
+  begin 
+    state := 1;
+    sym := Console.Read(); // СЃС‡РёС‚С‹РІР°РµРЅРёРµ РІ Р±СѓС„РµСЂ
+    Result := sym;
+  end;   
 end;
 
 function IOStandardSystem.read_symbol: char;
 begin
   if not console_alloc then
     AllocConsole;
-  Result := char(Console.Read());
+// SSM 29.11.14  
+  if state = 1 then // РІ sym - СЃРёРјРІРѕР», СЃС‡РёС‚Р°РЅРЅС‹Р№ РїСЂРµРґС‹РґСѓС‰РёРј Peek
+  begin
+    state := 0;
+    Result := char(sym);
+    sym := -1;
+  end
+  else // РІ sym РЅРёС‡РµРіРѕ РЅРµС‚
+    Result := char(Console.Read());
 end;
 
 procedure IOStandardSystem.read(var x: integer);
@@ -2414,19 +3735,38 @@ begin
   x := sb.ToString;
 end;}
 
-procedure IOStandardSystem.read(var x: string); // Это почему-то не работало. Что-то связано с тем, что console.Peek() возвращало -1
+procedure IOStandardSystem.read(var x: string);
 begin
-  var sb := new System.Text.StringBuilder;
-// SSM 8.04.10
-  var c := char(peek()); // первый раз может быть char(-1) - это значит, что в потоке ввода ничего нет, тогда мы читаем символ
-  while (c <> #13) and (c <> #10) do 
+  if IsWDE then
   begin
-    c := read_symbol;
-    sb.Append(c);
-    c := char(peek());
+    var sb := new System.Text.StringBuilder;
+    var c := read_symbol;
+    if (c <> #13) and (c <> #10) then
+        sb.Append(c);
+    while (c <> #13) and (c <> #10) do
+    begin
+        c := read_symbol;
+        sb.Append(c);
+        c := char(peek());
+    end;
+    x := sb.ToString;
+  end
+  else
+  begin
+    var sb := new System.Text.StringBuilder;
+    // SSM 8.04.10
+    var c := char(peek()); // РїРµСЂРІС‹Р№ СЂР°Р· РјРѕР¶РµС‚ Р±С‹С‚СЊ char(-1) - СЌС‚Рѕ Р·РЅР°С‡РёС‚, С‡С‚Рѕ РІ РїРѕС‚РѕРєРµ РІРІРѕРґР° РЅРёС‡РµРіРѕ РЅРµС‚, С‚РѕРіРґР° РјС‹ С‡РёС‚Р°РµРј СЃРёРјРІРѕР»
+    while (c <> #13) and (c <> #10) do 
+    begin
+      c := read_symbol;
+      if (c <> #13) and (c <> #10) then // SSM 13.12.13
+        sb.Append(c);
+      c := char(peek());
+    end;
+    x := sb.ToString;
   end;
-  x := sb.ToString;
 end;
+
 
 procedure IOStandardSystem.read(var x: byte);
 begin
@@ -2476,7 +3816,7 @@ begin
     x := True
   else if s = 'false' then
     x := False  
-  else raise new System.FormatException('Входная строка имела неверный формат');
+  else raise new System.FormatException('Р’С…РѕРґРЅР°СЏ СЃС‚СЂРѕРєР° РёРјРµР»Р° РЅРµРІРµСЂРЅС‹Р№ С„РѕСЂРјР°С‚');
 end;
 
 procedure IOStandardSystem.readln;
@@ -2485,18 +3825,19 @@ begin
 end;
 
 // string for writeln
-function _ObjectToString(obj: object): string;
+function _ObjectToString(o: object): string;
 begin
-  if obj = nil then
+  Result := StructuredObjectToString(o);
+  {if o = nil then
     Result := 'nil'
-  else case System.Type.GetTypeCode(obj.GetType) of
+  else case System.Type.GetTypeCode(o.GetType) of
       TypeCode.Double,  
       TypeCode.Single,  
       TypeCode.Decimal:
-      Result := FormatFloatNumber(obj.ToString);
+      Result := FormatFloatNumber(o.ToString);
     else
-      Result := obj.ToString;
-    end;
+      Result := o.ToString;
+    end;}
 end;
 
 procedure IOStandardSystem.write(obj: object);
@@ -2504,26 +3845,6 @@ begin
   if not console_alloc then
     AllocConsole;
   Console.Write(_ObjectToString(obj));  
-  {  if obj = nil then 
-  begin
-  Console.Write('nil');
-  //System.Diagnostics.Debug.Write('nil');
-  Exit;
-  end;
-  case System.Type.GetTypeCode(obj.GetType) of
-  TypeCode.Double,  
-  TypeCode.Single,  
-  TypeCode.Decimal:
-  begin
-  Console.Write(FormatFloatNumber(obj.ToString));
-  //System.Diagnostics.Debug.Write(FormatFloatNumber(obj.ToString));
-  end
-  else
-  begin
-  Console.Write(obj);
-  //System.Diagnostics.Debug.Write(obj);
-  end;
-  end;}
 end;
 
 procedure IOStandardSystem.write(p: pointer);
@@ -2793,16 +4114,81 @@ begin
   readln();
 end;
 
+// Read with prompt
+
+function ReadInteger(prompt: string): integer;
+begin
+  Print(prompt);
+  Result := ReadInteger;
+end;
+
+function ReadReal(prompt: string): real;
+begin
+  Print(prompt);
+  Result := ReadReal;
+end;
+
+function ReadChar(prompt: string): char;
+begin
+  Print(prompt);
+  Result := ReadChar;
+end;
+
+function ReadString(prompt: string): string;
+begin
+  Print(prompt);
+  Result := ReadString;
+end;
+
+function ReadBoolean(prompt: string): boolean;
+begin
+  Print(prompt);
+  Result := ReadBoolean;
+end;
+
+function ReadlnInteger(prompt: string): integer;
+begin
+  Print(prompt);
+  Result := ReadlnInteger;
+end;
+
+function ReadlnReal(prompt: string): real;
+begin
+  Print(prompt);
+  Result := ReadlnReal;
+end;
+
+function ReadlnChar(prompt: string): char;
+begin
+  Print(prompt);
+  Result := ReadlnChar;
+end;
+
+function ReadlnString(prompt: string): string;
+begin
+  Print(prompt);
+  Result := ReadlnString;
+end;
+
+function ReadlnBoolean(prompt: string): boolean;
+begin
+  Print(prompt);
+  Result := ReadlnBoolean;
+end;
+
+
 procedure ReadShortStringFromFile(f: Text; var s: string; n: integer);
 begin
-  //x := f.sr.ReadLine;//если конец файла то вернет nil  
-  //Нельзя эти пользоваться т.к. считывает и конец строки
+  //x := f.sr.ReadLine;//РµСЃР»Рё РєРѕРЅРµС† С„Р°Р№Р»Р° С‚Рѕ РІРµСЂРЅРµС‚ nil  
+  //РќРµР»СЊР·СЏ СЌС‚Рё РїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ С‚.Рє. СЃС‡РёС‚С‹РІР°РµС‚ Рё РєРѕРЅРµС† СЃС‚СЂРѕРєРё
   var i := 1;
   var sb := new System.Text.StringBuilder;
   repeat
     if f.sr.EndOfStream then
       break;
     if f.sr.Peek = 13 then
+      break;
+    if f.sr.Peek = 10 then
       break;
     if i > n then break;
     sb.Append(Convert.ToChar(f.sr.Read));
@@ -2814,30 +4200,30 @@ begin
   if s.Length > n then s := s.Substring(0, n);
 end;
 
-procedure ReadShortString(var s: string; n: integer); // Снова сделал peek. В прошлый раз была ошибка
+procedure ReadShortString(var s: string; n: integer);// РЎРЅРѕРІР° СЃРґРµР»Р°Р» peek. Р’ РїСЂРѕС€Р»С‹Р№ СЂР°Р· Р±С‹Р»Р° РѕС€РёР±РєР°
 begin
   if (input.fi <> nil) and (input.sr <> nil) then
   begin
     ReadShortStringFromFile(input, s, n);
     exit;
   end;
-
-{  var sb := new System.Text.StringBuilder;
-  var c := CurrentIOSystem.read_symbol;
-  while c <> #13 do 
-  begin
-    sb.Append(c);
-    c := CurrentIOSystem.read_symbol;
-  end;
-  s := sb.ToString;
-  if s.Length > n then s := s.Substring(0, n);
-}  
-
-// SSM 8.04.10
+  
+  {  var sb := new System.Text.StringBuilder;
+    var c := CurrentIOSystem.read_symbol;
+    while c <> #13 do 
+    begin
+      sb.Append(c);
+      c := CurrentIOSystem.read_symbol;
+    end;
+    s := sb.ToString;
+    if s.Length > n then s := s.Substring(0, n);
+  }  
+  
+  // SSM 8.04.10
   var sb := new System.Text.StringBuilder;
   var c := char(CurrentIOSystem.peek());
   var i := 0;
-  while (c <> #13) and (c <> #10) and (i<n) do 
+  while (c <> #13) and (c <> #10) and (i < n) do 
   begin
     c := CurrentIOSystem.read_symbol;
     i += 1;
@@ -2854,6 +4240,10 @@ end;
 
 procedure readln(f: Text);
 begin
+  if f.fi = nil then
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
+  if f.sr = nil then 
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED_FOR_READING));
   f.sr.ReadLine;
 end;
 
@@ -2877,18 +4267,34 @@ begin
   end;
 end;
 
-procedure read(f: Text; var x: string);
-var
-  s: System.Text.StringBuilder;
+procedure readln(f: Text; var x: string);
 begin
-  //x := f.sr.ReadLine;//если конец файла то вернет nil  
-  //Нельзя этим пользоваться т.к. считывает и конец строки
+  if f.fi = nil then
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
+  if f.sr = nil then 
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED_FOR_READING));
+
+  x := f.sr.ReadLine;
+  if x = nil then
+    x := '';
+end;
+
+procedure read(f: Text; var x: string);
+begin
+  //x := f.sr.ReadLine;//РµСЃР»Рё РєРѕРЅРµС† С„Р°Р№Р»Р° С‚Рѕ РІРµСЂРЅРµС‚ nil  
+  //РќРµР»СЊР·СЏ СЌС‚РёРј РїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ С‚.Рє. СЃС‡РёС‚С‹РІР°РµС‚ Рё РєРѕРЅРµС† СЃС‚СЂРѕРєРё
+  if f.fi = nil then
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
+  if f.sr = nil then 
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED_FOR_READING));
   
-  s := new System.Text.StringBuilder;
+  var s := new System.Text.StringBuilder;
   repeat
     if f.sr.EndOfStream then
       break;
     if f.sr.Peek = 13 then
+      break;
+    if f.sr.Peek = 10 then
       break;
     s.Append(Convert.ToChar(f.sr.Read));
   until False;
@@ -2899,6 +4305,10 @@ end;
 
 procedure read(f: Text; var x: char);
 begin
+  if f.fi = nil then
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
+  if f.sr = nil then 
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED_FOR_READING));
   try
     x := Convert.ToChar(f.sr.Read());
   except
@@ -2994,34 +4404,34 @@ begin
     x := True
   else if s = 'false' then
     x := False  
-  else raise new System.FormatException('Входная строка имела неверный формат');
+  else raise new System.FormatException('Р’С…РѕРґРЅР°СЏ СЃС‚СЂРѕРєР° РёРјРµР»Р° РЅРµРІРµСЂРЅС‹Р№ С„РѕСЂРјР°С‚');
 end;
 
 function ReadInteger(f: Text): integer;
 begin
   var x: integer;
-  read(f,x);
+  read(f, x);
   Result := x;
 end;
 
 function ReadReal(f: Text): real;
 begin
   var x: real;
-  read(f,x);
+  read(f, x);
   Result := x;
 end;
 
 function ReadChar(f: Text): char;
 begin
   var x: char;
-  read(f,x);
+  read(f, x);
   Result := x;
 end;
 
 function ReadString(f: Text): string;
 begin
   var x: string;
-  read(f,x);
+  read(f, x);
   readln(f);
   Result := x;
 end;
@@ -3029,23 +4439,234 @@ end;
 function ReadBoolean(f: Text): boolean;
 begin
   var x: boolean;
-  read(f,x);
+  read(f, x);
   Result := x;
 end;
+
+function ReadlnInteger(f: Text): integer;
+begin
+  Result := ReadInteger(f);
+  readln(f);
+end;
+
+function ReadlnReal(f: Text): real;
+begin
+  Result := ReadReal(f);
+  readln(f);
+end;
+
+function ReadlnChar(f: Text): char;
+begin
+  Result := ReadChar(f);
+  readln(f);
+end;
+
+function ReadlnString(f: Text): string;
+begin
+  Result := ReadString(f);
+end;
+
+function ReadlnBoolean(f: Text): boolean;
+begin
+  Result := ReadBoolean(f);
+  readln(f);
+end;
+// -----------------------------------------------------
+//                   TextFile methods
+// -----------------------------------------------------
+function Text.ReadInteger: integer;
+begin
+  Result := PABCSystem.ReadInteger(Self);
+end;
+
+function Text.ReadReal: real;
+begin
+  Result := PABCSystem.ReadReal(Self);
+end;
+
+function Text.ReadChar: char;
+begin
+  Result := PABCSystem.ReadChar(Self);
+end;
+
+function Text.ReadString: string;
+begin
+  Result := PABCSystem.ReadString(Self);
+end;
+
+function Text.ReadBoolean: boolean;
+begin
+  Result := PABCSystem.ReadBoolean(Self);
+end;
+
+function Text.ReadlnInteger: integer;
+begin
+  Result := PABCSystem.ReadlnInteger(Self);
+end;
+
+function Text.ReadlnReal: real;
+begin
+  Result := PABCSystem.ReadlnReal(Self);
+end;
+
+function Text.ReadlnChar: char;
+begin
+  Result := PABCSystem.ReadlnChar(Self);
+end;
+
+function Text.ReadlnString: string;
+begin
+  Result := PABCSystem.ReadlnString(Self);
+end;
+
+function Text.ReadlnBoolean: boolean;
+begin
+  Result := PABCSystem.ReadlnBoolean(Self);
+end;
+
+procedure Text.Write(params o: array of Object);
+begin
+  PABCSystem.Write(Self,o);
+end;
+
+procedure Text.Writeln(params o: array of Object);
+begin
+  PABCSystem.Writeln(Self,o);
+end;
+
+function Text.Eof: boolean;
+begin
+  Result := PABCSystem.Eof(Self);
+end;
+
+function Text.Eoln: boolean;
+begin
+  Result := PABCSystem.Eoln(Self);
+end;
+
+procedure Text.Close;
+begin
+  PABCSystem.Close(Self);
+end;
+
+function Text.SeekEof: boolean;
+begin
+  Result := PABCSystem.SeekEof(Self);
+end;
+
+function Text.SeekEoln: boolean;
+begin
+  Result := PABCSystem.SeekEoln(Self);
+end;
+
+procedure Text.Flush;
+begin
+  PABCSystem.Flush(Self);
+end;
+
+procedure Text.Erase;
+begin
+  PABCSystem.Erase(Self);
+end;
+
+procedure Text.Rename(newname: string);
+begin
+  PABCSystem.Rename(Self, newname);
+end;
+
+function Text.Name: string;
+begin
+  Result := fi.Name  
+end;
+
+function Text.FullName: string;
+begin
+  Result := fi.FullName  
+end;
+
+function Text.ReadToEnd: string;
+begin
+  Result := sr.ReadToEnd  
+end;
+
+
+// -----------------------------------------------------
+//                AbstractBinaryFile methods
+// -----------------------------------------------------
+procedure AbstractBinaryFile.Close;
+begin
+  PABCSystem.Close(Self);
+end;
+
+procedure AbstractBinaryFile.Truncate;
+begin
+  PABCSystem.Truncate(Self);
+end;
+
+function AbstractBinaryFile.Eof: boolean;
+begin
+  Result := PABCSystem.Eof(Self);
+end;
+
+procedure AbstractBinaryFile.Erase;
+begin
+  PABCSystem.Erase(Self);
+end;
+
+procedure AbstractBinaryFile.Rename(newname: string);
+begin
+  PABCSystem.Rename(Self, newname);
+end;
+
+procedure AbstractBinaryFile.Write(params vals: array of object);
+begin
+  PABCSystem.Write(Self, vals);
+end;
+
+function TypedFile.FilePos: int64;
+begin
+  Result := PABCSystem.FilePos(Self);
+end;
+
+function TypedFile.FileSize: int64;
+begin
+  Result := PABCSystem.FileSize(Self);
+end;
+
+procedure TypedFile.Seek(n: int64);
+begin
+  PABCSystem.Seek(Self, n);
+end;
+
+function BinaryFile.FilePos: int64;
+begin
+  Result := PABCSystem.FilePos(Self);
+end;
+
+function BinaryFile.FileSize: int64;
+begin
+  Result := PABCSystem.FileSize(Self);
+end;
+
+procedure BinaryFile.Seek(n: int64);
+begin
+  PABCSystem.Seek(Self, n);
+end;
+
+// -----------------------------------------------------
 
 function Eoln: boolean;
 begin
   if not console_alloc then
     AllocConsole;
-  Result := CurrentIOSystem.peek=13
+  Result := CurrentIOSystem.peek = 13
 end;
 
 function Eof: boolean;
 begin
   if not console_alloc then
     AllocConsole;
-  Console.WriteLine(CurrentIOSystem.peek);  
-  Result := CurrentIOSystem.peek=-1
+  Result := CurrentIOSystem.peek = -1
 end;
 
 // -----------------------------------------------------
@@ -3183,7 +4804,13 @@ end;
 
 procedure write(f: Text; val: object);
 begin
-  if val = nil then
+  if f.fi = nil then
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
+  if f.sw = nil then 
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED_FOR_WRITING));
+
+  f.sw.Write(StructuredObjectToString(val));
+  {if val = nil then
   begin
     f.sw.Write('nil');
     exit;
@@ -3195,7 +4822,7 @@ begin
     f.sw.Write(FormatFloatNumber(val.ToString));
   else
     f.sw.Write(val)
-  end;
+  end;}
 end;
 
 procedure write(f: Text; params args: array of object);
@@ -3206,6 +4833,11 @@ end;
 
 procedure writeln(f: Text);
 begin
+  if f.fi = nil then
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
+  if f.sw = nil then 
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED_FOR_WRITING));
+
   f.sw.WriteLine;
 end;
 
@@ -3246,6 +4878,38 @@ begin
   writeln(f, s);
 end;
 
+procedure Print(s: string);
+begin
+  write(s);
+end;
+
+procedure Print(params args: array of object);
+begin
+  if args.Length = 0 then
+    exit;
+  for var i := 0 to args.length - 1 do
+    write(args[i], ' ');
+end;
+
+procedure Println(params args: array of object);
+begin
+  Print(args);
+  writeln;
+end;
+
+procedure Print(f: Text; params args: array of object);
+begin
+  if args.Length = 0 then
+    exit;
+  for var i := 0 to args.length - 1 do
+    write(f, args[i], ' ');
+end;
+
+procedure Println(f: Text; params args: array of object);
+begin
+  Print(f, args);
+  writeln(f);
+end;
 // -----------------------------------------------------
 //                  Text files
 // -----------------------------------------------------
@@ -3271,7 +4935,7 @@ end;
 procedure Close(f: Text);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.sr <> nil then 
   begin
     f.sr.Close; 
@@ -3286,7 +4950,7 @@ begin
     f.sw := nil;
     //    f.fi := nil;
   end
-  else raise new System.IO.IOException(FILE_NOT_OPENED);
+  else raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
 end;
 
 procedure CloseFile(f: Text);
@@ -3297,7 +4961,7 @@ end;
 procedure Reset(f: Text);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.sr = nil then
   begin
     f.sr := System.IO.StreamReader.Create(f.fi.FullName, System.Text.Encoding.GetEncoding(1251));
@@ -3314,10 +4978,16 @@ begin
   end;
 end;
 
+procedure Reset(f: Text; name: string);
+begin
+  assign(f, name);
+  reset(f);
+end;
+
 procedure Rewrite(f: Text);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.sw = nil then
   begin
     f.sw := System.IO.StreamWriter.Create(f.fi.FullName, False, System.Text.Encoding.GetEncoding(1251));
@@ -3333,11 +5003,44 @@ begin
   end;
 end;
 
+procedure Rewrite(f: Text; name: string);
+begin
+  Assign(f, name);
+  Rewrite(f);
+end;
+
 procedure Append(f: Text);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   f.sw := System.IO.StreamWriter.Create(f.fi.FullName, True, System.Text.Encoding.GetEncoding(1251));
+end;
+
+procedure Append(f: Text; name: string);
+begin
+  Assign(f, name);
+  Append(f);
+end;
+
+function OpenRead(fname: string): Text;
+begin
+  var f: Text := new Text;
+  Reset(f,fname);
+  Result := f;
+end;
+
+function OpenWrite(fname: string): Text;
+begin
+  var f: Text := new Text;
+  Rewrite(f,fname);
+  Result := f;
+end;
+
+function OpenAppend(fname: string): Text;
+begin
+  var f: Text := new Text;
+  Append(f,fname);
+  Result := f;
 end;
 
 function Eof(f: Text): boolean;
@@ -3345,17 +5048,17 @@ begin
   if f.sr <> nil then
     Result := f.sr.EndOfStream
   else if f.sw <> nil then
-    raise new System.IO.IOException(EOF_FOR_TEXT_WRITEOPENED)
-  else raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(EOF_FOR_TEXT_WRITEOPENED))
+  else raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
 end;
 
 function Eoln(f: Text): boolean;
 begin
   if f.sr <> nil then
-    Result := f.sr.EndOfStream or (f.sr.Peek = 13) // возврат каретки
+    Result := f.sr.EndOfStream or (f.sr.Peek = 13) or (f.sr.Peek = 10) 
   else if f.sw <> nil then
-    raise new System.IO.IOException(EOLN_FOR_TEXT_WRITEOPENED)
-  else raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(EOLN_FOR_TEXT_WRITEOPENED))
+  else raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
 end;
 
 function SeekEof(f: Text): boolean;
@@ -3363,9 +5066,9 @@ var
   i: integer;
 begin
   if f.sw <> nil then
-    raise new System.IO.IOException(SEEKEOF_FOR_TEXT_WRITEOPENED);
+    raise new System.IO.IOException(GetTranslation(SEEKEOF_FOR_TEXT_WRITEOPENED));
   if f.sr = nil then  
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   repeat
     if f.sr.EndOfStream then
       break;
@@ -3380,19 +5083,19 @@ end;
 function SeekEoln(f: Text): boolean;
 begin
   if f.sw <> nil then
-    raise new System.IO.IOException(SEEKEOLN_FOR_TEXT_WRITEOPENED);
+    raise new System.IO.IOException(GetTranslation(SEEKEOLN_FOR_TEXT_WRITEOPENED));
   if f.sr = nil then  
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   repeat
     if f.sr.EndOfStream then
       break;
     var i := f.sr.Peek;
     //    if not char.IsWhiteSpace(char(i)) then
-    if (i <> 32) and (i <> 9) then // Если это не пробел и не табуляция
+    if (i <> 32) and (i <> 9) then // Р•СЃР»Рё СЌС‚Рѕ РЅРµ РїСЂРѕР±РµР» Рё РЅРµ С‚Р°Р±СѓР»СЏС†РёСЏ
       break;
     f.sr.Read;
   until False;
-  Result := f.sr.EndOfStream or (f.sr.Peek = 13) or (f.sr.Peek = 10); // Концом строки 
+  Result := f.sr.EndOfStream or (f.sr.Peek = 13) or (f.sr.Peek = 10); // РљРѕРЅС†РѕРј СЃС‚СЂРѕРєРё 
 end;
 
 procedure Flush(f: Text);
@@ -3404,21 +5107,100 @@ end;
 procedure Erase(f: Text);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   f.fi.Delete;
 end;
 
 procedure Rename(f: Text; newname: string);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   System.IO.File.Move(f.fi.FullName, newname);
 end;
-
 
 procedure TextFileInit(var f: Text);
 begin
   f := new Text;  
+end;
+
+function ReadLines(path: string): sequence of string;
+begin
+  Result := ReadLines(path,Encoding.GetEncoding(1251));
+end;
+
+function ReadLines(path: string; en: Encoding): sequence of string;
+begin
+  Result := System.IO.File.ReadLines(path,en);
+end;
+
+function ReadAllLines(path: string): array of string;
+begin
+  Result := ReadAllLines(path,Encoding.GetEncoding(1251));
+end;
+
+function ReadAllLines(path: string; en: Encoding): array of string;
+begin
+  Result := System.IO.File.ReadAllLines(path,en);
+end;
+
+function ReadAllText(path: string): string;
+begin
+  Result := ReadAllText(path,Encoding.GetEncoding(1251));
+end;
+
+function ReadAllText(path: string; en: Encoding): string;
+begin
+  Result := System.IO.File.ReadAllText(path,en);
+end;
+
+procedure WriteLines(path: string; ss: sequence of string);
+begin
+  WriteLines(path,ss,Encoding.GetEncoding(1251));
+end;
+
+procedure WriteLines(path: string; ss: sequence of string; en: Encoding);
+begin
+  System.IO.File.WriteAllLines(path,ss,en);
+end;
+
+procedure WriteAllLines(path: string; ss: array of string);
+begin
+  WriteAllLines(path,ss,Encoding.GetEncoding(1251));
+end;
+
+procedure WriteAllLines(path: string; ss: array of string; en: Encoding);
+begin
+  System.IO.File.WriteAllLines(path,ss,en);
+end;
+
+procedure WriteAllText(path: string; s: string);
+begin
+  System.IO.File.WriteAllText(path,s,Encoding.GetEncoding(1251));
+end;
+
+procedure WriteAllText(path: string; s: string; en: Encoding);
+begin
+  System.IO.File.WriteAllText(path,s,en);
+end;
+
+function EnumerateFiles(path: string; searchPattern: string): sequence of string;
+begin
+  Result := System.IO.Directory.EnumerateFiles(path,searchPattern,System.IO.SearchOption.TopDirectoryOnly)
+end;
+
+function EnumerateAllFiles(path: string; searchPattern: string): sequence of string;
+begin
+  Result := System.IO.Directory.EnumerateFiles(path,searchPattern,System.IO.SearchOption.AllDirectories)
+end;
+
+function EnumerateDirectories(path: string): sequence of string;
+begin
+  Result := System.IO.Directory.EnumerateDirectories(path,'*.*',System.IO.SearchOption.TopDirectoryOnly)
+end;
+
+function EnumerateAllDirectories(path: string): sequence of string;
+begin
+  Result := System.IO.Directory.EnumerateDirectories(path,'*.*',System.IO.SearchOption.AllDirectories)
 end;
 
 // -----------------------------------------------------
@@ -3437,9 +5219,9 @@ end;
 procedure Close(f: AbstractBinaryFile);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   if f.fs <> nil then
   begin
     f.br.Close; 
@@ -3458,7 +5240,7 @@ end;
 procedure Reset(f: AbstractBinaryFile);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then 
   begin
     f.fs := new FileStream(f.fi.FullName, FileMode.Open);
@@ -3469,10 +5251,16 @@ begin
     f.fs.Position := 0;
 end;
 
+procedure Reset(f: AbstractBinaryFile; name: string);
+begin
+  Assign(f, name);
+  Reset(f);
+end;
+
 procedure Rewrite(f: AbstractBinaryFile);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
   begin
     f.fs := new FileStream(f.fi.FullName, FileMode.Create);
@@ -3486,21 +5274,27 @@ begin
   end;  
 end;
 
+procedure Rewrite(f: AbstractBinaryFile; name: string);
+begin
+  Assign(f, name);
+  Rewrite(f);
+end;
+
 procedure Truncate(f: AbstractBinaryFile);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   f.fs.SetLength(f.fs.Position);
 end;
 
 function Eof(f: AbstractBinaryFile): boolean;
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   if f.fs <> nil then
     Result := f.fs.Position = f.fs.Length;
 end;
@@ -3508,14 +5302,14 @@ end;
 procedure Erase(f: AbstractBinaryFile);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   f.fi.Delete;
 end;
 
 procedure Rename(f: AbstractBinaryFile; newname: string);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   System.IO.File.Move(f.fi.FullName, newname);
 end;
 
@@ -3712,8 +5506,8 @@ procedure Write(f: AbstractBinaryFile; params vals: array of object);
 var
   i: integer;
 begin
-  if f.fi = nil then raise new System.IO.IOException(FILE_NOT_ASSIGNED);
-  if f.fs = nil then raise new System.IO.IOException(FILE_NOT_OPENED);
+  if f.fi = nil then raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
+  if f.fs = nil then raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   for i := 0 to vals.Length - 1 do
   begin
     var NullBasedArray := GetNullBasedArray(vals[i]);
@@ -3726,17 +5520,17 @@ end;
 
 procedure Writeln(f: AbstractBinaryFile);
 begin
-  raise new System.IO.IOException(WRITELN_IN_BINARYFILE_ERROR_MESSAGE);
+  raise new System.IO.IOException(GetTranslation(WRITELN_IN_BINARYFILE_ERROR_MESSAGE));
 end;
 
 procedure Writeln(f: AbstractBinaryFile; val: object);
 begin
-  raise new System.IO.IOException(WRITELN_IN_BINARYFILE_ERROR_MESSAGE);
+  raise new System.IO.IOException(GetTranslation(WRITELN_IN_BINARYFILE_ERROR_MESSAGE));
 end;
 
 procedure Writeln(f: AbstractBinaryFile; params vals: array of object);
 begin
-  raise new System.IO.IOException(WRITELN_IN_BINARYFILE_ERROR_MESSAGE);
+  raise new System.IO.IOException(GetTranslation(WRITELN_IN_BINARYFILE_ERROR_MESSAGE));
 end;
 
 // -----------------------------------------------------
@@ -3746,18 +5540,18 @@ end;
 function FilePos(f: TypedFile): int64;
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   Result := f.fs.Position div f.ElementSize;
 end;
 
 function FileSize(f: TypedFile): int64;
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   if f.fs.Length mod f.ElementSize <> 0 then
     raise new System.IO.IOException('Bad typed file size');
   Result := f.fs.Length div f.ElementSize;
@@ -3766,9 +5560,9 @@ end;
 procedure Seek(f: TypedFile; n: int64);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   f.fs.Position := n * f.ElementSize
 end;
 
@@ -3791,9 +5585,9 @@ function TypedFileRead(f: TypedFile): object;
 begin
   var ind := 0;
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   Result := AbstractBinaryFileReadT(f, f.ElementType, ind, false);
   //if f.offset > 0 then
   //f.fs.Seek(tmp+(f as TypedFile).ElementSize-f.fs.Position,SeekOrigin.Current);
@@ -3805,27 +5599,27 @@ end;
 function FilePos(f: BinaryFile): int64;
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   Result := f.fs.Position;
 end;
 
 function FileSize(f: BinaryFile): int64;
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   Result := f.fs.Length;
 end;
 
 procedure Seek(f: BinaryFile; n: int64);
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   f.fs.Position := n;
 end;
 
@@ -3837,9 +5631,9 @@ end;
 function BinaryFileRead(var f: BinaryFile; ElementType: System.Type): object;
 begin
   if f.fi = nil then
-    raise new System.IO.IOException(FILE_NOT_ASSIGNED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
   if f.fs = nil then
-    raise new System.IO.IOException(FILE_NOT_OPENED);
+    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
   var ind := 0;
   Result := AbstractBinaryFileReadT(f, ElementType, ind, false);
 end;
@@ -3950,12 +5744,50 @@ end;
 
 procedure Assert(cond: boolean);
 begin
-  System.Diagnostics.Debug.Assert(cond);
+  if (Environment.OSVersion.Platform = PlatformID.Unix) or (Environment.OSVersion.Platform = PlatformID.MacOSX) or IsWDE then
+  begin
+    var stackTrace := new System.Diagnostics.StackTrace(true);
+    var ind := 1;
+    if stackTrace.GetFrame(0).GetMethod().Name <> 'Assert' then
+      ind := 0;
+    var currentLine := stackTrace.GetFrame(ind).GetFileLineNumber();
+    var currentFile := stackTrace.GetFrame(ind).GetFileName();
+    if not IsWDE then
+      System.Diagnostics.Debug.Assert(cond,'Р¤Р°Р№Р» '+currentFile+', СЃС‚СЂРѕРєР° '+currentLine.ToString())
+    else if not cond then
+    begin
+      var err := 'РЎР±РѕР№ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ: '+Environment.NewLine+'Р¤Р°Р№Р» '+currentFile+', СЃС‚СЂРѕРєР° '+currentLine.ToString();
+      writeln(err);
+      System.Threading.Thread.Sleep(500);
+      raise new Exception();
+    end;
+  end
+  else
+    System.Diagnostics.Debug.Assert(cond);
 end;
 
 procedure Assert(cond: boolean; mes: string);
 begin
-  System.Diagnostics.Debug.Assert(cond, mes);
+  if (Environment.OSVersion.Platform = PlatformID.Unix) or (Environment.OSVersion.Platform = PlatformID.MacOSX) or IsWDE then
+  begin
+    var stackTrace := new System.Diagnostics.StackTrace(true);
+    var ind := 1;
+    if stackTrace.GetFrame(0).GetMethod().Name <> 'Assert' then
+      ind := 0;
+    var currentLine := stackTrace.GetFrame(ind).GetFileLineNumber();
+    var currentFile := stackTrace.GetFrame(ind).GetFileName();
+    if not IsWDE then
+      System.Diagnostics.Debug.Assert(cond,'Р¤Р°Р№Р» '+currentFile+', СЃС‚СЂРѕРєР° '+currentLine.ToString()+': '+mes)
+    else if not cond then
+    begin
+      var err := 'РЎР±РѕР№ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ: '+mes+Environment.NewLine+'Р¤Р°Р№Р» '+currentFile+', СЃС‚СЂРѕРєР° '+currentLine.ToString();
+      writeln(err);
+      System.Threading.Thread.Sleep(500);
+      raise new Exception();
+    end;
+  end
+  else
+    System.Diagnostics.Debug.Assert(cond, mes);
 end;
 
 function DiskFree(diskname: string): int64;
@@ -4010,7 +5842,15 @@ end;
 
 function Milliseconds: integer;
 begin
-  Milliseconds := Convert.ToInt32((DateTime.Now - StartTime).TotalMilliseconds);
+  curr_time := DateTime.Now;
+  Milliseconds := Convert.ToInt32((curr_time - StartTime).TotalMilliseconds);
+end;
+
+function MillisecondsDelta: integer;
+begin
+  var t := DateTime.Now;  
+  Result := Convert.ToInt32((t - curr_time).TotalMilliseconds);
+  curr_time := DateTime.Now;
 end;
 
 // -----------------------------------------------------
@@ -4067,9 +5907,24 @@ end;
 // -----------------------------------------------------
 //                Mathematical routines
 // -----------------------------------------------------
+function Sign(x: shortint): integer;
+begin
+  Result := Math.Sign(x);
+end;
+
+function Sign(x: smallint): integer;
+begin
+  Result := Math.Sign(x);
+end;
+
 function Sign(x: integer): integer;
 begin
   Result := Math.Sign(x);
+end;
+
+function Sign(x: BigInteger): integer;
+begin
+  Result := x.Sign;
 end;
 
 function Sign(x: int64): integer;
@@ -4095,6 +5950,11 @@ end;
 function Abs(x: integer): integer;
 begin
   Result := Math.Abs(x);
+end;
+
+function Abs(x: BigInteger): BigInteger;
+begin
+  Result := BigInteger.Abs(x)
 end;
 
 function Abs(x: int64): int64;
@@ -4197,6 +6057,11 @@ begin
   Result := x * x;
 end;
 
+function Sqr(x: BigInteger): BigInteger;
+begin
+  Result := x * x;
+end;
+
 function Sqr(x: longword): uint64;
 begin
   Result := x * x;
@@ -4220,6 +6085,16 @@ end;
 function Power(x, y: real): real;
 begin
   Result := Math.Pow(x, y);
+end;
+
+function Power(x, y: integer): real;
+begin
+  Result := Math.Pow(x, y);
+end;
+
+function Power(x: BigInteger; y: integer): BigInteger;
+begin
+  Result := BigInteger.Pow(x, y)
 end;
 
 function Round(x: real): integer;
@@ -4291,9 +6166,34 @@ begin
   Result := rnd.NextDouble;
 end;
 
+function Max(a, b: byte): byte;
+begin
+  Result := Math.Max(a, b);
+end;
+
+function Max(a, b: shortint): shortint;
+begin
+  Result := Math.Max(a, b);
+end;
+
+function Max(a, b: word): word;
+begin
+  Result := Math.Max(a, b);
+end;
+
+function Max(a, b: smallint): smallint;
+begin
+  Result := Math.Max(a, b);
+end;
+
 function Max(a, b: integer): integer;
 begin
   Result := Math.Max(a, b);
+end;
+
+function Max(a, b: BigInteger): BigInteger;
+begin
+  Result := BigInteger.Max(a,b);
 end;
 
 function Max(a, b: longword): longword;
@@ -4316,9 +6216,34 @@ begin
   Result := Math.Max(a, b);
 end;
 
+function Min(a, b: byte): byte;
+begin
+  Result := Math.Min(a, b);
+end;
+
+function Min(a, b: shortint): shortint;
+begin
+  Result := Math.Min(a, b);
+end;
+
+function Min(a, b: word): word;
+begin
+  Result := Math.Min(a, b);
+end;
+
+function Min(a, b: smallint): smallint;
+begin
+  Result := Math.Min(a, b);
+end;
+
 function Min(a, b: integer): integer;
 begin
   Result := Math.Min(a, b);
+end;
+
+function Min(a, b: BigInteger): BigInteger;
+begin
+  Result := BigInteger.Min(a,b);
 end;
 
 function Min(a, b: longword): longword;
@@ -4346,6 +6271,11 @@ begin
   result := (i mod 2) <> 0;
 end;
 
+function Odd(i: BigInteger): boolean;
+begin
+  Result := not i.IsEven;
+end;
+
 function Odd(i: longword): boolean;
 begin
   result := (i mod 2) <> 0;
@@ -4363,12 +6293,16 @@ end;
 
 function Low(i: System.Array): integer;
 begin
-  Result := i.GetLowerBound(0);
+  if i <> nil then 
+    Result := i.GetLowerBound(0)
+  else Result := 0;
 end;
 
 function High(i: System.Array): integer;
 begin
-  Result := i.GetUpperBound(0);
+  if i <> nil then 
+    Result := i.GetUpperBound(0)
+  else Result := -1;
 end;
 
 // -----------------------------------------------------
@@ -4376,14 +6310,24 @@ end;
 // -----------------------------------------------------
 function Chr(a: Byte): char;
 begin
-  __one_byte[0] := a;
-  Result := DefaultOrdChrEncoding.GetChars(__one_byte)[0];
+  if a < 128 then
+    Result := char(a)
+  else
+  begin
+    __one_byte[0] := a;
+    Result := DefaultOrdChrEncoding.GetChars(__one_byte)[0];
+  end;
 end;
 
 function Ord(a: char): byte;
 begin
-  __one_char[0] := a;
-  Result := DefaultOrdChrEncoding.GetBytes(__one_char)[0];
+  if a < #128 then
+    Result := byte(a)
+  else
+  begin
+    __one_char[0] := a;
+    Result := DefaultOrdChrEncoding.GetBytes(__one_char)[0];
+  end;
 end;
 
 function Ord(a: integer): integer;
@@ -4478,7 +6422,7 @@ end;
 
 function Pos(subs, s: string): integer;
 begin
-  if (subs=nil) or (subs.Length=0) then
+  if (subs = nil) or (subs.Length = 0) then
     Result := 0
   else Result := s.IndexOf(subs) + 1;
 end;
@@ -4523,26 +6467,26 @@ begin
 end;
 
 procedure Insert(source: string; var s: string; index: integer);
-// Insert никогда не возвращает исключения
+// Insert РЅРёРєРѕРіРґР° РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ
 begin
-  if index<1 then 
+  if index < 1 then 
     index := 1;
-  if index>s.Length+1 then
+  if index > s.Length + 1 then
     index := s.Length + 1;
   s := s.Insert(index - 1, source);
-{  try
-    s := s.Insert(index - 1, source);
+  {  try
+  s := s.Insert(index - 1, source);
   except 
-    on e: System.Exception do
-      s := s.Insert(s.Length, source);
+  on e: System.Exception do
+  s := s.Insert(s.Length, source);
   end;}
 end;
 
 procedure InsertInShortString(source: string; var s: string; index, n: integer);
 begin
-  if index<1 then 
+  if index < 1 then 
     index := 1;
-  if index>n then
+  if index > n then
     exit;
   try
     s := s.Insert(index - 1, source);
@@ -4554,9 +6498,9 @@ begin
 end;
 
 procedure Delete(var s: string; index, count: integer);
-// Delete никогда не возвращает исключения
+// Delete РЅРёРєРѕРіРґР° РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ
 begin
-  if (index < 1) or (index > s.Length) or (count<=0) then
+  if (index < 1) or (index > s.Length) or (count <= 0) then
     Exit;
   if index + count - 1 > s.Length then
     count := s.Length - index + 1;
@@ -4564,11 +6508,11 @@ begin
 end;
 
 function Copy(s: string; index, count: integer): string;
-// Copy никогда не возвращает исключения
+// Copy РЅРёРєРѕРіРґР° РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚ РёСЃРєР»СЋС‡РµРЅРёСЏ
 begin
-  if index<1 then
+  if index < 1 then
     index := 1;
-  if (index>s.Length) or (count<=0) then
+  if (index > s.Length) or (count <= 0) then
   begin
     Result := '';
     exit;
@@ -4576,13 +6520,13 @@ begin
   if index + count - 1 > s.Length then
     count := s.Length - index + 1;
   Result := s.SubString(index - 1, count);
-{  try
-    if index - 1 >= s.Length then 
-      Result := ''
-    else Result := s.SubString(index - 1, count);
+  {  try
+  if index - 1 >= s.Length then 
+  Result := ''
+  else Result := s.SubString(index - 1, count);
   except 
-    on e: System.Exception do
-      Result := s.Substring(index - 1, s.Length - index + 1);
+  on e: System.Exception do
+  Result := s.Substring(index - 1, s.Length - index + 1);
   end;}
 end;
 
@@ -4655,9 +6599,130 @@ begin
   Result := s.TrimEnd(' ');
 end;
 
+function ErrorStringFromResource(s: string): string;
+begin
+  var _rm := new System.Resources.ResourceManager('mscorlib', typeof(object).Assembly);
+  Result := _rm.GetString(s);
+end;
+
 function StrToInt(s: string): integer;
 begin
-  Result := Convert.ToInt32(s); 
+  var j := 1;
+  while (j <= s.Length) and char.IsWhiteSpace(s[j]) do
+    j += 1;
+  if (j > s.Length) then 
+    raise new System.FormatException(ErrorStringFromResource('Format_InvalidString'));
+  var sign := 0;  
+  if s[j] = '-' then
+  begin
+    sign := -1;
+    j += 1;
+  end  
+  else if s[j] = '+' then
+  begin
+    sign := 1;
+    j += 1;
+  end;
+  if (j > s.Length) then 
+    raise new System.FormatException(ErrorStringFromResource('Format_InvalidString'));
+  var c := integer(s[j]);
+  if (c < 48) or (c > 57) then
+    raise new System.FormatException(ErrorStringFromResource('Format_InvalidString'));
+  Result := c - 48;
+  j += 1;  
+  while j <= s.Length do
+  begin
+    c := integer(s[j]);
+    if c > 57 then
+      break;
+    if c < 48 then
+      break;
+    if Result > 214748364 then
+      raise new System.OverflowException(ErrorStringFromResource('Overflow_Int32'));
+    Result := Result * 10 + (c - 48);
+    j += 1;
+  end;
+  if Result < 0 then 
+    if (Result = -2147483648) and (sign = -1) then
+      exit
+    else raise new System.OverflowException(ErrorStringFromResource('Overflow_Int32'));
+  if sign = -1 then
+    Result := -Result;
+  while (j <= s.Length) and char.IsWhiteSpace(s[j]) do
+    j += 1;
+  if j <= s.Length then  
+    raise new System.FormatException(ErrorStringFromResource('Format_InvalidString'));
+end;
+
+function TryStrToInt(s: string; var value: integer): boolean;
+begin
+  Result := True;
+  var Res := 0;
+  var j := 1;
+  while (j <= s.Length) and char.IsWhiteSpace(s[j]) do
+    j += 1;
+  if (j > s.Length) then 
+  begin
+    Result := False;
+    exit
+  end;  
+  var sign := 0;  
+  if s[j] = '-' then
+  begin
+    sign := -1;
+    j += 1;
+  end  
+  else if s[j] = '+' then
+  begin
+    sign := 1;
+    j += 1;
+  end;
+  if (j > s.Length) then 
+  begin
+    Result := False;
+    exit
+  end;  
+  var c := integer(s[j]);
+  if (c < 48) or (c > 57) then
+  begin
+    Result := False;
+    exit
+  end;  
+  Res := c - 48;
+  j += 1;  
+  while j <= s.Length do
+  begin
+    c := integer(s[j]);
+    if c > 57 then
+      break;
+    if c < 48 then
+      break;
+    if Res > 214748364 then
+    begin
+      Result := False;
+      exit
+    end;  
+    Res := Res * 10 + (c - 48);
+    j += 1;
+  end;
+  if Res < 0 then 
+    if (Res = -2147483648) and (sign = -1) then
+      exit
+    else 
+    begin
+      Result := False;
+      exit
+    end;  
+  if sign = -1 then
+    Res := -Res;
+  while (j <= s.Length) and char.IsWhiteSpace(s[j]) do
+    j += 1;
+  if j <= s.Length then  
+  begin
+    Result := False;
+    exit
+  end;  
+  value := Res;
 end;
 
 function StrToInt64(s: string): int64;
@@ -4668,11 +6733,6 @@ end;
 function StrToFloat(s: string): real;
 begin
   Result := Convert.ToDouble(s, nfi);
-end;
-
-function TryStrToInt(s: string; var value: integer): boolean;
-begin
-  Result := integer.TryParse(s, value);
 end;
 
 function TryStrToInt64(s: string; var value: int64): boolean;
@@ -4700,6 +6760,100 @@ begin
     value := 0;
     Result := False;
   end;
+end;
+
+function ReadIntegerFromString(s: string; var from: integer): integer;
+begin
+  while (from <= s.Length) and char.IsWhiteSpace(s[from]) do
+    from += 1;
+  if (from > s.Length) then 
+    raise new System.FormatException(ErrorStringFromResource('Format_InvalidString'));
+  var sign := 0;  
+  if s[from] = '-' then
+  begin
+    sign := -1;
+    from += 1;
+  end  
+  else if s[from] = '+' then
+  begin
+    sign := 1;
+    from += 1;
+  end;
+  if (from > s.Length) then 
+    raise new System.FormatException(ErrorStringFromResource('Format_InvalidString'));
+  var c := integer(s[from]);
+  if (c < 48) or (c > 57) then
+    raise new System.FormatException(ErrorStringFromResource('Format_InvalidString'));
+  Result := c - 48;
+  from += 1;  
+  while from <= s.Length do
+  begin
+    c := integer(s[from]);
+    if c > 57 then
+      break;
+    if c < 48 then
+      break;
+    if Result > 214748364 then
+      raise new System.OverflowException(ErrorStringFromResource('Overflow_Int32'));
+    Result := Result * 10 + (c - 48);
+    from += 1;
+  end;
+  if Result < 0 then 
+    if (Result = -2147483648) and (sign = -1) then
+      exit
+    else raise new System.OverflowException(ErrorStringFromResource('Overflow_Int32'));
+  if sign = -1 then
+    Result := -Result;
+end;
+
+function ReadWordFromString(s: string; var from: integer): string;
+begin
+  while (from <= s.Length) and char.IsWhiteSpace(s[from]) do
+    from += 1;
+  var res := new System.Text.StringBuilder();
+  while (from <= s.Length) and not char.IsWhiteSpace(s[from]) do
+  begin
+    res.Append(s[from]);
+    from += 1;
+  end;  
+  Result := res.ToString;
+end;
+
+function ReadRealFromString(s: string; var from: integer): real;
+begin
+  Result := real.Parse(ReadWordFromString(s, from));  
+end;
+
+function string.ReadInteger(var from: integer): integer;
+begin
+  Result := ReadIntegerFromString(Self, from);
+end;
+
+function string.ReadReal(var from: integer): real;
+begin
+  Result := ReadRealFromString(Self, from);
+end;
+
+function string.ReadWord(var from: integer): string;
+begin
+  Result := ReadwordFromString(Self, from);
+end;
+
+function TryReadRealFromString(s: string; var from: integer; var res: real): boolean;
+begin
+  Result := real.TryParse(ReadWordFromString(s, from), res);
+end;
+
+function StringIsEmpty(s: string; var from: integer): boolean;
+begin
+  while (from <= s.Length) and char.IsWhiteSpace(s[from]) do
+    from += 1;
+  Result := from > s.Length;
+end;
+
+function TryReadIntegerFromString(s: string; var from: integer; var res: integer): boolean;
+begin
+  Result := TryStrToInt(ReadWordFromString(s, from), res);
 end;
 
 procedure Val(s: string; var value: integer; var err: integer);
@@ -4832,7 +6986,7 @@ end;
 
 procedure cls;
 begin
-  //для совместимости
+  //РґР»СЏ СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚Рё
   {  if IsConsoleApplication then
   Console.Clear;}
 end;
@@ -4864,22 +7018,22 @@ end;
 
 procedure Inc(var c: char);
 begin
-  c := Chr(Ord(c) + 1);
+  c := ChrUnicode(word(c) + 1);
 end;
 
 procedure Inc(var c: char; n: integer);
 begin
-  c := Chr(Ord(c) + n);
+  c := ChrUnicode(word(c) + n);
 end;
 
 procedure Dec(var c: char);
 begin
-  c := Chr(Ord(c) - 1);
+  c := ChrUnicode(word(c) - 1);
 end;
 
 procedure Dec(var c: char; n: integer);
 begin
-  c := Chr(Ord(c) - n);
+  c := ChrUnicode(word(c) - n);
 end;
 
 procedure Inc(var b: byte);
@@ -5013,14 +7167,80 @@ function pred(x: char): char;
 begin
   Result := System.Convert.ToChar(System.Convert.ToUInt16(x) - 1);
 end;
-//------------------------------------------------------------------------------
 
-function Range(a,b: integer): IEnumerable<integer>;
+procedure Swap<T>(var a, b: T);
 begin
-  Result := System.Linq.Enumerable.Range(a,b);
+  var v := a;
+  a := b;
+  b := v;
 end;
 
+//------------------------------------------------------------------------------
+//    Linq ext
+//------------------------------------------------------------------------------
+// РЇРІР»СЏРµС‚СЃСЏ Р»Рё СЃРёРјРІРѕР» С†РёС„СЂРѕР№
+function char.IsDigit(self: char): boolean; extensionmethod;
+begin
+  Result := char.IsDigit(self);
+end;
 
+// РЇРІР»СЏРµС‚СЃСЏ Р»Рё СЃРёРјРІРѕР» Р±СѓРєРІРѕР№
+function char.IsLetter(self: char): boolean; extensionmethod;
+begin
+  Result := char.IsLetter(self);
+end;
+
+function char.IsLower(self: char): boolean; extensionmethod;
+begin
+  Result := char.IsLower(self);
+end;
+
+function char.IsUpper(self: char): boolean; extensionmethod;
+begin
+  Result := char.IsUpper(self);
+end;
+
+function char.ToUpper(self: char): char; extensionmethod;
+begin
+  Result := char.ToUpper(self);
+end;
+
+function char.ToLower(self: char): char; extensionmethod;
+begin
+  Result := char.ToLower(self);
+end;
+
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєСѓ РІ С†РµР»РѕРµ
+function string.ToInteger: integer;
+begin
+  Result := integer.Parse(Self);
+end;
+
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєСѓ РІ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ
+function string.ToReal: real;
+begin
+  Result := real.Parse(Self, nfi);
+end;
+
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєСѓ РІ РјР°СЃСЃРёРІ СЃР»РѕРІ
+function string.ToWords(params delim: array of char): array of string;
+begin
+  Result := Self.Split(delim, System.StringSplitOptions.RemoveEmptyEntries);
+end;
+
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєСѓ РІ РјР°СЃСЃРёРІ С†РµР»С‹С…
+function string.ToIntegers(): array of integer;
+begin
+  Result := Self.ToWords().Select(s -> StrToInt(s)).ToArray();
+end;
+
+/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ СЃС‚СЂРѕРєСѓ РІ РјР°СЃСЃРёРІ РІРµС‰РµСЃС‚РІРµРЅРЅС‹С…
+function string.ToReals(): array of real;
+begin
+  Result := Self.ToWords().Select(s -> StrToFloat(s)).ToArray();
+end;
+
+//------------------------------------------------------------------------------
 function GetEXEFileName: string;
 begin
   Result := System.Reflection.Assembly.GetEntryAssembly().ManifestModule.FullyQualifiedName;
@@ -5082,10 +7302,16 @@ begin
   result := s;}
 end;
 
+procedure ChangeChar(var c: char; val: char);
+begin
+  c := val;
+end;
+
 procedure StringDefaultPropertySet(var s: string; index: integer; c: char);
 begin
   //s := string.Concat( s.Copy(0,index-1), c, s.Copy(index, s.Length - index));
   //s := string.Concat(s.Substring(0, index), c, s.Substring(index + 1));
+  //ChangeChar(s[index + 1], c);
   var chars := s.ToCharArray;
   chars[index] := c;
   s := new String(chars);
@@ -5121,7 +7347,7 @@ begin
     exit;
   if T = typeof(TypedSet) then
   begin
-    //TODO: обработать множества
+    //TODO: РѕР±СЂР°Р±РѕС‚Р°С‚СЊ РјРЅРѕР¶РµСЃС‚РІР°
     raise new CanNotUseTypeForFilesException(T);
   end;
   if T = typeof(string) then
@@ -5157,17 +7383,17 @@ end;
 
 function CanNotUseTypeForPointersException.ToString: string;
 begin
-  result := InstanceType.FullName + ' непригоден для указателей.';
+  result := InstanceType.FullName + ' РЅРµРїСЂРёРіРѕРґРµРЅ РґР»СЏ СѓРєР°Р·Р°С‚РµР»РµР№.';
 end;
 
 function CanNotUseTypeForTypedFilesException.ToString: string;
 begin
-  result := InstanceType.FullName + ' непригоден для типизированных файлов.';
+  result := InstanceType.FullName + ' РЅРµРїСЂРёРіРѕРґРµРЅ РґР»СЏ С‚РёРїРёР·РёСЂРѕРІР°РЅРЅС‹С… С„Р°Р№Р»РѕРІ.';
 end;
 
 function CanNotUseTypeForFilesException.ToString: string;
 begin
-  result := InstanceType.FullName + ' непригоден для файлов.';
+  result := InstanceType.FullName + ' РЅРµРїСЂРёРіРѕРґРµРЅ РґР»СЏ С„Р°Р№Р»РѕРІ.';
 end;
 
 function RuntimeDetermineType(T: System.Type): byte;
@@ -5287,18 +7513,25 @@ function Copy(a: &Array): &Array;
 begin
   Result := &Array(a.Clone());
 end;
-{function Copy<T>(a: array of T): array of T;
-begin
-Result := Result;
-SetLength(Result,a.Length);
-System.Array.Copy(a,Result,a.Length);
-end;}
 
-procedure Swap<T>(var a, b: T);
+procedure Sort<T>(a: array of T);
 begin
-  var v := a;
-  a := b;
-  b := v;
+  System.Array.Sort(a);
+end;
+
+procedure Reverse<T>(a: array of T);
+begin
+  System.Array.Reverse(a);
+end;
+
+procedure Reverse<T>(a: array of T; index,length: integer);
+begin
+  System.Array.Reverse(a,index,length);
+end;
+
+procedure Sort<T>(l: List<T>);
+begin
+  l.Sort();
 end;
 
 procedure Exec(filename: string);
@@ -5308,7 +7541,7 @@ end;
 
 procedure Exec(filename: string; args: string);
 begin
-  System.Diagnostics.Process.Start(filename,args)
+  System.Diagnostics.Process.Start(filename, args)
 end;
 
 procedure Execute(filename: string);
@@ -5318,7 +7551,7 @@ end;
 
 procedure Execute(filename: string; args: string);
 begin
-  System.Diagnostics.Process.Start(filename,args)
+  System.Diagnostics.Process.Start(filename, args)
 end;
 
 function TypedSetComparer.Equals(x: System.Object; y: System.Object): boolean;
@@ -5457,18 +7690,19 @@ end;
 function check_in_range(val: int64; low, up: int64): int64;
 begin
   if (val < low) or (val > up) then
-    raise new RangeException(RANGE_ERROR_MESSAGE);
+    raise new RangeException(GetTranslation(RANGE_ERROR_MESSAGE));
   Result := val;
 end;
 
 function check_in_range_char(val: char; low, up: char): char;
 begin
   if (val < low) or (val > up) then
-    raise new RangeException(RANGE_ERROR_MESSAGE);
+    raise new RangeException(GetTranslation(RANGE_ERROR_MESSAGE));
   Result := val;
 end;
 
-var __from_dll := false;
+var
+  __from_dll := false;
 
 function ExecuteAssemlyIsDll: boolean;
 begin
@@ -5479,12 +7713,12 @@ end;
 //------------------------------------------------------------------------------
 //OMP
 
-procedure omp_set_nested(nested:integer);
+procedure omp_set_nested(nested: integer);
 begin
   OMP_NESTED := nested <> 0;
 end;
 
-function omp_get_nested:integer;
+function omp_get_nested: integer;
 begin
   if OMP_NESTED then
     result := 1
@@ -5494,10 +7728,9 @@ end;
 
 //------------------------------------------------------------------------------
 
-var 
+var
   __initialized := false;
-  
-  
+
 procedure __InitModule;
 begin
   var arg := Environment.GetCommandLineArgs();
@@ -5509,7 +7742,11 @@ begin
     CommandLineArgs := new string[0];
   CurrentIOSystem := new IOStandardSystem;
   //  ENCultureInfo := new System.Globalization.CultureInfo('en-US');
-  System.Threading.Thread.CurrentThread.CurrentUICulture := System.Globalization.CultureInfo.GetCultureInfo('ru-RU');
+  var locale: object;
+  var locale_str := 'ru-RU';
+  if __CONFIG__.TryGetValue('full_locale', locale) then
+    locale_str := string(locale);
+  System.Threading.Thread.CurrentThread.CurrentUICulture := System.Globalization.CultureInfo.GetCultureInfo(locale_str);
   nfi := new System.Globalization.NumberFormatInfo();
   nfi.NumberGroupSeparator := '.';
   //  System.Threading.Thread.CurrentThread.CurrentCulture := new System.Globalization.CultureInfo('en-US');
@@ -5517,6 +7754,11 @@ begin
   StartTime := DateTime.Now;
   output := new TextFile();
   input := new TextFile();
+  //var tmp := __CONFIG__;
+  if (Environment.OSVersion.Platform = PlatformID.Unix) or (Environment.OSVersion.Platform = PlatformID.MacOSX) then
+    foreach listener: System.Diagnostics.TraceListener in System.Diagnostics.Trace.Listeners do
+      if listener is System.Diagnostics.DefaultTraceListener then
+        (listener as System.Diagnostics.DefaultTraceListener).AssertUiEnabled := true; 
 end;
 
 procedure __InitModule__;
@@ -5527,6 +7769,11 @@ begin
     __from_dll := true;
     __InitModule;
   end;
+end;
+
+procedure __InitPABCSystem;
+begin
+  __InitModule__;
 end;
 
 procedure __FinalizeModule__;

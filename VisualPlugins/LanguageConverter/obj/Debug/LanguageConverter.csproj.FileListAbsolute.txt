@@ -1,0 +1,8 @@
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\LanguageConverter.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\LanguageConverter.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\LanguageConverter\obj\Debug\LanguageConverter.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\LanguageConverter\obj\Debug\Converter.Properties.Resources.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\LanguageConverter\obj\Debug\Converter.TextFormatterForm.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\LanguageConverter\obj\Debug\LanguageConverter.csproj.GenerateResource.Cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\LanguageConverter\obj\Debug\LanguageConverter.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\LanguageConverter\obj\Debug\LanguageConverter.pdb

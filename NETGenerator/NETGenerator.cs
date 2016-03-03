@@ -125,7 +125,7 @@ namespace PascalABCCompiler.NETGenerator
         protected bool is_dot_expr = false;//флаг, стоит ли после выражения точка (нужно для упаковки размерных типов)
         protected TypeInfo cur_ti;//текущий клас
         protected CompilerOptions comp_opt = new CompilerOptions();//опции компилятора
-        protected Dictionary<ICommonNamespaceNode, ISymbolDocumentWriter> sym_docs = new Dictionary<ICommonNamespaceNode, ISymbolDocumentWriter>();//таблица отладочных документов
+        protected Dictionary<string, ISymbolDocumentWriter> sym_docs = new Dictionary<string, ISymbolDocumentWriter>();//таблица отладочных документов
         protected bool is_constructor = false;//флаг, переводим ли мы конструктор
         protected bool save_debug_info = false;
         protected bool add_special_debug_variables = false;
@@ -156,12 +156,36 @@ namespace PascalABCCompiler.NETGenerator
         private ISymbolDocumentWriter new_doc;
         private List<LocalBuilder> pinned_variables = new List<LocalBuilder>();
 
+        private void CheckLocation(SemanticTree.ILocation Location)
+        {
+            if (Location != null)
+            {
+                ISymbolDocumentWriter temp_doc = null;
+                if (sym_docs.ContainsKey(Location.document.file_name))
+                {
+                    temp_doc = sym_docs[Location.document.file_name];
+                }
+                else
+                if (save_debug_info) // иногда вызывается MarkSequencePoint при save_debug_info = false
+                {
+                    temp_doc = mb.DefineDocument(Location.document.file_name, SymDocumentType.Text, SymLanguageType.Pascal, SymLanguageVendor.Microsoft);
+                    sym_docs.Add(Location.document.file_name, temp_doc);
+                }
+                if (temp_doc != doc)
+                {
+                    doc = temp_doc;
+                    cur_line = -1;
+                }
+            }
+        }
+
         private bool OnNextLine(ILocation loc)
         {
             if (doc != new_doc)
             {
                 new_doc = doc;
-                cur_line = 0;
+                cur_line = loc.begin_line_num;
+                return true;
             }
             if (loc.begin_line_num == cur_line) return false;
             cur_line = loc.begin_line_num;
@@ -180,6 +204,7 @@ namespace PascalABCCompiler.NETGenerator
 
         protected void MarkSequencePoint(SemanticTree.ILocation Location)
         {
+            CheckLocation(Location);
             if (Location != null && OnNextLine(Location))
                 MarkSequencePoint(il, Location);
         }
@@ -192,7 +217,10 @@ namespace PascalABCCompiler.NETGenerator
         protected void MarkSequencePoint(ILGenerator ilg, SemanticTree.ILocation Location)
         {
             if (Location != null)
+            {
+                CheckLocation(Location);
                 MarkSequencePoint(ilg, Location.begin_line_num, Location.begin_column_num, Location.end_line_num, Location.end_column_num);
+            }
         }
 
         protected void MarkSequencePoint(ILGenerator ilg, int bl, int bc, int el, int ec)
@@ -518,15 +546,22 @@ namespace PascalABCCompiler.NETGenerator
             if (save_debug_info)
             {
                 first_doc = mb.DefineDocument(SourceFileName, SymDocumentType.Text, SymLanguageType.Pascal, SymLanguageVendor.Microsoft);
+                sym_docs.Add(SourceFileName, first_doc);
                 for (int iii = 0; iii < cnns.Length; iii++)
                 {
+                    string cnns_document_file_name = null;
                     if (cnns[iii].Location != null)
-                        doc = mb.DefineDocument(cnns[iii].Location.document.file_name, SymDocumentType.Text, SymLanguageType.Pascal, SymLanguageVendor.Microsoft);
+                    {
+                        cnns_document_file_name = cnns[iii].Location.document.file_name;
+                        doc = mb.DefineDocument(cnns_document_file_name, SymDocumentType.Text, SymLanguageType.Pascal, SymLanguageVendor.Microsoft);
+                    }
                     else
                         doc = first_doc;
-                    sym_docs.Add(cnns[iii], doc);//сохраняем его в таблице документов
+                    if (!sym_docs.ContainsKey(cnns_document_file_name))
+                        sym_docs.Add(cnns_document_file_name, doc);//сохраняем его в таблице документов
                 }
-                first_doc = sym_docs[cnns[0]];
+                first_doc = sym_docs[cnns[0].Location == null ? SourceFileName : cnns[0].Location.document.file_name];
+
                 if (p.main_function != null)
                 {
                     if (p.main_function.function_code is IStatementsListNode)
@@ -542,7 +577,7 @@ namespace PascalABCCompiler.NETGenerator
             //Переводим заголовки типов
             for (int iii = 0; iii < cnns.Length; iii++)
             {
-                if (save_debug_info) doc = sym_docs[cnns[iii]];
+                if (save_debug_info) doc = sym_docs[cnns[iii].Location == null ? SourceFileName : cnns[iii].Location.document.file_name];
                 bool is_main_namespace = cnns[iii].namespace_name == "" && comp_opt.target != TargetType.Dll || comp_opt.target == TargetType.Dll && cnns[iii].namespace_name == "";
                 ICommonNamespaceNode cnn = cnns[iii];
                 cur_type = entry_type;
@@ -626,7 +661,7 @@ namespace PascalABCCompiler.NETGenerator
             }
             for (int iii = 0; iii < cnns.Length; iii++)
             {
-                if (save_debug_info) doc = sym_docs[cnns[iii]];
+                if (save_debug_info) doc = sym_docs[cnns[iii].Location == null ? SourceFileName : cnns[iii].Location.document.file_name];
                 cur_type = NamespacesTypes[cnns[iii]];
                 cur_unit_type = NamespacesTypes[cnns[iii]];
                 ConvertTypeMemberHeaders(cnns[iii].types);
@@ -637,7 +672,7 @@ namespace PascalABCCompiler.NETGenerator
 
             for (int iii = 0; iii < cnns.Length; iii++)
             {
-                if (save_debug_info) doc = sym_docs[cnns[iii]];
+                if (save_debug_info) doc = sym_docs[cnns[iii].Location == null ? SourceFileName : cnns[iii].Location.document.file_name];
                 cur_type = NamespacesTypes[cnns[iii]];
                 cur_unit_type = NamespacesTypes[cnns[iii]];
                 ConvertFunctionHeaders(cnns[iii].functions);
@@ -672,7 +707,7 @@ namespace PascalABCCompiler.NETGenerator
 
             for (int iii = 0; iii < cnns.Length; iii++)
             {
-                if (save_debug_info) doc = sym_docs[cnns[iii]];
+                if (save_debug_info) doc = sym_docs[cnns[iii].Location == null ? SourceFileName : cnns[iii].Location.document.file_name];
                 cur_type = NamespacesTypes[cnns[iii]];
                 cur_unit_type = NamespacesTypes[cnns[iii]];
                 //генерим инциализацию для полей
@@ -685,7 +720,7 @@ namespace PascalABCCompiler.NETGenerator
             //Переводим заголовки всего остального (процедур, переменных)
             for (int iii = 0; iii < cnns.Length; iii++)
             {
-                if (save_debug_info) doc = sym_docs[cnns[iii]];
+                if (save_debug_info) doc = sym_docs[cnns[iii].Location == null ? SourceFileName : cnns[iii].Location.document.file_name];
                 bool is_main_namespace = iii == cnns.Length - 1 && comp_opt.target != TargetType.Dll;
                 ICommonNamespaceNode cnn = cnns[iii];
                 string tmp_unit_name = cur_unit;
@@ -744,7 +779,7 @@ namespace PascalABCCompiler.NETGenerator
             //переводим реализации
             for (int iii = 0; iii < cnns.Length; iii++)
             {
-                if (save_debug_info) doc = sym_docs[cnns[iii]];
+                if (save_debug_info) doc = sym_docs[cnns[iii].Location == null ? SourceFileName : cnns[iii].Location.document.file_name];
                 bool is_main_namespace = iii == 0 && comp_opt.target != TargetType.Dll;
                 ICommonNamespaceNode cnn = cnns[iii];
                 string tmp_unit_name = cur_unit;
@@ -764,7 +799,7 @@ namespace PascalABCCompiler.NETGenerator
             }
             for (int iii = 0; iii < cnns.Length; iii++)
             {
-                if (save_debug_info) doc = sym_docs[cnns[iii]];
+                if (save_debug_info) doc = sym_docs[cnns[iii].Location == null ? SourceFileName : cnns[iii].Location.document.file_name];
                 cur_type = NamespacesTypes[cnns[iii]];
                 cur_unit_type = NamespacesTypes[cnns[iii]];
                 //вставляем ret в int_meth
@@ -1486,6 +1521,8 @@ namespace PascalABCCompiler.NETGenerator
                     else
                     {
                         MethodInfo meth = helper.GetMethod(icmn).mi;
+                        if (meth.GetType().FullName == "System.Reflection.Emit.MethodOnTypeBuilderInstantiation")
+                            meth = meth.GetGenericMethodDefinition();
                         MethodInfo mi = TypeBuilder.GetMethod(t, meth);
                         helper.AddMethod(value.used_members[dn] as IFunctionNode, mi);
                         continue;
@@ -2276,7 +2313,10 @@ namespace PascalABCCompiler.NETGenerator
             }
             else
             {
-                mi = helper.GetMethod(igfi.original_function).mi;
+                MethInfo methi = helper.GetMethod(igfi.original_function);
+                if (methi == null)//not used functions from pcu
+                    return;
+                mi = methi.mi;
             }
             int tcount = igfi.generic_parameters.Count;
             Type[] tpars = new Type[tcount];
@@ -2295,13 +2335,11 @@ namespace PascalABCCompiler.NETGenerator
             num_scope++; //увеличиваем глубину обл. видимости
             TypeBuilder tb = null, tmp_type = cur_type;
             Frame frm = null;
-            bool nested = false;
 
             //func.functions_nodes.Length > 0 - имеет вложенные
             //funcs.Count > 0 - сама вложенная
             if (func.functions_nodes.Length > 0 || funcs.Count > 0)
             {
-                nested = true;
                 frm = MakeAuxType(func);//создаем запись активации
                 tb = frm.tb;
                 cur_type = tb;
@@ -6598,7 +6636,6 @@ namespace PascalABCCompiler.NETGenerator
             MethInfo mi = null;
             mi = helper.AddConstructor(value, cnstr);
             mi.num_scope = num_scope + 1;
-            ParameterBuilder pb = null;
             if (save_debug_info)
             {
                 if (value.function_code is IStatementsListNode)
@@ -6634,7 +6671,6 @@ namespace PascalABCCompiler.NETGenerator
             MethodBuilder methb = null;
             bool is_prop_acc = IsPropertyAccessor(value);
             MethodAttributes attrs = GetMethodAttributes(value, is_prop_acc);
-
             IRuntimeManagedMethodBody irmmb = value.function_code as IRuntimeManagedMethodBody;
             if (irmmb != null)
             {
@@ -6903,7 +6939,7 @@ namespace PascalABCCompiler.NETGenerator
             if (tmp_dot == true)
             {
                 //MethodInfo mi = value.static_method.method_info;
-                if (mi.ReturnType.IsValueType && !NETGeneratorTools.IsPointer(mi.ReturnType))
+                if ((mi.ReturnType.IsValueType || mi.ReturnType.IsGenericParameter) && !NETGeneratorTools.IsPointer(mi.ReturnType))
                 {
                     LocalBuilder lb = il.DeclareLocal(mi.ReturnType);
                     il.Emit(OpCodes.Stloc, lb);
@@ -7018,7 +7054,6 @@ namespace PascalABCCompiler.NETGenerator
             bool tmp_dot = is_dot_expr;
             is_dot_expr = false;
             bool is_comp_gen = false;
-            bool need_fee = false;
             IParameterNode[] parameters = value.static_method.parameters;
             for (int i = 0; i < real_parameters.Length; i++)
             {
@@ -7040,7 +7075,6 @@ namespace PascalABCCompiler.NETGenerator
                     is_dot_expr = true;
                 is_comp_gen = CheckForCompilerGenerated(real_parameters[i]);
                 //if (save_debug_info) MarkSequencePoint(il, 0xFeeFee, 1, 0xFeeFee, 1);
-                need_fee = true;
                 //вызов фактического параметра
                 real_parameters[i].visit(this);
 
@@ -7162,7 +7196,7 @@ namespace PascalABCCompiler.NETGenerator
             {
                 //if (mi.ReturnType.IsValueType && !NETGeneratorTools.IsPointer(mi.ReturnType))
                 //Для правильной работы шаблонов поменял условие (ssyy, 15.05.2009)
-                if ((value.method.return_value_type != null && value.method.return_value_type.is_value_type || value.method.return_value_type.is_generic_parameter) && !NETGeneratorTools.IsPointer(mi.ReturnType))
+                if ((value.method.return_value_type != null && value.method.return_value_type.is_value_type /*|| value.method.return_value_type != null && value.method.return_value_type.is_generic_parameter*/) && !NETGeneratorTools.IsPointer(mi.ReturnType))
                 {
                     LocalBuilder lb = mi.ReturnType.IsGenericParameter ?
                         il.DeclareLocal(helper.GetTypeReference(value.method.return_value_type).tp) :
@@ -7245,7 +7279,6 @@ namespace PascalABCCompiler.NETGenerator
                 }
             }
             bool is_comp_gen = false;
-            bool need_fee = false;
             IParameterNode[] parameters = value.common_function.parameters;
             for (int i = 0; i < real_parameters.Length; i++)
             {
@@ -7266,7 +7299,6 @@ namespace PascalABCCompiler.NETGenerator
                 if (ti.clone_meth != null && ti.tp != null && ti.tp.IsValueType && !box_awaited && !parameters[i].is_const)
                     is_dot_expr = true;
                 is_comp_gen = CheckForCompilerGenerated(real_parameters[i]);
-                if (is_comp_gen) need_fee = true;
                 real_parameters[i].visit(this);
                 is_dot_expr = false;
                 CallCloneIfNeed(il, parameters[i], real_parameters[i]);
@@ -7526,7 +7558,6 @@ namespace PascalABCCompiler.NETGenerator
             bool tmp_dot = is_dot_expr;
             is_dot_expr = false;
             bool is_comp_gen = false;
-            bool need_fee = false;
             MethodInfo mi = meth.mi;
             IParameterNode[] parameters = value.namespace_function.parameters;
             for (int i = 0; i < real_parameters.Length; i++)
@@ -7552,7 +7583,6 @@ namespace PascalABCCompiler.NETGenerator
                 }
                 //if (is_comp_gen == false)
                 is_comp_gen = CheckForCompilerGenerated(real_parameters[i]);
-                if (is_comp_gen) need_fee = true;
                 real_parameters[i].visit(this);
                 is_dot_expr = false;
                 CallCloneIfNeed(il, parameters[i], real_parameters[i]);
@@ -8697,7 +8727,7 @@ namespace PascalABCCompiler.NETGenerator
                 case basic_function_type.ishl: il.Emit(OpCodes.Shl); break;
                 case basic_function_type.ishr: il.Emit(OpCodes.Shr); break;
                 case basic_function_type.bshl: il.Emit(OpCodes.Shl); break;
-                case basic_function_type.bshr: il.Emit(OpCodes.Shr); break;
+                case basic_function_type.bshr: il.Emit(OpCodes.Shr_Un); break;
                 case basic_function_type.sshl: il.Emit(OpCodes.Shl); break;
                 case basic_function_type.sshr: il.Emit(OpCodes.Shr); break;
                 case basic_function_type.lshl: il.Emit(OpCodes.Shl); break;
@@ -8706,10 +8736,10 @@ namespace PascalABCCompiler.NETGenerator
                 case basic_function_type.sbshl: il.Emit(OpCodes.Shl); break;
                 case basic_function_type.usshl: il.Emit(OpCodes.Shl); break;
                 case basic_function_type.ulshl: il.Emit(OpCodes.Shl); break;
-                case basic_function_type.uishr: il.Emit(OpCodes.Shr); break;
+                case basic_function_type.uishr: il.Emit(OpCodes.Shr_Un); break;
                 case basic_function_type.sbshr: il.Emit(OpCodes.Shr); break;
-                case basic_function_type.usshr: il.Emit(OpCodes.Shr); break;
-                case basic_function_type.ulshr: il.Emit(OpCodes.Shr); break;
+                case basic_function_type.usshr: il.Emit(OpCodes.Shr_Un); break;
+                case basic_function_type.ulshr: il.Emit(OpCodes.Shr_Un); break;
 
                 case basic_function_type.ieq: il.Emit(OpCodes.Ceq); break;
                 case basic_function_type.inoteq: il.Emit(OpCodes.Ceq); il.Emit(OpCodes.Ldc_I4_0); il.Emit(OpCodes.Ceq); break;
@@ -8860,6 +8890,7 @@ namespace PascalABCCompiler.NETGenerator
                 case basic_function_type.iunmin:
                 case basic_function_type.bunmin:
                 case basic_function_type.sunmin:
+                case basic_function_type.funmin:
                 case basic_function_type.dunmin:
                 //case basic_function_type.uiunmin:
                 case basic_function_type.sbunmin:
@@ -9229,12 +9260,15 @@ namespace PascalABCCompiler.NETGenerator
                 {
                     if (elem_type.IsGenericParameter)
                     {
-                        il.Emit(OpCodes.Ldelema, elem_type);
-                        //if (value.indices == null)
-                        //    il.Emit(OpCodes.Ldelema, elem_type);
-                        //else
-                        //    il.Emit(OpCodes.Call, addr_meth);
-                    }
+                        if (indices == null)
+                            il.Emit(OpCodes.Ldelema, elem_type);
+                        else
+                            il.Emit(OpCodes.Call, addr_meth);
+                    //if (value.indices == null)
+                    //    il.Emit(OpCodes.Ldelema, elem_type);
+                    //else
+                    //    il.Emit(OpCodes.Call, addr_meth);
+                }
                     else if (elem_type.IsValueType == true)
                     {
                         if (indices == null)
@@ -9801,7 +9835,6 @@ namespace PascalABCCompiler.NETGenerator
             }
             else
                 elem_type = ti.tp.GetElementType();
-            MethodInfo get_meth = null;
             MethodInfo addr_meth = null;
             if (indices == null)
             {

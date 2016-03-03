@@ -1,0 +1,8 @@
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\PT4Provider.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\PT4Provider.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\PT4Provider\obj\Debug\PT4Provider.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\PT4Provider\obj\Debug\PT4Provider.Images.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\PT4Provider\obj\Debug\PT4Provider.Properties.Resources.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\PT4Provider\obj\Debug\PT4Provider.csproj.GenerateResource.Cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\PT4Provider\obj\Debug\PT4Provider.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\PT4Provider\obj\Debug\PT4Provider.pdb

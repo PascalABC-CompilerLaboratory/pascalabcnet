@@ -1,0 +1,8 @@
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\SyntaxTreeVisualisator.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\SyntaxTreeVisualisator.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SyntaxTreeVisualisator\obj\Debug\VisualPascalABCPlugins.Properties.Resources.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SyntaxTreeVisualisator\obj\Debug\VisualPascalABCPlugins.SyntaxTreeVisualisatorForm.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SyntaxTreeVisualisator\obj\Debug\SyntaxTreeVisualisator.csproj.GenerateResource.Cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SyntaxTreeVisualisator\obj\Debug\SyntaxTreeVisualisator.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SyntaxTreeVisualisator\obj\Debug\SyntaxTreeVisualisator.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SyntaxTreeVisualisator\obj\Debug\SyntaxTreeVisualisator.csprojResolveAssemblyReference.cache
