@@ -49,9 +49,15 @@ namespace SyntaxVisitors
             }
             var d = UpperNodeAs<declarations>();
             d.defs.Remove(vd); // может ли остаться список declarations пустым?
+
+            // frninja 03/03/16 - переносим объявления переменных c initial_value в тело метода для дальнейшей обработки
+            var methodBody = UpperTo<block>().program_code;
+
+            methodBody.list.InsertRange(0, vd.list
+                    .Where(vds => (object)vds.inital_value != null)
+                    .SelectMany(vdsInit => vdsInit.vars.list.Select(id => new assign(id, vdsInit.inital_value))));
+
+            // еще - не заходить в лямбды
         }
-
-        // еще - не заходить в лямбды
-
     }
 }

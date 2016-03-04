@@ -1266,6 +1266,10 @@ namespace PascalABCCompiler.SyntaxTree
 		void visit(dot_question_node _dot_question_node);
 
         void visit(unknown_ident _unk);
+
+        void visit(unknown_expression_type _unk);
+
+        void visit(vars_initial_values_type_helper _vars);
 	}
 
 
