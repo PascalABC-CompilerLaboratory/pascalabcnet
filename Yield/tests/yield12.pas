@@ -26,7 +26,7 @@ type A = class(R)
   testField: real;
 
   function Gen(n: integer): sequence of real;
-  var j := 44.3;
+  var j := 33.2;
   begin
     yield testField;
     yield sin(3.14);

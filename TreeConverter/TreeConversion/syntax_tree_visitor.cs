@@ -18847,6 +18847,7 @@ namespace PascalABCCompiler.TreeConverter
             visit(st);
         }
 
+        // frninja 04/03/16 - для yield
 
         private bool CheckUnknownIdentNeedsClassCapture(SyntaxTree.unknown_ident _unk)
         {
@@ -18913,6 +18914,22 @@ namespace PascalABCCompiler.TreeConverter
             ProcessUnknownIdent(_unk).visit(this);
         }
 
+        public override void visit(SyntaxTree.unknown_expression_type _unk_expr)
+        {
+            var t = _unk_expr.Vars.VarsTypeMap[_unk_expr.Vds];
+            (t as same_type_node).visit(this);
+        }
+
+        public override void visit(SyntaxTree.vars_initial_values_type_helper _vars)
+        {
+            var x = convert_strong(_vars.Vars.First().inital_value);
+
+            foreach (var vds in _vars.Vars)
+            {
+                _vars.VarsTypeMap[vds] = new same_type_node(vds.inital_value); //convert_strong(vds.inital_value);
+            }
+        
+        }
         
 
         /*public SyntaxTree.question_colon_expression ConvertToQCE(dot_question_node dqn)

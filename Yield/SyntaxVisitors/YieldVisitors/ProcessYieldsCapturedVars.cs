@@ -88,7 +88,8 @@ namespace SyntaxVisitors
 
         type_declarations GenClassesForYield(procedure_definition pd, IEnumerable<var_def_statement> fields,
             IDictionary<string, string> localsMap,
-            IDictionary<string, string> formalParamsMap)
+            IDictionary<string, string> formalParamsMap,
+            vars_initial_values_type_helper varsTypeDetectorHelper)
         {
             var fh = (pd.proc_header as function_header);
             if (fh == null)
@@ -104,6 +105,10 @@ namespace SyntaxVisitors
             var capturedFields = fields.Select(vds =>
                                     {
                                         ident_list ids = new ident_list(vds.vars.idents.Select(id => new ident(localsMap[id.name])).ToArray());
+                                        if ((object)vds.vars_type == null && (object)vds.inital_value != null)
+                                        {
+                                            return new var_def_statement(ids, new unknown_expression_type(vds, varsTypeDetectorHelper), null);
+                                        }
                                         return new var_def_statement(ids, vds.vars_type, vds.inital_value);
                                     });
 
@@ -425,10 +430,27 @@ namespace SyntaxVisitors
 
             var cfa = new ConstructFiniteAutomata((pd.proc_body as block).program_code);
             cfa.Transform();
+
+            // frninja 04/03/16 - узел для определения типов локальных переменных
+            var varsTypeDetectorHelperNode = new vars_initial_values_type_helper(dld.LocalDeletedDefs.Where(vds => 
+                {
+                    return (object)vds.inital_value != null && (object)vds.vars_type == null;
+                }));
+
+            function_header nfh = new function_header();
+            nfh.name = new method_name("<helper>" + pd.proc_header.name.meth_name.name);
+            nfh.parameters = pd.proc_header.parameters;
+            nfh.proc_attributes = pd.proc_header.proc_attributes;
+            nfh.return_type = (pd.proc_header as function_header).return_type;
+            procedure_definition npd = new procedure_definition(nfh, new block(new statement_list(varsTypeDetectorHelperNode)));
+
+            var classMembers = UpperTo<class_members>();
+            classMembers.Add(npd);
+
             (pd.proc_body as block).program_code = cfa.res;
 
             // Конструируем определение класса
-            var cct = GenClassesForYield(pd, dld.LocalDeletedDefs, CapturedLocalsNamesMap, CapturedFormalParamsNamesMap); // все удаленные описания переменных делаем описанием класса
+            var cct = GenClassesForYield(pd, dld.LocalDeletedDefs, CapturedLocalsNamesMap, CapturedFormalParamsNamesMap, varsTypeDetectorHelperNode); // все удаленные описания переменных делаем описанием класса
 
             //UpperNodeAs<declarations>().InsertBefore(pd, cct);
             if (isClassMethod)
@@ -437,15 +459,18 @@ namespace SyntaxVisitors
                 if ((object)cd != null)
                 {
                     var td = UpperTo<type_declarations>();
-                    // Insert class predefenition!
-                    var iteratorClassPredef = new type_declaration(GetClassName(pd), new class_definition(null));
-                    td.types_decl.Insert(0, iteratorClassPredef);
+                    
+                    
 
                     foreach (var helperName in cct.types_decl.Select(ttd => ttd.type_name))
                     {
                         var helperPredef = new type_declaration(helperName, new class_definition());
                         td.types_decl.Insert(0, helperPredef);
                     }
+
+                    // Insert class predefenition!
+                    var iteratorClassPredef = new type_declaration(GetClassName(pd), new class_definition(null));
+                    td.types_decl.Insert(0, iteratorClassPredef);
 
                     foreach (var helper in cct.types_decl)
                     {

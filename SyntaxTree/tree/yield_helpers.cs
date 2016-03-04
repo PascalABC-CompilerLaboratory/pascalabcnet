@@ -87,18 +87,19 @@ namespace PascalABCCompiler.SyntaxTree
     [Serializable]
     public class unknown_expression_type : type_definition
     {
-        public expression Expr { get; private set; }
+        public var_def_statement Vds { get; private set; }
 
         public vars_initial_values_type_helper Vars { get; private set; }
 
-        public unknown_expression_type(expression expr)
+        public unknown_expression_type(var_def_statement vds, vars_initial_values_type_helper vars)
         {
-            this.Expr = expr;
+            this.Vds = vds;
+            this.Vars = vars;
         }
 
-        public unknown_expression_type(expression expr, SourceContext sc)
+        public unknown_expression_type(var_def_statement vds, SourceContext sc)
         {
-            this.Expr = expr;
+            this.Vds = vds;
             source_context = sc;
         }
 
@@ -165,12 +166,12 @@ namespace PascalABCCompiler.SyntaxTree
     {
         public List<var_def_statement> Vars { get; private set; }
 
-        public Dictionary<ident, type_definition> VarsTypeMap { get; private set; }
+        public Dictionary<var_def_statement, object> VarsTypeMap { get; private set; }
         
         public vars_initial_values_type_helper(IEnumerable<var_def_statement> vars)
         {
             this.Vars = new List<var_def_statement>(vars);
-            this.VarsTypeMap = new Dictionary<ident, type_definition>();
+            this.VarsTypeMap = new Dictionary<var_def_statement, object>();
         }
 
         #region Helpers
