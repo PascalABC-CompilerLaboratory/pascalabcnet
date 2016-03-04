@@ -190,6 +190,7 @@ namespace PascalABCCompiler.SyntaxTree
 
     public enum c_scalar_sign { none, signed, unsigned };
 
+    [Serializable]
 	public class file_position
 	{
 		private int _line_num;
@@ -219,6 +220,7 @@ namespace PascalABCCompiler.SyntaxTree
 
 	}
 
+    [Serializable]
 	public class SourceContext
 	{
 		private file_position _begin_position;

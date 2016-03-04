@@ -2,9 +2,6 @@ uses System.IO;
 
 var aa: real := 555.0;
 
-type R = class
-  testR: real := 666.6;
-end;
 
 type R = class
   testR: real := 77.3;
@@ -32,8 +29,8 @@ type A = class(StreamReader)
   function Gen(n: integer): sequence of real;
   var j,k: real;
   begin
-    //var x := BaseStream;
-    var x := 56.4;
+    var x := BaseStream;
+    //var x := 56.4;
     var y := x;
     yield Peek();
   end;

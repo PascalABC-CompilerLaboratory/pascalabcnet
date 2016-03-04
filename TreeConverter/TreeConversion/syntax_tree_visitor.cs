@@ -18917,16 +18917,17 @@ namespace PascalABCCompiler.TreeConverter
         public override void visit(SyntaxTree.unknown_expression_type _unk_expr)
         {
             var t = _unk_expr.Vars.VarsTypeMap[_unk_expr.Vds];
-            (t as same_type_node).visit(this);
+            (t as named_type_reference).visit(this);
         }
 
         public override void visit(SyntaxTree.vars_initial_values_type_helper _vars)
         {
-            var x = convert_strong(_vars.Vars.First().inital_value);
-
             foreach (var vds in _vars.Vars)
             {
-                _vars.VarsTypeMap[vds] = new same_type_node(vds.inital_value); //convert_strong(vds.inital_value);
+                var_statement vs = new var_statement(vds);
+                vs.visit(this);
+                var x = convert_strong(vds.inital_value);
+                _vars.VarsTypeMap[vds] = new named_type_reference(x.type.full_name); //new same_type_node(vds.inital_value); //convert_strong(vds.inital_value);
             }
         
         }
