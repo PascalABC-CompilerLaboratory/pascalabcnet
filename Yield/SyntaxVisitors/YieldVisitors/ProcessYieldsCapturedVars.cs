@@ -424,13 +424,13 @@ namespace SyntaxVisitors
             // frninja 04/03/16 - узел для определения типов локальных переменных
             var varsTypeDetectorHelperNode = new vars_initial_values_type_helper(dld.LocalDeletedDefs.Where(vds =>
             {
-                return (object)vds.inital_value != null && (object)vds.vars_type == null;
+                return (object)vds.inital_value != null;
             }));
 
             var varsCloned = ObjectCopier.Clone(varsTypeDetectorHelperNode);
 
             function_header nfh = new function_header();
-            nfh.name = new method_name("<helper>" + pd.proc_header.name.meth_name.name);
+            nfh.name = new method_name("<yield_helper>" + pd.proc_header.name.meth_name.name);
             nfh.parameters = pd.proc_header.parameters;
             nfh.proc_attributes = pd.proc_header.proc_attributes;
             nfh.return_type = (pd.proc_header as function_header).return_type;

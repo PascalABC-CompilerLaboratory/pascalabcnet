@@ -24,9 +24,9 @@ type A = class(R)
 
   function Gen(n: integer): sequence of real;
   var j := n;
-  var jj := j;
+  var jj : real := j;
   begin
-    var xx := j;
+    var xx := jj;
     yield xx;
     for var i := 1 to j do
     begin
