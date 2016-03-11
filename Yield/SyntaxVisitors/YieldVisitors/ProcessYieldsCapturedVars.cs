@@ -106,11 +106,23 @@ namespace SyntaxVisitors
             var capturedFields = fields.Select(vds =>
                                     {
                                         ident_list ids = new ident_list(vds.vars.idents.Select(id => new ident(localsMap[id.name])).ToArray());
-                                        if ((object)vds.vars_type == null && (object)vds.inital_value != null)
+                                        if ((object)vds.vars_type == null) //&& (object)vds.inital_value != null)
                                         {
-                                            return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], varsTypeDetectorHelper), null);
+                                            if ((object)vds.inital_value != null)
+                                            {
+                                                return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], varsTypeDetectorHelper), null);
+                                            }
+                                            else
+                                            {
+                                                throw new Exception("Variable defenition without type and value!");
+                                            }
                                         }
-                                        return new var_def_statement(ids, vds.vars_type, vds.inital_value);
+                                        else
+                                        {
+                                            return new var_def_statement(ids, vds.vars_type, null);
+                                        }
+                                        
+                                        //return new var_def_statement(ids, vds.vars_type, vds.inital_value);
                                     });
 
             foreach (var m in capturedFields)
@@ -383,6 +395,9 @@ namespace SyntaxVisitors
             var dld = new DeleteAllLocalDefs(); // mids.vars - все захваченные переменные
             pd.visit(dld); // Удалить в локальных и блочных описаниях этой процедуры все переменные и вынести их в отдельный список var_def_statement
 
+            // frninja 11/03/16 - строим список vds в правильном порядке
+            dld.LocalDeletedDefs.AddRange(dld.LocalDeletedVS);
+
             // frninja 08/12/15
             bool isClassMethod = IsClassMethod(pd);
 
@@ -410,7 +425,7 @@ namespace SyntaxVisitors
             var varsTypeDetectorHelperNode = new vars_initial_values_type_helper(dld.LocalDeletedDefs.Where(vds =>
             {
                 return (object)vds.inital_value != null && (object)vds.vars_type == null;
-            }).Reverse());
+            }));
 
             var varsCloned = ObjectCopier.Clone(varsTypeDetectorHelperNode);
 

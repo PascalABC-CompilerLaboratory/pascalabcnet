@@ -13,9 +13,6 @@ type R = class
   testR: real := 77.3;
   testI: integer;
 
-  //property sin: real read testR;
-
-//private
   function sin2(x: real): real;
   begin
     result := 83.9;
@@ -27,10 +24,14 @@ type A = class(R)
 
   function Gen(n: integer): sequence of real;
   var j := n;
+  var jj := j;
   begin
-    yield testField;
-    yield sin(3.14);
-    yield j;
+    var xx := j;
+    yield xx;
+    for var i := 1 to j do
+    begin
+      yield i;
+    end;
   end;
 end;
 

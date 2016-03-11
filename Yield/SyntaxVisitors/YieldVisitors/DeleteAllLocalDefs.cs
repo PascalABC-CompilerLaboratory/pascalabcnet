@@ -13,6 +13,8 @@ namespace SyntaxVisitors
     {
         public List<var_def_statement> LocalDeletedDefs = new List<var_def_statement>(); // все локальные описания
 
+        public List<var_def_statement> LocalDeletedVS = new List<var_def_statement>(); // var_statement's, потом объединим с LocalDeletedDefs для верного порядка
+
         public ISet<string> LocalDeletedDefsNames = new HashSet<string>();            // их имена - для быстрого поиска  
 
         public ISet<ident> CollectedLocals = new HashSet<ident>();
@@ -23,18 +25,18 @@ namespace SyntaxVisitors
 
         public override void visit(var_statement vs) // локальные описания внутри процедуры
         {
-            LocalDeletedDefs.Add(vs.var_def);
-            DeleteInStatementList(vs);
+            LocalDeletedVS.Insert(0, vs.var_def);
+            //DeleteInStatementList(vs);
 
             // frninja 02/03/16 - fix capturing unknown idents -> replace delete with assign
-            /*if ((object)vs.var_def.inital_value == null)
+            if ((object)vs.var_def.inital_value == null)
             {
                 DeleteInStatementList(vs);
             }
             else
             {
-                Replace(vs, new statement_list(SeqStatements(vs.var_def.vars.idents.Select(id => new assign(id, vs.var_def.inital_value)).ToArray()).ToArray()));
-            }*/
+                ReplaceStatement(vs, SeqStatements(vs.var_def.vars.idents.Select(id => new assign(id, vs.var_def.inital_value)).ToArray()));
+            }
 
             LocalDeletedDefsNames.UnionWith(vs.var_def.vars.idents.Select(id => id.name));
             CollectedLocals.UnionWith(vs.var_def.vars.idents);
@@ -44,7 +46,7 @@ namespace SyntaxVisitors
         {
             foreach (var v in vd.list)
             {
-                LocalDeletedDefs.Add(v);
+                LocalDeletedDefs.Insert(0, v); //.Add(v);
                 LocalDeletedDefsNames.UnionWith(v.vars.idents.Select(id => id.name));
             }
             var d = UpperNodeAs<declarations>();
@@ -56,7 +58,7 @@ namespace SyntaxVisitors
             methodBody.list.InsertRange(0, vd.list
                     .Where(vds => (object)vds.inital_value != null)
                     .SelectMany(vdsInit => vdsInit.vars.list.Select(id => new assign(id, vdsInit.inital_value))));
-            
+
             // еще - не заходить в лямбды
         }
     }

@@ -53,6 +53,16 @@ namespace SyntaxVisitors
 
         }
 
+        public override void visit(labeled_statement ls)
+        {
+            ProcessNode(ls.to_statement);
+        }
+
+        public override void visit(goto_statement gt)
+        {
+            // Empty
+        }
+
         public override void visit(ident id)
         {
             // Check dot node
