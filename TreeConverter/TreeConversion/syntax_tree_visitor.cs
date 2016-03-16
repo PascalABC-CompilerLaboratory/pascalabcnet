@@ -18853,6 +18853,9 @@ namespace PascalABCCompiler.TreeConverter
         {
             string Consts__Self = "<>4__self";
 
+            var dn = new dot_node(Consts__Self, _unk.UnknownID);
+            var xxx = convert_strong(dn);
+
             // Find semantic class containing iterator (yield-method) with unknown ident
             var iteratorContainingClass = context._ctn.fields.Where(f => f.name == Consts__Self).First().type;
             //var iteratorContainingClass = context._cmn.types.Where(t => t.name == _unk.ClassName.name).First();
@@ -18874,7 +18877,8 @@ namespace PascalABCCompiler.TreeConverter
                     if (found.sym_info is class_field 
                         || found.sym_info is common_method_node
                         || found.sym_info is common_property_node
-                        || found.sym_info is compiled_function_node)
+                        || found.sym_info is compiled_function_node
+                        || found.sym_info is compiled_property_node)
                     {
                         if (found.access_level != access_level.al_private)
                         {
@@ -18909,6 +18913,7 @@ namespace PascalABCCompiler.TreeConverter
             }
         }
 
+        // frninja - захват полей класса для yield
         public override void visit(SyntaxTree.unknown_ident _unk)
         {
             ProcessUnknownIdent(_unk).visit(this);
@@ -18916,13 +18921,10 @@ namespace PascalABCCompiler.TreeConverter
 
         public override void visit(SyntaxTree.unknown_expression_type _unk_expr)
         {
-            var x = _unk_expr.MapHelper.vars_type_map[_unk_expr.Vds];
             _unk_expr.MapHelper.vars_type_map[_unk_expr.Vds].visit(this);
-            //var t = _unk_expr.Vars.VarsTypeMap[_unk_expr.Vds];
-            //(t as SyntaxTree.semantic_type_node).visit(this);
         }
 
-
+        // frninja - заполнение хелпера типов локальных переменных для yield
         public override void visit(SyntaxTree.var_def_statement_with_unknown_type _vars)
         {
             if ((object)_vars.vars.vars_type != null)
@@ -18934,6 +18936,7 @@ namespace PascalABCCompiler.TreeConverter
             _vars.vars.visit(this);
         }
 
+        // frninja - заполнение хелпера типов локальных переменных для yield// frninja - заполнение хелпера типов локальных переменных для yield
         public override void visit(SyntaxTree.variable_definitions_with_unknown_type _vars)
         {
             foreach (var vd in _vars.vars.list)

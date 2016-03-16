@@ -13,10 +13,12 @@ type R = class
   begin
     result := 83.9;
   end;
+private
+  testRr: real := 23.3;
 end;
 
-type A = class(StreamReader)
-  constructor Create;
+type A = class(R)
+  (*constructor Create;
   begin
     inherited Create('hz');
   end;
@@ -24,15 +26,16 @@ type A = class(StreamReader)
   constructor Create(path: string);
   begin
     inherited Create(path);
-  end;
+  end;*)
 
   function Gen(n: integer): sequence of real;
   var j,k: real;
   begin
-    var x := BaseStream;
+    //var x := BaseStream;
     //var x := 56.4;
-    var y := x;
-    yield Peek();
+    //var y := x;
+    yield testRr;
+    //yield Peek();
   end;
 end;
 
