@@ -2259,6 +2259,9 @@ namespace PascalABCCompiler.NETGenerator
                 {
                     continue;
                 }*/
+                // frninja 16/03/16 - грязный хак для вырезания мусорных хелперов yield
+                if (funcs[i].name.StartsWith("<yield_helper"))
+                    continue;
                 ConvertFunctionBody(funcs[i]);
             }
         }
@@ -2334,6 +2337,10 @@ namespace PascalABCCompiler.NETGenerator
         //перевод заголовка функции
         private void ConvertFunctionHeader(ICommonFunctionNode func)
         {
+            //frninja 16/03/16 - грязный хак для вырезания мусорных хелперов yield
+            if (func.name.StartsWith("<yield_helper"))
+                return;
+
             //if (is_in_unit && helper.IsUsed(func)==false) return;
             num_scope++; //увеличиваем глубину обл. видимости
             TypeBuilder tb = null, tmp_type = cur_type;

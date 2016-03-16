@@ -391,7 +391,9 @@ namespace SyntaxVisitors
 
             if (!hasYields) // т.е. мы разобрали функцию и уже выходим. Это значит, что пока yield будет обрабатываться только в функциях. Так это и надо.
                 return;
+            
 
+            // Теперь lowering
             LoweringVisitor.Accept(pd);
 
             // Выполняем определение типов локальных переменных с автовыводом типов
@@ -409,10 +411,16 @@ namespace SyntaxVisitors
             localsTypeDetectorHelperVisitor.LocalDeletedVS.Clear();
 
             // Добавляем в класс метод с обертками для локальных переменных
-            pdCloned.proc_header.name = new method_name("<yield_helper_test>" + pd.proc_header.name.meth_name.name);
-            var classMembers = UpperTo<class_members>();
-            classMembers.Add(pdCloned);
-
+            pdCloned.proc_header.name = new method_name("<yield_helper_locals_type_detector>" + pd.proc_header.name.meth_name.name);
+            if (IsClassMethod(pd))
+            {
+                var classMembers = UpperTo<class_members>();
+                classMembers.Add(pdCloned);
+            }
+            else
+            {
+                UpperTo<declarations>().InsertBefore(pd, pdCloned);
+            }
             
 
             // frninja 16/11/15: перенес ниже чтобы работал захват для lowered for

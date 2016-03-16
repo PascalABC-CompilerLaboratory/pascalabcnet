@@ -36,9 +36,9 @@ type A = class(R)
       //  var x := 9;
       //end;
       yield jj;
-      for var i := 1 to j do
+      for var x := 1 to j do
       begin
-        yield i;
+        yield x;
       end;
       
     //end;
