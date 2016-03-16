@@ -1068,10 +1068,6 @@ namespace PascalABCCompiler.SyntaxTree
             DefaultVisit(_unk);
         }
 
-        public virtual void visit(vars_initial_values_type_helper _vars)
-        {
-            DefaultVisit(_vars);
-        }
 
         public virtual void visit(var_def_statement_with_unknown_type _vars)
         {

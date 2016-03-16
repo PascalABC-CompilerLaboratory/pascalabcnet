@@ -1269,8 +1269,6 @@ namespace PascalABCCompiler.SyntaxTree
 
         void visit(unknown_expression_type _unk);
 
-        void visit(vars_initial_values_type_helper _vars);
-
         void visit(var_def_statement_with_unknown_type _vars);
 
         void visit(variable_definitions_with_unknown_type _vars);

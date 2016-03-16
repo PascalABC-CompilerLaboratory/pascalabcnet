@@ -5870,11 +5870,6 @@ namespace PascalABCCompiler.SyntaxTree
             // Sth
         }
 
-        public void visit(vars_initial_values_type_helper _vars)
-        {
-            // Sth
-        }
-
         public void visit(var_def_statement_with_unknown_type _vars)
         {
             // Sth

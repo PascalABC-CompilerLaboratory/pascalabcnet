@@ -86,12 +86,12 @@ namespace SyntaxVisitors
             base.visit(cm);
         }*/
 
-        type_declarations GenClassesForYield(procedure_definition pd, IEnumerable<var_def_statement> fields,
-            IDictionary<string, string> localsMap,
-            IDictionary<string, string> formalParamsMap,
-            IDictionary<var_def_statement, var_def_statement> localsCloneMap,
-            vars_initial_values_type_helper varsTypeDetectorHelper,
-            locals_type_map_helper localTypeMapHelper)
+        type_declarations GenClassesForYield(procedure_definition pd,
+            IEnumerable<var_def_statement> fields, // локальные переменные
+            IDictionary<string, string> localsMap, // отображение для захваченных имен локальных переменных
+            IDictionary<string, string> formalParamsMap, // отображение для захваченных имен формальных параметров
+            IDictionary<var_def_statement, var_def_statement> localsCloneMap, // отображение для оберток локальных переменных 
+            locals_type_map_helper localTypeMapHelper) // вспомогательный узел для типов локальных переменных
         {
             var fh = (pd.proc_header as function_header);
             if (fh == null)
@@ -112,7 +112,7 @@ namespace SyntaxVisitors
                                             if ((object)vds.inital_value != null)
                                             {
                                                 //return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], varsTypeDetectorHelper), null);
-                                                return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], localTypeMapHelper));
+                                                return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], localTypeMapHelper), null);
                                             }
                                             else
                                             {
@@ -394,7 +394,9 @@ namespace SyntaxVisitors
 
             LoweringVisitor.Accept(pd);
 
-            // Клонируем метод для обработки оберток-хелперов на семантике
+            // Выполняем определение типов локальных переменных с автовыводом типов
+
+            // Клонируем исходный метод для вставки оберток-хелперов для локальных переменных и дальнейшей обработки на семантике
             var pdCloned = ObjectCopier.Clone(pd);
 
             // Заменяем локальные переменные с неизвестным типом на обертки-хелперы (откладываем до семантики)
@@ -402,19 +404,37 @@ namespace SyntaxVisitors
             LocalVariablesTypeDetectorHelperVisior localsTypeDetectorHelperVisitor = new LocalVariablesTypeDetectorHelperVisior(localsTypeMapHelper);
             pdCloned.visit(localsTypeDetectorHelperVisitor);
 
-            // frninja 16/03/16 - строим список vds в правильном порядке
+            // frninja 16/03/16 - строим список локальных переменных в правильном порядке
             localsTypeDetectorHelperVisitor.LocalDeletedDefs.AddRange(localsTypeDetectorHelperVisitor.LocalDeletedVS);
+            localsTypeDetectorHelperVisitor.LocalDeletedVS.Clear();
 
-            //RenameSameBlockLocalVarsVisitor sameLocalVarsRenameVisitor = new RenameSameBlockLocalVarsVisitor();
-            //(pd.proc_body as block).visit(sameLocalVarsRenameVisitor);
+            // Добавляем в класс метод с обертками для локальных переменных
+            pdCloned.proc_header.name = new method_name("<yield_helper_test>" + pd.proc_header.name.meth_name.name);
+            var classMembers = UpperTo<class_members>();
+            classMembers.Add(pdCloned);
+
+            
 
             // frninja 16/11/15: перенес ниже чтобы работал захват для lowered for
 
             var dld = new DeleteAllLocalDefs(); // mids.vars - все захваченные переменные
             pd.visit(dld); // Удалить в локальных и блочных описаниях этой процедуры все переменные и вынести их в отдельный список var_def_statement
 
-            // frninja 11/03/16 - строим список vds в правильном порядке
+            // frninja 11/03/16 - строим список локальных переменных в правильном порядке
             dld.LocalDeletedDefs.AddRange(dld.LocalDeletedVS);
+            dld.LocalDeletedVS.Clear();
+
+            // Строим отображение из локальных переменных клона оригинального метода в локальные переменные основного метода
+            Dictionary<var_def_statement, var_def_statement> localsCloneMap = new Dictionary<var_def_statement, var_def_statement>();
+
+            var localsArr = dld.LocalDeletedDefs.ToArray(); //varsTypeDetectorHelperNode.Vars.ToArray();
+            var localsClonesArr = localsTypeDetectorHelperVisitor.LocalDeletedDefs.ToArray(); //varsCloned.Vars.ToArray();
+
+            // Create map :: locals -> cloned locals
+            for (int i = 0; i < localsArr.Length; ++i)
+            {
+                localsCloneMap.Add(localsArr[i], localsClonesArr[i]);
+            }
 
             // frninja 08/12/15
             bool isClassMethod = IsClassMethod(pd);
@@ -439,28 +459,6 @@ namespace SyntaxVisitors
             CreateCapturedLocalsNamesMap(CollectedLocalsNames, CapturedLocalsNamesMap);
             CreateCapturedFormalParamsNamesMap(CollectedFormalParamsNames, CapturedFormalParamsNamesMap);
 
-            // frninja 04/03/16 - узел для определения типов локальных переменных
-            var varsTypeDetectorHelperNode = new vars_initial_values_type_helper(dld.LocalDeletedDefs.Where(vds =>
-            {
-                return (object)vds.inital_value != null;
-            }));
-
-            var varsCloned = ObjectCopier.Clone(varsTypeDetectorHelperNode);
-            
-
-            function_header nfh = new function_header();
-            nfh.name = new method_name("<yield_helper>" + pd.proc_header.name.meth_name.name);
-            nfh.parameters = pd.proc_header.parameters;
-            nfh.proc_attributes = pd.proc_header.proc_attributes;
-            nfh.return_type = (pd.proc_header as function_header).return_type;
-            procedure_definition npd = new procedure_definition(nfh, new block(new statement_list(varsCloned)));
-
-            pdCloned.proc_header.name = new method_name("<yield_helper_test>" + pd.proc_header.name.meth_name.name);
-
-            var classMembers = UpperTo<class_members>();
-            classMembers.Add(pdCloned);
-            classMembers.Add(npd);
-
             // AHAHA test!
             ReplaceCapturedVariablesVisitor rcapVis = new ReplaceCapturedVariablesVisitor(
                 CollectedLocalsNames,
@@ -477,16 +475,7 @@ namespace SyntaxVisitors
             // Replace
             (pd.proc_body as block).program_code.visit(rcapVis);
 
-            Dictionary<var_def_statement, var_def_statement> localsCloneMap = new Dictionary<var_def_statement,var_def_statement>();
-
-            var localsArr = dld.LocalDeletedDefs.ToArray(); //varsTypeDetectorHelperNode.Vars.ToArray();
-            var localsClonesArr = localsTypeDetectorHelperVisitor.LocalDeletedDefs.ToArray(); //varsCloned.Vars.ToArray();
             
-            // Create map :: locals -> cloned locals
-            for (int i = 0; i < varsTypeDetectorHelperNode.Vars.ToArray().Length; ++i)
-            {
-                localsCloneMap.Add(localsArr[i], localsClonesArr[i]);
-            }
 
             mids.vars.Except(dld.LocalDeletedDefsNames); // параметры остались. Их тоже надо исключать - они и так будут обработаны
             // В результате работы в mids.vars что-то осталось. Это не локальные переменные и с ними непонятно что делать
@@ -500,7 +489,7 @@ namespace SyntaxVisitors
             (pd.proc_body as block).program_code = cfa.res;
 
             // Конструируем определение класса
-            var cct = GenClassesForYield(pd, dld.LocalDeletedDefs, CapturedLocalsNamesMap, CapturedFormalParamsNamesMap, localsCloneMap, varsCloned, localsTypeMapHelper); // все удаленные описания переменных делаем описанием класса
+            var cct = GenClassesForYield(pd, dld.LocalDeletedDefs, CapturedLocalsNamesMap, CapturedFormalParamsNamesMap, localsCloneMap, localsTypeMapHelper); // все удаленные описания переменных делаем описанием класса
 
             //UpperNodeAs<declarations>().InsertBefore(pd, cct);
             if (isClassMethod)

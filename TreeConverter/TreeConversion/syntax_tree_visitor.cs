@@ -18922,17 +18922,6 @@ namespace PascalABCCompiler.TreeConverter
             //(t as SyntaxTree.semantic_type_node).visit(this);
         }
 
-        public override void visit(SyntaxTree.vars_initial_values_type_helper _vars)
-        {
-            foreach (var vds in _vars.Vars)
-            {
-                var_statement vs = new var_statement(vds);
-                vs.visit(this);
-                var x = convert_strong(vds.inital_value);
-                _vars.VarsTypeMap[vds] = new SyntaxTree.semantic_type_node(x.type);//new named_type_reference(x.type.full_name); 
-            }
-        
-        }
 
         public override void visit(SyntaxTree.var_def_statement_with_unknown_type _vars)
         {
