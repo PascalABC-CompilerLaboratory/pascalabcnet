@@ -26,12 +26,22 @@ type A = class(R)
   var j := n;
   var jj : real := j;
   begin
-    var xx := jj;
-    yield xx;
-    for var i := 1 to j do
-    begin
-      yield i;
-    end;
+    //begin
+      var x := 777;
+      //yield xx;
+    //end;
+    //begin
+      //var x := 89.3;
+      //begin
+      //  var x := 9;
+      //end;
+      yield jj;
+      for var i := 1 to j do
+      begin
+        yield i;
+      end;
+      
+    //end;
   end;
 end;
 

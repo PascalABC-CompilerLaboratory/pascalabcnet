@@ -14,6 +14,9 @@ using System.Runtime.Remoting;
 using System.Security;
 using System.Runtime.Versioning;
 
+// frninja was here
+using System.Linq;
+
 namespace PascalABCCompiler.NETGenerator
 {
 
@@ -6660,6 +6663,10 @@ namespace PascalABCCompiler.NETGenerator
         //перевод заголовка метода
         private void ConvertMethodHeader(SemanticTree.ICommonMethodNode value)
         {
+            // frninja 16/03/16 - грязный хак для вырезания мусорных хелперов yield
+            if (value.name.StartsWith("<yield_helper"))
+                return;
+
             if (value.is_constructor == true)
             {
                 ConvertConstructorHeader(value);
@@ -9113,9 +9120,23 @@ namespace PascalABCCompiler.NETGenerator
             cur_ti = tmp_ti;
         }
 
+        
         //перевод реализации типа
         public override void visit(SemanticTree.ICommonTypeNode value)
         {
+
+            // frninja 16/03/16 - грубый хак для отмены обхода мусорных методов-хелперов для yield
+            /*if (value is PascalABCCompiler.TreeRealization.common_type_node)
+            {
+                var ctn = value as PascalABCCompiler.TreeRealization.common_type_node;
+                if (ctn.methods.Where(m => m.name.StartsWith("<yield_helper")).Count() > 0)
+                {
+                    var methods = ctn.methods.Where(m => !m.name.StartsWith("<yield_helper")).ToArray();
+                    ctn.methods.clear();
+                    ctn.methods.AddRange(methods);
+                }
+            }*/
+
             if (value is ISimpleArrayNode || value.type_special_kind == type_special_kind.array_kind) return;
             MakeAttribute(value);
             TypeInfo ti = helper.GetTypeReference(value);
@@ -9127,7 +9148,14 @@ namespace PascalABCCompiler.NETGenerator
             cur_type = tb;
 
             foreach (ICommonMethodNode meth in value.methods)
+            {
+                // frninja 16/03/16 - грубый хак для отмены обхода мусорных методов-хелперов для yield
+                // заменить визитором семант дерева повыше
+                if (meth.name.StartsWith("<yield_helper"))
+                    continue;
+
                 meth.visit(this);
+            }
             cur_type = tmp;
             /*mb.GetILGenerator().Emit(OpCodes.Ret);
             if (hndl_mb != null)

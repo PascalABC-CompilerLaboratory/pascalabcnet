@@ -1072,6 +1072,16 @@ namespace PascalABCCompiler.SyntaxTree
         {
             DefaultVisit(_vars);
         }
+
+        public virtual void visit(var_def_statement_with_unknown_type _vars)
+        {
+            DefaultVisit(_vars);
+        }
+
+        public virtual void visit(variable_definitions_with_unknown_type _vars)
+        {
+            DefaultVisit(_vars);
+        }
 	}
 
 

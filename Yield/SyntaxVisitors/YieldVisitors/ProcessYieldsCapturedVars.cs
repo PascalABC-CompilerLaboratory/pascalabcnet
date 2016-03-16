@@ -90,7 +90,8 @@ namespace SyntaxVisitors
             IDictionary<string, string> localsMap,
             IDictionary<string, string> formalParamsMap,
             IDictionary<var_def_statement, var_def_statement> localsCloneMap,
-            vars_initial_values_type_helper varsTypeDetectorHelper)
+            vars_initial_values_type_helper varsTypeDetectorHelper,
+            locals_type_map_helper localTypeMapHelper)
         {
             var fh = (pd.proc_header as function_header);
             if (fh == null)
@@ -110,7 +111,8 @@ namespace SyntaxVisitors
                                         {
                                             if ((object)vds.inital_value != null)
                                             {
-                                                return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], varsTypeDetectorHelper), null);
+                                                //return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], varsTypeDetectorHelper), null);
+                                                return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], localTypeMapHelper));
                                             }
                                             else
                                             {
@@ -359,6 +361,8 @@ namespace SyntaxVisitors
 
         public override void visit(procedure_definition pd)
         {
+            if (pd.proc_header.name.meth_name.name.StartsWith("<yield_helper"))
+                return;
             // frninja
             // DEBUG for test 
             // SORRY
@@ -389,6 +393,20 @@ namespace SyntaxVisitors
                 return;
 
             LoweringVisitor.Accept(pd);
+
+            // Клонируем метод для обработки оберток-хелперов на семантике
+            var pdCloned = ObjectCopier.Clone(pd);
+
+            // Заменяем локальные переменные с неизвестным типом на обертки-хелперы (откладываем до семантики)
+            locals_type_map_helper localsTypeMapHelper = new locals_type_map_helper();
+            LocalVariablesTypeDetectorHelperVisior localsTypeDetectorHelperVisitor = new LocalVariablesTypeDetectorHelperVisior(localsTypeMapHelper);
+            pdCloned.visit(localsTypeDetectorHelperVisitor);
+
+            // frninja 16/03/16 - строим список vds в правильном порядке
+            localsTypeDetectorHelperVisitor.LocalDeletedDefs.AddRange(localsTypeDetectorHelperVisitor.LocalDeletedVS);
+
+            //RenameSameBlockLocalVarsVisitor sameLocalVarsRenameVisitor = new RenameSameBlockLocalVarsVisitor();
+            //(pd.proc_body as block).visit(sameLocalVarsRenameVisitor);
 
             // frninja 16/11/15: перенес ниже чтобы работал захват для lowered for
 
@@ -428,6 +446,7 @@ namespace SyntaxVisitors
             }));
 
             var varsCloned = ObjectCopier.Clone(varsTypeDetectorHelperNode);
+            
 
             function_header nfh = new function_header();
             nfh.name = new method_name("<yield_helper>" + pd.proc_header.name.meth_name.name);
@@ -436,8 +455,10 @@ namespace SyntaxVisitors
             nfh.return_type = (pd.proc_header as function_header).return_type;
             procedure_definition npd = new procedure_definition(nfh, new block(new statement_list(varsCloned)));
 
+            pdCloned.proc_header.name = new method_name("<yield_helper_test>" + pd.proc_header.name.meth_name.name);
 
             var classMembers = UpperTo<class_members>();
+            classMembers.Add(pdCloned);
             classMembers.Add(npd);
 
             // AHAHA test!
@@ -458,8 +479,8 @@ namespace SyntaxVisitors
 
             Dictionary<var_def_statement, var_def_statement> localsCloneMap = new Dictionary<var_def_statement,var_def_statement>();
 
-            var localsArr = varsTypeDetectorHelperNode.Vars.ToArray();
-            var localsClonesArr = varsCloned.Vars.ToArray();
+            var localsArr = dld.LocalDeletedDefs.ToArray(); //varsTypeDetectorHelperNode.Vars.ToArray();
+            var localsClonesArr = localsTypeDetectorHelperVisitor.LocalDeletedDefs.ToArray(); //varsCloned.Vars.ToArray();
             
             // Create map :: locals -> cloned locals
             for (int i = 0; i < varsTypeDetectorHelperNode.Vars.ToArray().Length; ++i)
@@ -479,7 +500,7 @@ namespace SyntaxVisitors
             (pd.proc_body as block).program_code = cfa.res;
 
             // Конструируем определение класса
-            var cct = GenClassesForYield(pd, dld.LocalDeletedDefs, CapturedLocalsNamesMap, CapturedFormalParamsNamesMap, localsCloneMap, varsCloned); // все удаленные описания переменных делаем описанием класса
+            var cct = GenClassesForYield(pd, dld.LocalDeletedDefs, CapturedLocalsNamesMap, CapturedFormalParamsNamesMap, localsCloneMap, varsCloned, localsTypeMapHelper); // все удаленные описания переменных делаем описанием класса
 
             //UpperNodeAs<declarations>().InsertBefore(pd, cct);
             if (isClassMethod)

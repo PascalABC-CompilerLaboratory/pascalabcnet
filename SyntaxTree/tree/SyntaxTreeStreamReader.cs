@@ -3747,6 +3747,16 @@ namespace PascalABCCompiler.SyntaxTree
         {
             // Sth
         }
+
+        public void visit(var_def_statement_with_unknown_type _vars)
+        {
+            // Sth
+        }
+
+        public void visit(variable_definitions_with_unknown_type _vars)
+        {
+            // Sth
+        }
 	}
 
 

@@ -18916,8 +18916,10 @@ namespace PascalABCCompiler.TreeConverter
 
         public override void visit(SyntaxTree.unknown_expression_type _unk_expr)
         {
-            var t = _unk_expr.Vars.VarsTypeMap[_unk_expr.Vds];
-            (t as SyntaxTree.semantic_type_node).visit(this);
+            var x = _unk_expr.MapHelper.vars_type_map[_unk_expr.Vds];
+            _unk_expr.MapHelper.vars_type_map[_unk_expr.Vds].visit(this);
+            //var t = _unk_expr.Vars.VarsTypeMap[_unk_expr.Vds];
+            //(t as SyntaxTree.semantic_type_node).visit(this);
         }
 
         public override void visit(SyntaxTree.vars_initial_values_type_helper _vars)
@@ -18930,6 +18932,31 @@ namespace PascalABCCompiler.TreeConverter
                 _vars.VarsTypeMap[vds] = new SyntaxTree.semantic_type_node(x.type);//new named_type_reference(x.type.full_name); 
             }
         
+        }
+
+        public override void visit(SyntaxTree.var_def_statement_with_unknown_type _vars)
+        {
+            if ((object)_vars.vars.vars_type != null)
+                return;
+            var t = convert_strong(_vars.vars.inital_value);
+            _vars.map_helper.vars_type_map[_vars.vars] = new SyntaxTree.semantic_type_node(t.type);
+
+            // Visit stored vars
+            _vars.vars.visit(this);
+        }
+
+        public override void visit(SyntaxTree.variable_definitions_with_unknown_type _vars)
+        {
+            foreach (var vd in _vars.vars.list)
+            {
+                if ((object)vd.vars_type != null)
+                    continue;
+                var t = convert_strong(vd.inital_value);
+                _vars.map_helper.vars_type_map[vd] = new SyntaxTree.semantic_type_node(t.type);
+            }
+            
+            // Visit stored vars
+            _vars.vars.visit(this);
         }
         
 

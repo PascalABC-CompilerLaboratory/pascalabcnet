@@ -34,6 +34,8 @@ namespace SyntaxVisitors
                 Replace(id, _newName);
             }
         }
+
+        // frninja 11/03/16 - оно тут вообще надо???
         public override void visit(dot_node dn)
         {
             ProcessNode(dn.left);

@@ -46,7 +46,7 @@ namespace SyntaxVisitors
             _varnum++;
             return new VarNames()
             {
-                VarName = name.name + _varnum,
+                VarName = "$" + name.name + _varnum,
                 VarEndName = "<>varLV" + _varnum
             };
         }
