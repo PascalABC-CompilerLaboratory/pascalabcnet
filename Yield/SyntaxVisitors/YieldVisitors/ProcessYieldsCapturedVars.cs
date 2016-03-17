@@ -191,25 +191,30 @@ namespace SyntaxVisitors
 
             if ((object)GetClassName(pd) != null)
             {
-                // frninja 10/12/15 - заменить на function_header и перенести описание тела в declarations
-                Replace(pd, fh);
-                var decls = UpperTo<declarations>();
-                if ((object)decls != null)
+                var cd = UpperTo<class_definition>();
+                if ((object)cd != null)
                 {
-                    function_header nfh = new function_header();
-                    nfh.name = new method_name(fh.name.meth_name.name);
-                    // Set name
-                    nfh.name.class_name = GetClassName(pd);
-                    nfh.parameters = fh.parameters;
-                    nfh.proc_attributes = fh.proc_attributes;
+                    // Если метод описан в классе 
+                    // frninja 10/12/15 - заменить на function_header и перенести описание тела в declarations
+                    Replace(pd, fh);
+                    var decls = UpperTo<declarations>();
+                    if ((object)decls != null)
+                    {
+                        function_header nfh = new function_header();
+                        nfh.name = new method_name(fh.name.meth_name.name);
+                        // Set name
+                        nfh.name.class_name = GetClassName(pd);
+                        nfh.parameters = fh.parameters;
+                        nfh.proc_attributes = fh.proc_attributes;
 
-                    
-                    procedure_definition npd = new procedure_definition(nfh, new block(stl));
-                    
-                    // Update header
-                    //pd.proc_header.name.class_name = GetClassName(pd);
-                    // Add to decls
-                    decls.Add(npd);
+
+                        procedure_definition npd = new procedure_definition(nfh, new block(stl));
+
+                        // Update header
+                        //pd.proc_header.name.class_name = GetClassName(pd);
+                        // Add to decls
+                        decls.Add(npd);
+                    }
                 }
             }
 
@@ -361,6 +366,7 @@ namespace SyntaxVisitors
 
         public override void visit(procedure_definition pd)
         {
+            
             if (pd.proc_header.name.meth_name.name.StartsWith("<yield_helper"))
                 return;
             // frninja
@@ -411,11 +417,39 @@ namespace SyntaxVisitors
             localsTypeDetectorHelperVisitor.LocalDeletedVS.Clear();
 
             // Добавляем в класс метод с обертками для локальных переменных
-            pdCloned.proc_header.name = new method_name("<yield_helper_locals_type_detector>" + pd.proc_header.name.meth_name.name);
+            pdCloned.proc_header.name.meth_name = new ident("<yield_helper_locals_type_detector>" + pd.proc_header.name.meth_name.name); // = new method_name("<yield_helper_locals_type_detector>" + pd.proc_header.name.meth_name.name);
             if (IsClassMethod(pd))
             {
-                var classMembers = UpperTo<class_members>();
-                classMembers.Add(pdCloned);
+                var cd = UpperTo<class_definition>();
+                if ((object)cd != null)
+                {
+                    // Метод класса описан в классе
+                    var classMembers = UpperTo<class_members>();
+                    classMembers.Add(pdCloned);
+                }
+                else
+                {
+                    // Метод класса описан вне класса
+
+                    var decls = UpperTo<declarations>();
+                    var classMembers = decls.list
+                        .Select(decl => decl as type_declarations)
+                        .Where(tdecls => (object)tdecls != null)
+                        .SelectMany(tdecls => tdecls.types_decl)
+                        .Where(td => td.type_name.name == GetClassName(pd).name)
+                        .Select(td => td.type_def as class_definition)
+                        .Where(_cd => (object)_cd != null)
+                        .SelectMany(_cd => _cd.body.class_def_blocks);
+
+
+                    // Вставляем предописание метода-хелпера 
+                    var helperPredefHeader = ObjectCopier.Clone(pdCloned.proc_header);
+                    helperPredefHeader.name.class_name = null;
+                    classMembers.First().members.Insert(0, helperPredefHeader);
+
+                    // Всталвяем тело метода-хелпера
+                    UpperTo<declarations>().InsertBefore(pd, pdCloned);
+                }
             }
             else
             {
@@ -505,10 +539,9 @@ namespace SyntaxVisitors
                 var cd = UpperTo<class_definition>();
                 if ((object)cd != null)
                 {
+                    // Если метод класса описан в классе
                     var td = UpperTo<type_declarations>();
                     
-                    
-
                     foreach (var helperName in cct.types_decl.Select(ttd => ttd.type_name))
                     {
                         var helperPredef = new type_declaration(helperName, new class_definition());
@@ -525,6 +558,11 @@ namespace SyntaxVisitors
                     }
 
                     //UpperTo<declarations>().InsertAfter(td, cct);
+                }
+                else
+                {
+                    // Метод класса описан вне класса
+                    UpperTo<declarations>().InsertBefore(pd, cct);
                 }
             }
             else 

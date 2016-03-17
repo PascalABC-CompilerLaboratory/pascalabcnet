@@ -18853,9 +18853,6 @@ namespace PascalABCCompiler.TreeConverter
         {
             string Consts__Self = "<>4__self";
 
-            var dn = new dot_node(Consts__Self, _unk.UnknownID);
-            var xxx = convert_strong(dn);
-
             // Find semantic class containing iterator (yield-method) with unknown ident
             var iteratorContainingClass = context._ctn.fields.Where(f => f.name == Consts__Self).First().type;
             //var iteratorContainingClass = context._cmn.types.Where(t => t.name == _unk.ClassName.name).First();
@@ -18872,13 +18869,16 @@ namespace PascalABCCompiler.TreeConverter
                     
                     // че там с .NET как базовым?
                     // compiled_function_node - метод базового .NET класса
+                    // compiled_property_node - свойство базового .NET класса
 
                     // че с классом из другого модуля?
+                    // то же что и с классом из этого же
                     if (found.sym_info is class_field 
                         || found.sym_info is common_method_node
                         || found.sym_info is common_property_node
                         || found.sym_info is compiled_function_node
                         || found.sym_info is compiled_property_node)
+                        
                     {
                         if (found.access_level != access_level.al_private)
                         {

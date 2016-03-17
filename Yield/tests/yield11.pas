@@ -1,5 +1,7 @@
 uses System.IO;
 
+uses UnitClass;
+
 var aa: real := 555.0;
 
 
@@ -17,7 +19,7 @@ private
   testRr: real := 23.3;
 end;
 
-type A = class(R)
+type A = class(UnitClassTest)
   (*constructor Create;
   begin
     inherited Create('hz');
@@ -34,7 +36,7 @@ type A = class(R)
     //var x := BaseStream;
     //var x := 56.4;
     //var y := x;
-    yield testRr;
+    yield testField;
     //yield Peek();
   end;
 end;
