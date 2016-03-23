@@ -364,57 +364,28 @@ namespace SyntaxVisitors
             }
         }
 
-        public override void visit(procedure_definition pd)
+        /// <summary>
+        /// Обработка локальных переменных метода и их типов для корректного захвата
+        /// </summary>
+        /// <param name="pd">Объявление метода</param>
+        /// <returns>Коллекция посещенных локальных переменных</returns>
+        private void CreateLocalVariablesTypeProxies(procedure_definition pd, out IEnumerable<var_def_statement> localsClonesCollection, out locals_type_map_helper localsTypeMapHelper)
         {
-            
-            if (pd.proc_header.name.meth_name.name.StartsWith("<yield_helper"))
-                return;
-            // frninja
-            // DEBUG for test 
-            // SORRY
-
-            // Classification
-            ISet<string> CollectedLocalsNames = new HashSet<string>();
-            ISet<string> CollectedFormalParamsNames = new HashSet<string>();
-            ISet<string> CollectedClassFieldsNames = new HashSet<string>();
-            ISet<string> CollectedClassMethodsNames = new HashSet<string>();
-            ISet<string> CollectedClassPropertiesNames = new HashSet<string>();
-            ISet<string> CollectedUnitGlobalsNames = new HashSet<string>();
-
-            ISet<var_def_statement> CollectedLocals = new HashSet<var_def_statement>();
-            ISet<var_def_statement> CollectedFormalParams = new HashSet<var_def_statement>();
-
-            // Map from ident idName -> captured ident idName
-            IDictionary<string, string> CapturedLocalsNamesMap = new Dictionary<string, string>();
-            IDictionary<string, string> CapturedFormalParamsNamesMap = new Dictionary<string, string>();
-
-
-            hasYields = false;
-            if (pd.proc_header is function_header)
-                mids = new FindMainIdentsVisitor();
-
-            base.visit(pd);
-
-            if (!hasYields) // т.е. мы разобрали функцию и уже выходим. Это значит, что пока yield будет обрабатываться только в функциях. Так это и надо.
-                return;
-            
-
-            // Теперь lowering
-            LoweringVisitor.Accept(pd);
-
             // Выполняем определение типов локальных переменных с автовыводом типов
 
             // Клонируем исходный метод для вставки оберток-хелперов для локальных переменных и дальнейшей обработки на семантике
             var pdCloned = ObjectCopier.Clone(pd);
 
             // Заменяем локальные переменные с неизвестным типом на обертки-хелперы (откладываем до семантики)
-            locals_type_map_helper localsTypeMapHelper = new locals_type_map_helper();
+            localsTypeMapHelper = new locals_type_map_helper();
             LocalVariablesTypeDetectorHelperVisior localsTypeDetectorHelperVisitor = new LocalVariablesTypeDetectorHelperVisior(localsTypeMapHelper);
             pdCloned.visit(localsTypeDetectorHelperVisitor);
 
             // frninja 16/03/16 - строим список локальных переменных в правильном порядке
             localsTypeDetectorHelperVisitor.LocalDeletedDefs.AddRange(localsTypeDetectorHelperVisitor.LocalDeletedVS);
             localsTypeDetectorHelperVisitor.LocalDeletedVS.Clear();
+
+            localsClonesCollection = localsTypeDetectorHelperVisitor.LocalDeletedDefs.ToArray();
 
             // Добавляем в класс метод с обертками для локальных переменных
             pdCloned.proc_header.name.meth_name = new ident("<yield_helper_locals_type_detector>" + pd.proc_header.name.meth_name.name); // = new method_name("<yield_helper_locals_type_detector>" + pd.proc_header.name.meth_name.name);
@@ -447,7 +418,7 @@ namespace SyntaxVisitors
                     helperPredefHeader.name.class_name = null;
                     classMembers.First().members.Insert(0, helperPredefHeader);
 
-                    // Всталвяем тело метода-хелпера
+                    // Вставляем тело метода-хелпера
                     UpperTo<declarations>().InsertBefore(pd, pdCloned);
                 }
             }
@@ -455,93 +426,48 @@ namespace SyntaxVisitors
             {
                 UpperTo<declarations>().InsertBefore(pd, pdCloned);
             }
-            
+        }
 
-            // frninja 16/11/15: перенес ниже чтобы работал захват для lowered for
-
-            var dld = new DeleteAllLocalDefs(); // mids.vars - все захваченные переменные
-            pd.visit(dld); // Удалить в локальных и блочных описаниях этой процедуры все переменные и вынести их в отдельный список var_def_statement
-
-            // frninja 11/03/16 - строим список локальных переменных в правильном порядке
-            dld.LocalDeletedDefs.AddRange(dld.LocalDeletedVS);
-            dld.LocalDeletedVS.Clear();
+        /// <summary>
+        /// Отображение локальных в клонированные локальные
+        /// </summary>
+        /// <param name="from">Откуда</param>
+        /// <param name="to">Куда</param>
+        /// <returns>Отображение</returns>
+        private Dictionary<var_def_statement, var_def_statement> CreateLocalsClonesMap(IEnumerable<var_def_statement> from, IEnumerable<var_def_statement> to)
+        {
+            // Нужно тк клонировали метод для создания хелпера-определителя типов локальных переменных - Eq не будет работать
 
             // Строим отображение из локальных переменных клона оригинального метода в локальные переменные основного метода
-            Dictionary<var_def_statement, var_def_statement> localsCloneMap = new Dictionary<var_def_statement, var_def_statement>();
+            Dictionary<var_def_statement, var_def_statement> localsClonesMap = new Dictionary<var_def_statement, var_def_statement>();
 
-            var localsArr = dld.LocalDeletedDefs.ToArray(); //varsTypeDetectorHelperNode.Vars.ToArray();
-            var localsClonesArr = localsTypeDetectorHelperVisitor.LocalDeletedDefs.ToArray(); //varsCloned.Vars.ToArray();
+            var localsArr = from.ToArray();
+            var localsClonesArr = to.ToArray();
 
             // Create map :: locals -> cloned locals
             for (int i = 0; i < localsArr.Length; ++i)
             {
-                localsCloneMap.Add(localsArr[i], localsClonesArr[i]);
+                localsClonesMap.Add(localsArr[i], localsClonesArr[i]);
             }
 
-            // frninja 08/12/15
-            bool isClassMethod = IsClassMethod(pd);
+            return localsClonesMap;
+        }
 
-            // Collect locals
-            CollectedLocals.UnionWith(dld.LocalDeletedDefs);
-            CollectedLocalsNames.UnionWith(dld.LocalDeletedDefs.SelectMany(vds => vds.vars.idents).Select(id => id.name));
-            // Collect formal params
-            CollectFormalParams(pd, CollectedFormalParams);
-            CollectFormalParamsNames(pd, CollectedFormalParamsNames);
-            // Collect class fields
-            CollectClassFieldsNames(pd, CollectedClassFieldsNames);
-            // Collect class methods
-            CollectClassMethodsNames(pd, CollectedClassMethodsNames);
-            // Collect class properties
-            CollectClassPropertiesNames(pd, CollectedClassPropertiesNames);
-            // Collect unit globals
-            CollectUnitGlobalsNames(pd, CollectedUnitGlobalsNames);
-            
-
-            // Create maps :: idName -> captureName
-            CreateCapturedLocalsNamesMap(CollectedLocalsNames, CapturedLocalsNamesMap);
-            CreateCapturedFormalParamsNamesMap(CollectedFormalParamsNames, CapturedFormalParamsNamesMap);
-
-            // AHAHA test!
-            ReplaceCapturedVariablesVisitor rcapVis = new ReplaceCapturedVariablesVisitor(
-                CollectedLocalsNames,
-                CollectedFormalParamsNames,
-                CollectedClassFieldsNames,
-                CollectedClassMethodsNames,
-                CollectedClassPropertiesNames,
-                CollectedUnitGlobalsNames,
-                CapturedLocalsNamesMap,
-                CapturedFormalParamsNamesMap,
-                isClassMethod,
-                GetClassName(pd)
-                );
-            // Replace
-            (pd.proc_body as block).program_code.visit(rcapVis);
-
-            
-
-            mids.vars.Except(dld.LocalDeletedDefsNames); // параметры остались. Их тоже надо исключать - они и так будут обработаны
-            // В результате работы в mids.vars что-то осталось. Это не локальные переменные и с ними непонятно что делать
-
-            // Обработать параметры! 
-            // Как? Ищем в mids formal_parametrs, но надо выделить именно обращение к параметрам - не полям класса, не глобальным переменным
-
-            var cfa = new ConstructFiniteAutomata((pd.proc_body as block).program_code);
-            cfa.Transform();
-
-            (pd.proc_body as block).program_code = cfa.res;
-
-            // Конструируем определение класса
-            var cct = GenClassesForYield(pd, dld.LocalDeletedDefs, CapturedLocalsNamesMap, CapturedFormalParamsNamesMap, localsCloneMap, localsTypeMapHelper); // все удаленные описания переменных делаем описанием класса
-
-            //UpperNodeAs<declarations>().InsertBefore(pd, cct);
-            if (isClassMethod)
+        /// <summary>
+        /// Вставляем описание классов-хелперов для yield перед методом-итератором в зависимости от его описания
+        /// </summary>
+        /// <param name="pd">Метод-итератор</param>
+        /// <param name="cct">Описание классов-хелперов для yield</param>
+        private void InsertYieldHelpers(procedure_definition pd, type_declarations cct)
+        {
+            if (IsClassMethod(pd))
             {
                 var cd = UpperTo<class_definition>();
                 if ((object)cd != null)
                 {
                     // Если метод класса описан в классе
                     var td = UpperTo<type_declarations>();
-                    
+
                     foreach (var helperName in cct.types_decl.Select(ttd => ttd.type_name))
                     {
                         var helperPredef = new type_declaration(helperName, new class_definition());
@@ -557,7 +483,6 @@ namespace SyntaxVisitors
                         td.types_decl.Add(helper);
                     }
 
-                    //UpperTo<declarations>().InsertAfter(td, cct);
                 }
                 else
                 {
@@ -565,10 +490,134 @@ namespace SyntaxVisitors
                     UpperTo<declarations>().InsertBefore(pd, cct);
                 }
             }
-            else 
+            else
             {
                 UpperTo<declarations>().InsertBefore(pd, cct);
             }
+        }
+
+        private void ReplaceCapturedVariables(procedure_definition pd,
+            IEnumerable<var_def_statement> deletedLocals,
+            out IDictionary<string, string> capturedLocalsNamesMap,
+            out IDictionary<string, string> capturedFormalParamsNamesMap)
+        {
+            // Структуры данных под классификацию имен в методе
+
+            // Classification
+            ISet<string> CollectedLocalsNames = new HashSet<string>();
+            ISet<string> CollectedFormalParamsNames = new HashSet<string>();
+            ISet<string> CollectedClassFieldsNames = new HashSet<string>();
+            ISet<string> CollectedClassMethodsNames = new HashSet<string>();
+            ISet<string> CollectedClassPropertiesNames = new HashSet<string>();
+            ISet<string> CollectedUnitGlobalsNames = new HashSet<string>();
+
+            ISet<var_def_statement> CollectedLocals = new HashSet<var_def_statement>();
+            ISet<var_def_statement> CollectedFormalParams = new HashSet<var_def_statement>();
+
+            // Map from ident idName -> captured ident idName
+            capturedLocalsNamesMap = new Dictionary<string, string>();
+            capturedFormalParamsNamesMap = new Dictionary<string, string>();
+
+            // Собираем инфу о именах
+
+            // Collect locals
+            CollectedLocals.UnionWith(deletedLocals);
+            CollectedLocalsNames.UnionWith(deletedLocals.SelectMany(vds => vds.vars.idents).Select(id => id.name));
+            // Collect formal params
+            CollectFormalParams(pd, CollectedFormalParams);
+            CollectFormalParamsNames(pd, CollectedFormalParamsNames);
+            // Collect class fields
+            CollectClassFieldsNames(pd, CollectedClassFieldsNames);
+            // Collect class methods
+            CollectClassMethodsNames(pd, CollectedClassMethodsNames);
+            // Collect class properties
+            CollectClassPropertiesNames(pd, CollectedClassPropertiesNames);
+            // Collect unit globals
+            CollectUnitGlobalsNames(pd, CollectedUnitGlobalsNames);
+
+            // Строим отображения для имён захваченных локальных переменных и формальных параметров
+
+            // Create maps :: idName -> captureName
+            CreateCapturedLocalsNamesMap(CollectedLocalsNames, capturedLocalsNamesMap);
+            CreateCapturedFormalParamsNamesMap(CollectedFormalParamsNames, capturedFormalParamsNamesMap);
+
+            // Выполняем замену захват имён в теле метода
+            // AHAHA test!
+            ReplaceCapturedVariablesVisitor rcapVis = new ReplaceCapturedVariablesVisitor(
+                CollectedLocalsNames,
+                CollectedFormalParamsNames,
+                CollectedClassFieldsNames,
+                CollectedClassMethodsNames,
+                CollectedClassPropertiesNames,
+                CollectedUnitGlobalsNames,
+                capturedLocalsNamesMap,
+                capturedFormalParamsNamesMap,
+                IsClassMethod(pd),
+                GetClassName(pd)
+                );
+            // Replace
+            (pd.proc_body as block).program_code.visit(rcapVis);
+        }
+
+        public override void visit(procedure_definition pd)
+        {
+            if (pd.proc_header.name.meth_name.name.StartsWith("<yield_helper"))
+                return;
+
+
+            hasYields = false;
+            if (pd.proc_header is function_header)
+                mids = new FindMainIdentsVisitor();
+
+            base.visit(pd);
+
+            if (!hasYields) // т.е. мы разобрали функцию и уже выходим. Это значит, что пока yield будет обрабатываться только в функциях. Так это и надо.
+                return;
+
+            // Теперь lowering
+            LoweringVisitor.Accept(pd);
+
+            // Обрабатотка метода для корректного захвата локальных переменных и их типов
+            locals_type_map_helper localsTypeMapHelper;
+            IEnumerable<var_def_statement> localsClonesCollection;
+            CreateLocalVariablesTypeProxies(pd, out localsClonesCollection, out localsTypeMapHelper);
+            
+
+            // frninja 16/11/15: перенес ниже чтобы работал захват для lowered for
+
+            var dld = new DeleteAllLocalDefs(); // mids.vars - все захваченные переменные
+            pd.visit(dld); // Удалить в локальных и блочных описаниях этой процедуры все переменные и вынести их в отдельный список var_def_statement
+
+            // Строим отображение из локальных переменных клона оригинального метода в локальные переменные основного метода
+            Dictionary<var_def_statement, var_def_statement> localsCloneMap = CreateLocalsClonesMap(dld.LocalDeletedDefs, localsClonesCollection);
+
+            // frninja 08/12/15
+            bool isClassMethod = IsClassMethod(pd);
+
+            // Выполняем захват имён
+            IDictionary<string, string> CapturedLocalsNamesMap;
+            IDictionary<string, string> CapturedFormalParamsNamesMap;
+            ReplaceCapturedVariables(pd, dld.LocalDeletedDefs, out CapturedLocalsNamesMap, out CapturedFormalParamsNamesMap);
+
+
+            mids.vars.Except(dld.LocalDeletedDefsNames); // параметры остались. Их тоже надо исключать - они и так будут обработаны
+            // В результате работы в mids.vars что-то осталось. Это не локальные переменные и с ними непонятно что делать
+
+            // Обработать параметры! 
+            // Как? Ищем в mids formal_parametrs, но надо выделить именно обращение к параметрам - не полям класса, не глобальным переменным
+
+            var cfa = new ConstructFiniteAutomata((pd.proc_body as block).program_code);
+            cfa.Transform();
+
+            (pd.proc_body as block).program_code = cfa.res;
+
+            // Конструируем определение класса
+            var cct = GenClassesForYield(pd, dld.LocalDeletedDefs, CapturedLocalsNamesMap, CapturedFormalParamsNamesMap, localsCloneMap, localsTypeMapHelper); // все удаленные описания переменных делаем описанием класса
+
+            // Вставляем классы-хелперы
+            InsertYieldHelpers(pd, cct);
+
+            
 
             mids = null; // вдруг мы выйдем из процедуры, не зайдем в другую, а там - оператор! Такого конечно не может быть
         }

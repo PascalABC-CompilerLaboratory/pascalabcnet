@@ -11,13 +11,22 @@ namespace SyntaxVisitors
 {
     public class DeleteAllLocalDefs : BaseChangeVisitor
     {
-        public List<var_def_statement> LocalDeletedDefs = new List<var_def_statement>(); // все локальные описания
 
-        public List<var_def_statement> LocalDeletedVS = new List<var_def_statement>(); // var_statement's, потом объединим с LocalDeletedDefs для верного порядка
+        private List<var_def_statement> LocalDeletedVD = new List<var_def_statement>(); // все локальные описания
+
+        private List<var_def_statement> LocalDeletedVS = new List<var_def_statement>(); // var_statement's, потом объединим с LocalDeletedVD для верного порядка
 
         public ISet<string> LocalDeletedDefsNames = new HashSet<string>();            // их имена - для быстрого поиска  
 
         public ISet<ident> CollectedLocals = new HashSet<ident>();
+
+        public IEnumerable<var_def_statement> LocalDeletedDefs
+        {
+            get
+            {
+                return new List<var_def_statement>(LocalDeletedVD.Union(LocalDeletedVS));
+            }
+        }
 
         public DeleteAllLocalDefs() // надо запускать этот визитор начиная с корня подпрограммы
         {
@@ -46,7 +55,7 @@ namespace SyntaxVisitors
         {
             foreach (var v in vd.list)
             {
-                LocalDeletedDefs.Insert(0, v); //.Add(v);
+                LocalDeletedVD.Insert(0, v); //.Add(v);
                 LocalDeletedDefsNames.UnionWith(v.vars.idents.Select(id => id.name));
             }
             var d = UpperNodeAs<declarations>();

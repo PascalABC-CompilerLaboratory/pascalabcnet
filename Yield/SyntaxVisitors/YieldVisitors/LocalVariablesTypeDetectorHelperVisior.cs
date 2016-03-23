@@ -14,7 +14,7 @@ namespace SyntaxVisitors
     {
         public List<var_def_statement> LocalDeletedDefs = new List<var_def_statement>(); // все локальные описания
 
-        public List<var_def_statement> LocalDeletedVS = new List<var_def_statement>(); // var_statement's, потом объединим с LocalDeletedDefs для верного порядка
+        public List<var_def_statement> LocalDeletedVS = new List<var_def_statement>(); // var_statement's, потом объединим с LocalDeletedVD для верного порядка
 
         public locals_type_map_helper VarTypeMap { get; private set; }
 
