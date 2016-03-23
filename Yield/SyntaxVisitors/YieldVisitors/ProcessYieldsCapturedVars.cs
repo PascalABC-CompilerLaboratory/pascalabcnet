@@ -10,18 +10,10 @@ using PascalABCCompiler.SyntaxTree;
 using PascalABCCompiler.ParserTools;
 using PascalABCCompiler.Errors;
 
+using PascalABCCompiler.YieldHelpers;
 
 namespace SyntaxVisitors
 {
-    public static class Consts
-    {
-        public static string Current = "<>2__current";
-        public static string State = "<>1__state";
-
-        public static string Self = "<>4__self";
-
-        public enum ReservedNum { StateField = 1, CurrentField = 2, MethodFormalParam = 3, MethodSelf = 4, MethodLocalVariable = 5 }
-    }
 
     public static class CapturedNamesHelper
     {
@@ -29,12 +21,12 @@ namespace SyntaxVisitors
 
         public static string MakeCapturedFormalParameterName(string formalParamName)
         {
-            return string.Format("<>{0}__{1}", Consts.ReservedNum.MethodFormalParam, formalParamName);
+            return string.Format("<>{0}__{1}", YieldConsts.ReservedNum.MethodFormalParam, formalParamName);
         }
 
         public static string MakeCapturedLocalName(string localName)
         {
-            return string.Format("<{0}>{1}__{2}", localName, Consts.ReservedNum.MethodLocalVariable, ++CurrentLocalVariableNum);
+            return string.Format("<{0}>{1}__{2}", localName, YieldConsts.ReservedNum.MethodLocalVariable, ++CurrentLocalVariableNum);
         }
     }
 
@@ -152,15 +144,15 @@ namespace SyntaxVisitors
 
             // frninja 08/18/15 - Для захвата self
             if ((object)GetClassName(pd) != null)
-                cm.Add(new var_def_statement(Consts.Self, GetClassName(pd).name));
+                cm.Add(new var_def_statement(YieldConsts.Self, GetClassName(pd).name));
 
             // Системные поля и методы для реализации интерфейса IEnumerable
-            cm.Add(new var_def_statement(Consts.State, "integer"),
-                new var_def_statement(Consts.Current, stels),
+            cm.Add(new var_def_statement(YieldConsts.State, "integer"),
+                new var_def_statement(YieldConsts.Current, stels),
                 procedure_definition.EmptyDefaultConstructor,
                 new procedure_definition("Reset"),
                 new procedure_definition("MoveNext", "boolean", pd.proc_body),
-                new procedure_definition("get_Current", "object", new assign("Result", Consts.Current)),
+                new procedure_definition("get_Current", "object", new assign("Result", YieldConsts.Current)),
                 new procedure_definition("GetEnumerator", "System.Collections.IEnumerator", new assign("Result", "Self"))
                 );
 
@@ -182,7 +174,7 @@ namespace SyntaxVisitors
 
             // frninja 08/12/15 - захват self
             if ((object)GetClassName(pd) != null)
-                stl.Add(new assign(new dot_node("res", Consts.Self), new ident("self")));
+                stl.Add(new assign(new dot_node("res", YieldConsts.Self), new ident("self")));
 
             stl.Add(new assign("Result", "res"));
 
@@ -226,7 +218,7 @@ namespace SyntaxVisitors
 
             var cm1 = class_members.Public.Add(
                 procedure_definition.EmptyDefaultConstructor,
-                new procedure_definition(new function_header("get_Current", stels), new assign("Result", Consts.Current)),
+                new procedure_definition(new function_header("get_Current", stels), new assign("Result", YieldConsts.Current)),
                 new procedure_definition(new function_header("GetEnumerator", IEnumeratorT), new assign("Result", "Self")),
                 new procedure_definition("Dispose")
             );
@@ -388,7 +380,7 @@ namespace SyntaxVisitors
             localsClonesCollection = localsTypeDetectorHelperVisitor.LocalDeletedDefs.ToArray();
 
             // Добавляем в класс метод с обертками для локальных переменных
-            pdCloned.proc_header.name.meth_name = new ident("<yield_helper_locals_type_detector>" + pd.proc_header.name.meth_name.name); // = new method_name("<yield_helper_locals_type_detector>" + pd.proc_header.name.meth_name.name);
+            pdCloned.proc_header.name.meth_name = new ident(YieldConsts.YieldHelperMethodPrefix+ "_locals_type_detector>" + pd.proc_header.name.meth_name.name); // = new method_name("<yield_helper_locals_type_detector>" + pd.proc_header.name.meth_name.name);
             if (IsClassMethod(pd))
             {
                 var cd = UpperTo<class_definition>();
@@ -561,7 +553,7 @@ namespace SyntaxVisitors
 
         public override void visit(procedure_definition pd)
         {
-            if (pd.proc_header.name.meth_name.name.StartsWith("<yield_helper"))
+            if (pd.proc_header.name.meth_name.name.StartsWith(YieldConsts.YieldHelperMethodPrefix))
                 return;
 
 
@@ -673,8 +665,8 @@ namespace SyntaxVisitors
                 var yn = st as yield_node;
                 curState += 1;
                 curStatList.AddMany(
-                    new assign(Consts.Current, yn.ex),
-                    new assign(Consts.State, curState),
+                    new assign(YieldConsts.Current, yn.ex),
+                    new assign(YieldConsts.State, curState),
                     new assign("Result", true),
                     new procedure_call("exit")
                 );
@@ -694,7 +686,7 @@ namespace SyntaxVisitors
 
         public void Transform()
         {
-            cas = new case_node(new ident(Consts.State));
+            cas = new case_node(new ident(YieldConsts.State));
 
             curStatList = new statement_list();
             case_variant cv = new case_variant(new expression_list(new int32_const(curState)), curStatList);

@@ -24,3 +24,5 @@ C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Y
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\ParsePABC1\obj\Debug\ParsePABC.pdb
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\ParsePABC1\bin\Debug\PascalABCParser.dll
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\ParsePABC1\bin\Debug\PascalABCParser.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\ParsePABC1\bin\Debug\YieldHelpers.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\ParsePABC1\bin\Debug\YieldHelpers.pdb

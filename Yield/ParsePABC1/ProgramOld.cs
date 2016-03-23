@@ -23,9 +23,7 @@ namespace ParsePABC1
             c.SyntaxTreeChanger = new TestSyntaxTreeChanger();
             var opts = new CompilerOptions(fname, CompilerOptions.OutputType.ConsoleApplicaton);
             
-            //opts.GenerateCode = true;
             var res = c.Compile(opts);
-            
 
             var err = new List<Error>();
 

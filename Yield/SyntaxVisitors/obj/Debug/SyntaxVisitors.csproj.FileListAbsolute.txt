@@ -37,3 +37,5 @@ C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Y
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\SyntaxVisitors\obj\Debug\SyntaxVisitors.csprojResolveAssemblyReference.cache
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\SyntaxVisitors\obj\Debug\SyntaxVisitors.dll
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\SyntaxVisitors\obj\Debug\SyntaxVisitors.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\SyntaxVisitors\bin\Debug\YieldHelpers.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\SyntaxVisitors\bin\Debug\YieldHelpers.pdb

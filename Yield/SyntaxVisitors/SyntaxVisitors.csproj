@@ -85,6 +85,10 @@
       <Project>{c2cac65a-b2ae-4ccc-b067-e6b8e75df73a}</Project>
       <Name>SyntaxTree</Name>
     </ProjectReference>
+    <ProjectReference Include="..\YieldHelpers\YieldHelpers.csproj">
+      <Project>{ce5c55c2-a11c-4e94-a9fa-3fc6ca3e4c09}</Project>
+      <Name>YieldHelpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

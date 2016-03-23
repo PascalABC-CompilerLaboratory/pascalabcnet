@@ -2260,7 +2260,7 @@ namespace PascalABCCompiler.NETGenerator
                     continue;
                 }*/
                 // frninja 16/03/16 - грязный хак для вырезания мусорных хелперов yield
-                if (funcs[i].name.StartsWith("<yield_helper"))
+                if (funcs[i].name.StartsWith(YieldHelpers.YieldConsts.YieldHelperMethodPrefix))
                     continue;
                 ConvertFunctionBody(funcs[i]);
             }
@@ -2338,7 +2338,7 @@ namespace PascalABCCompiler.NETGenerator
         private void ConvertFunctionHeader(ICommonFunctionNode func)
         {
             //frninja 16/03/16 - грязный хак для вырезания мусорных хелперов yield
-            if (func.name.StartsWith("<yield_helper"))
+            if (func.name.StartsWith(YieldHelpers.YieldConsts.YieldHelperMethodPrefix))
                 return;
 
             //if (is_in_unit && helper.IsUsed(func)==false) return;
@@ -6671,7 +6671,7 @@ namespace PascalABCCompiler.NETGenerator
         private void ConvertMethodHeader(SemanticTree.ICommonMethodNode value)
         {
             // frninja 16/03/16 - грязный хак для вырезания мусорных хелперов yield
-            if (value.name.StartsWith("<yield_helper"))
+            if (value.name.StartsWith(YieldHelpers.YieldConsts.YieldHelperMethodPrefix))
                 return;
 
             if (value.is_constructor == true)
@@ -9132,17 +9132,6 @@ namespace PascalABCCompiler.NETGenerator
         public override void visit(SemanticTree.ICommonTypeNode value)
         {
 
-            // frninja 16/03/16 - грубый хак для отмены обхода мусорных методов-хелперов для yield
-            /*if (value is PascalABCCompiler.TreeRealization.common_type_node)
-            {
-                var ctn = value as PascalABCCompiler.TreeRealization.common_type_node;
-                if (ctn.methods.Where(m => m.name.StartsWith("<yield_helper")).Count() > 0)
-                {
-                    var methods = ctn.methods.Where(m => !m.name.StartsWith("<yield_helper")).ToArray();
-                    ctn.methods.clear();
-                    ctn.methods.AddRange(methods);
-                }
-            }*/
 
             if (value is ISimpleArrayNode || value.type_special_kind == type_special_kind.array_kind) return;
             MakeAttribute(value);
@@ -9158,7 +9147,7 @@ namespace PascalABCCompiler.NETGenerator
             {
                 // frninja 16/03/16 - грубый хак для отмены обхода мусорных методов-хелперов для yield
                 // заменить визитором семант дерева повыше
-                if (meth.name.StartsWith("<yield_helper"))
+                if (meth.name.StartsWith(YieldHelpers.YieldConsts.YieldHelperMethodPrefix))
                     continue;
 
                 meth.visit(this);

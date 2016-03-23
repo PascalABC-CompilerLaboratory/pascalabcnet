@@ -95,6 +95,10 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Yield\YieldHelpers\YieldHelpers.csproj">
+      <Project>{ce5c55c2-a11c-4e94-a9fa-3fc6ca3e4c09}</Project>
+      <Name>YieldHelpers</Name>
+    </ProjectReference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>

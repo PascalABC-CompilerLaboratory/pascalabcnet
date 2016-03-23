@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using PascalABCCompiler;
 using PascalABCCompiler.SyntaxTree;
 
+using PascalABCCompiler.YieldHelpers;
+
 namespace SyntaxVisitors
 {
     public class ReplaceCapturedVariablesVisitor : BaseChangeVisitor
@@ -75,7 +77,7 @@ namespace SyntaxVisitors
 
             if (idName.ToLower() == "self")
             {
-                var newSelf = new dot_node(new ident("self"), new ident(Consts.Self));
+                var newSelf = new dot_node(new ident("self"), new ident(YieldConsts.Self));
                 Replace(id, newSelf);
                 return;
             }
@@ -98,7 +100,7 @@ namespace SyntaxVisitors
                     // Name in class fields -> capture as class field
 
 
-                    var capturedId = new dot_node(new dot_node(new ident("self"), new ident(Consts.Self)), id);
+                    var capturedId = new dot_node(new dot_node(new ident("self"), new ident(YieldConsts.Self)), id);
                     Replace(id, capturedId);
                 }
                 else
@@ -146,7 +148,7 @@ namespace SyntaxVisitors
         public override void visit(dot_node dn)
         {
             var rid = dn.right as ident;
-            if ((object)rid != null && rid.name != Consts.Self)
+            if ((object)rid != null && rid.name != YieldConsts.Self)
                 ProcessNode(dn.left);
 
             // Most nested
