@@ -3,4 +3,3 @@ C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\V
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPascalABCNET\FormsDesignerBinding\Dependecies\bin\ICSharpCode.Core.pdb
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPascalABCNET\FormsDesignerBinding\Dependecies\src\Main\Core\Project\obj\Debug\ICSharpCode.Core.dll
 C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPascalABCNET\FormsDesignerBinding\Dependecies\src\Main\Core\Project\obj\Debug\ICSharpCode.Core.pdb
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPascalABCNET\FormsDesignerBinding\Dependecies\src\Main\Core\Project\obj\Debug\ICSharpCode.Core.csprojResolveAssemblyReference.cache

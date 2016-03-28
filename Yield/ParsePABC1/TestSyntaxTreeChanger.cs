@@ -16,7 +16,7 @@ namespace ParsePABC1
         public void Change(syntax_tree_node sn)
         {
             //sn.visit(new CalcConstExprs());
-            sn.visit(new LoweringVisitor());
+            //sn.visit(new LoweringVisitor());
             sn.visit(new ProcessYieldCapturedVarsVisitor());
             
         }

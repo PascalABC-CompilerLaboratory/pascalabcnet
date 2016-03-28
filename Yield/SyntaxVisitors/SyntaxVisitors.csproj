@@ -54,6 +54,7 @@
     <Compile Include="UniversalVisitors\CountNodesVisitor.cs" />
     <Compile Include="UniversalVisitors\DeleteRedundantBeginEnds.cs" />
     <Compile Include="UniversalVisitors\SimplePrettyPrinterVisitor.cs" />
+    <Compile Include="YieldVisitors\CheckVariablesRedefenitionVisitor.cs" />
     <Compile Include="YieldVisitors\CollectClassMethodsVisitor.cs" />
     <Compile Include="YieldVisitors\CollectClassPropertiesVisitor.cs" />
     <Compile Include="YieldVisitors\CollectUnitGlobalsVisitor.cs" />

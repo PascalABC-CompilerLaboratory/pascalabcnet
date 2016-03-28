@@ -488,6 +488,13 @@ namespace SyntaxVisitors
             }
         }
 
+        /// <summary>
+        /// Захватываем имена в методе
+        /// </summary>
+        /// <param name="pd">Метод-итератор</param>
+        /// <param name="deletedLocals">Коллекция удаленных локальных переменных</param>
+        /// <param name="capturedLocalsNamesMap">Построенное отображение имен локальных переменных в захваченные имена</param>
+        /// <param name="capturedFormalParamsNamesMap">Построенное отображение имен формальных параметров в захваченные имена</param>
         private void ReplaceCapturedVariables(procedure_definition pd,
             IEnumerable<var_def_statement> deletedLocals,
             out IDictionary<string, string> capturedLocalsNamesMap,
@@ -566,10 +573,20 @@ namespace SyntaxVisitors
             if (!hasYields) // т.е. мы разобрали функцию и уже выходим. Это значит, что пока yield будет обрабатываться только в функциях. Так это и надо.
                 return;
 
+            // Проверяем проблемы имен для for
+            CheckVariablesRedefenitionVisitor checkVarRedefVisitor = new CheckVariablesRedefenitionVisitor(
+                new HashSet<string>(
+                    pd
+                    .proc_header
+                    .parameters
+                    .params_list
+                    .SelectMany(fp => fp.idents.idents.Select(id => id.name))));
+            pd.visit(checkVarRedefVisitor);
+
             // Теперь lowering
             LoweringVisitor.Accept(pd);
 
-            // Обрабатотка метода для корректного захвата локальных переменных и их типов
+            // Обработка метода для корректного захвата локальных переменных и их типов
             locals_type_map_helper localsTypeMapHelper;
             IEnumerable<var_def_statement> localsClonesCollection;
             CreateLocalVariablesTypeProxies(pd, out localsClonesCollection, out localsTypeMapHelper);
@@ -584,7 +601,6 @@ namespace SyntaxVisitors
             Dictionary<var_def_statement, var_def_statement> localsCloneMap = CreateLocalsClonesMap(dld.LocalDeletedDefs, localsClonesCollection);
 
             // frninja 08/12/15
-            bool isClassMethod = IsClassMethod(pd);
 
             // Выполняем захват имён
             IDictionary<string, string> CapturedLocalsNamesMap;
