@@ -583,6 +583,10 @@ namespace SyntaxVisitors
                     .SelectMany(fp => fp.idents.idents.Select(id => id.name))));
             pd.visit(checkVarRedefVisitor);
 
+            // Переименовываем одинаковые имена в мини-ПИ
+            RenameSameBlockLocalVarsVisitor renameLocalsVisitor = new RenameSameBlockLocalVarsVisitor();
+            pd.visit(renameLocalsVisitor);
+
             // Теперь lowering
             LoweringVisitor.Accept(pd);
 

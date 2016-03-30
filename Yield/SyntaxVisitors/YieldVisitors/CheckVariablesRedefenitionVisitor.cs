@@ -20,10 +20,31 @@ namespace SyntaxVisitors
 
         public CheckVariablesRedefenitionVisitor(ISet<string> upperBlockNames)
         {
-            this.UpperBlockNames = upperBlockNames;
+            //this.UpperBlockNames = upperBlockNames;
+            this.UpperBlockNames = new HashSet<string>();
             this.BlockNamesStack = new List<ISet<string>>(10);
         }
 
+
+        public override void visit(formal_parameters fp)
+        {
+            foreach (var id in fp.params_list.SelectMany(tp => tp.idents.idents))
+            {
+                CheckVariableAlreadyDefined(id);
+                UpperBlockNames.Add(id.name);
+            }
+        }
+
+        public override void visit(variable_definitions vd)
+        {
+            foreach (var id in vd.var_definitions.SelectMany(vds => vds.vars.idents))
+            {
+                CheckVariableAlreadyDefined(id);
+                UpperBlockNames.Add(id.name);
+            }
+
+            base.visit(vd);
+        }
 
         /*
          * // Scope Level 0
@@ -71,34 +92,24 @@ namespace SyntaxVisitors
 
         public override void visit(var_statement vs)
         {
-            foreach (var name in vs.var_def.vars.idents.Select(id => id.name))
+            foreach (var id in vs.var_def.vars.idents)
             {
                 // Проверяем есть ли такое имя выше?
-                CheckVariableAlreadyDefined(name);
+                CheckVariableAlreadyDefined(id);
 
-                BlockNamesStack[CurrentLevel].Add(name);
+                BlockNamesStack[CurrentLevel].Add(id.name);
             }
 
             base.visit(vs);
         }
 
-        public override void visit(variable_definitions vd)
-        {
-            var varNames = vd.var_definitions.SelectMany(vds => vds.vars.idents.Select(id => id.name));
-            foreach (var name in varNames)
-            {
-                CheckVariableAlreadyDefined(name);
-                UpperBlockNames.Add(name);
-            }
-
-            base.visit(vd);
-        }
+        
 
         public override void visit(for_node fn)
         {
             if (fn.create_loop_variable)
             {
-                CheckVariableAlreadyDefined(fn.loop_variable.name);
+                CheckVariableAlreadyDefined(fn.loop_variable);
             }
             base.visit(fn);
         }
@@ -115,11 +126,13 @@ namespace SyntaxVisitors
             return false;
         }
 
-        private void CheckVariableAlreadyDefined(string name)
+        private void CheckVariableAlreadyDefined(ident id)
         {
+            string name = id.name;
+
             if (IsVariableAlreadyDefined(name))
             {
-                throw new Exception(string.Format("Var {0} is already defined", name));
+                throw new PascalABCCompiler.Errors.SyntaxError(string.Format("Var {0} is already defined", name), "", id.source_context, id);
             }
         }
         

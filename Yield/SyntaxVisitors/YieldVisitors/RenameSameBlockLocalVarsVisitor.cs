@@ -11,16 +11,39 @@ namespace SyntaxVisitors
 {
     public class RenameSameBlockLocalVarsVisitor : BaseChangeVisitor
     {
-        // Уровень вложенности -> (localName -> countAtThisLevel)
-        private Dictionary<int, Dictionary<string, int>> BlockLocalVarMapStack = new Dictionary<int, Dictionary<string, int>>();
-        private int CurrentLevel = 0;
+        // Надо хранить принадлежность имени конкретному ПИ на определенном уровне вложенности
+        // И отображение этого имени в новое
+
+        // Map :: CurrentLevel -> { BlockName -> NewBlockName }
+        private List<Dictionary<string, string>> BlockNamesStack { get; set; }
+
+        private Dictionary<string, int> BlockNamesCounter { get; set; }
+
+
+        private int CurrentLevel = -1;
 
         public RenameSameBlockLocalVarsVisitor()
         {
-
+            this.BlockNamesStack = new List<Dictionary<string, string>>();
+            this.BlockNamesCounter = new Dictionary<string, int>();
         }
 
         public override void visit(declarations decls)
+        {
+            // DO NOTHING
+        }
+
+        public override void visit(procedure_header pd)
+        {
+            // DO NOTHING
+        }
+
+        public override void visit(function_header fh)
+        {
+            // DO NOTHING
+        }
+
+        public override void visit(formal_parameters fp)
         {
             // DO NOTHING
         }
@@ -29,57 +52,76 @@ namespace SyntaxVisitors
         {
             ++CurrentLevel;
 
-            if (!BlockLocalVarMapStack.ContainsKey(CurrentLevel))
+            if (BlockNamesStack.Count <= CurrentLevel)
             {
-                BlockLocalVarMapStack.Add(CurrentLevel, new Dictionary<string, int>());
+                // Создаем отображение для имен текущего уровня вложенности мини-пространства имен
+                BlockNamesStack.Add(new Dictionary<string, string>());
             }
 
             for (var i = 0; i < stlist.list.Count; ++i)
                 ProcessNode(stlist.list[i]);
+
+            BlockNamesStack.RemoveAt(BlockNamesStack.Count - 1);
 
             --CurrentLevel;
         }
 
         public override void visit(var_statement vs)
         {
-            foreach (var varName in vs.var_def.vars.idents.Select(id => id.name))
-            {
-                // Проверяем есть ли такое имя в statement_list на уровень выше?
-
-                if (BlockLocalVarMapStack[CurrentLevel].ContainsKey(varName))
+            if (vs.var_def.vars.idents.Any(id => id.name.StartsWith("$")))
+                return;
+            var newLocalNames = vs.var_def.vars.idents.Select(id => 
                 {
-                    // Уже есть такая переменная - увеличиваем счетчик
-                    ++BlockLocalVarMapStack[CurrentLevel][varName];
-                }
-                else
-                {
-                    // Нет - добавляем
-                    BlockLocalVarMapStack[CurrentLevel].Add(varName, 0);
-                }
-            }
+                    var newName = this.CreateNewVariableName(id.name);
+                    BlockNamesStack[CurrentLevel].Add(id.name, newName);
+                    return new ident(newName, id.source_context);
+                });
 
-            var newLocalNames = vs.var_def.vars.idents.Select(id => this.CreateSameLocalVariable(id));
+            var newVS = new var_statement(new var_def_statement(new ident_list(newLocalNames.ToArray()), vs.var_def.vars_type, vs.var_def.inital_value));
+            Replace(vs, newVS);
 
-            Replace(vs, new var_statement(new var_def_statement(new ident_list(newLocalNames.ToArray()), vs.var_def.vars_type, vs.var_def.inital_value)));
-
-            base.visit(vs);
+            base.visit(newVS);
         }
 
         public override void visit(ident id)
         {
-            if (BlockLocalVarMapStack[CurrentLevel].ContainsKey(id.name))
+            var newName = this.GetNewVariableName(id.name);
+            if ((object)newName != null)
             {
-                Replace(id, this.CreateSameLocalVariable(id));
+                Replace(id, new ident(newName, id.source_context));
             }
         }
 
         public override void visit(dot_node dn)
         {
+            ProcessNode(dn.left);
+            if (dn.right.GetType() != typeof(ident))
+                ProcessNode(dn.right);
         }
 
-        private ident CreateSameLocalVariable(ident id)
+        private string CreateNewVariableName(string name)
         {
-            return new ident(id.name + "_" + BlockLocalVarMapStack[CurrentLevel][id.name], id.source_context);
+            if (BlockNamesCounter.ContainsKey(name))
+            {
+                ++BlockNamesCounter[name];
+            }
+            else
+            {
+                BlockNamesCounter.Add(name, 0);
+            }
+            return "$" + name + "__" + BlockNamesCounter[name]; 
+        }
+
+        private string GetNewVariableName(string name)
+        {
+            for (int i = CurrentLevel; i >= 0; --i)
+            {
+                if (BlockNamesStack[i].ContainsKey(name))
+                {
+                    return BlockNamesStack[i][name];
+                }
+            }
+            return null;
         }
     }
 }

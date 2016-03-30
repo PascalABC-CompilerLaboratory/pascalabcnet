@@ -4,12 +4,12 @@ type A = class
   begin
     var i := 222;
     begin
-      var x := 33;
+      var x := i;
     end;
     begin
-      var x := 33.3;
+      var x := j;
     end;
-    for var z := 1 to 10 do
+    for var n := 1 to 10 do
     begin
       yield i;
     end;
