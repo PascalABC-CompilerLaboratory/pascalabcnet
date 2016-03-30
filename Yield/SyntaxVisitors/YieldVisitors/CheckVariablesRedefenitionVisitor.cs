@@ -80,10 +80,10 @@ namespace SyntaxVisitors
                 BlockNamesStack.Add(new HashSet<string>());
             }
 
-            
 
-            for (var i = 0; i < stlist.list.Count; ++i)
-                ProcessNode(stlist.list[i]);
+            base.visit(stlist);
+            //for (var i = 0; i < stlist.list.Count; ++i)
+            //    ProcessNode(stlist.list[i]);
 
             BlockNamesStack.RemoveAt(BlockNamesStack.Count - 1);
 

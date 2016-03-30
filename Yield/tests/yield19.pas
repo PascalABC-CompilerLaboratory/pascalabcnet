@@ -1,6 +1,7 @@
 type A = class
   function Gen(n: integer): sequence of real;
   var j,k: real;
+  var m := j;
   begin
     var i := 222;
     begin
@@ -9,7 +10,7 @@ type A = class
     begin
       var x := j;
     end;
-    for var n := 1 to 10 do
+    for var nn := 1 to 10 do
     begin
       yield i;
     end;

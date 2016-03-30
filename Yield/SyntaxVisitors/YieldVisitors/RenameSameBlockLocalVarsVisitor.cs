@@ -30,7 +30,12 @@ namespace SyntaxVisitors
 
         public override void visit(declarations decls)
         {
-            // DO NOTHING
+            // Для обхода в правильном порядке сверху вниз
+            var vd_s = decls.defs.OfType<variable_definitions>().ToArray();
+            for (int i = 0; i < vd_s.Count(); ++i)
+            {
+                ProcessNode(vd_s[i]);
+            }
         }
 
         public override void visit(procedure_header pd)
@@ -58,6 +63,7 @@ namespace SyntaxVisitors
                 BlockNamesStack.Add(new Dictionary<string, string>());
             }
 
+            //base.visit(stlist);
             for (var i = 0; i < stlist.list.Count; ++i)
                 ProcessNode(stlist.list[i]);
 
@@ -70,6 +76,7 @@ namespace SyntaxVisitors
         {
             if (vs.var_def.vars.idents.Any(id => id.name.StartsWith("$")))
                 return;
+
             var newLocalNames = vs.var_def.vars.idents.Select(id => 
                 {
                     var newName = this.CreateNewVariableName(id.name);
@@ -77,10 +84,44 @@ namespace SyntaxVisitors
                     return new ident(newName, id.source_context);
                 });
 
-            var newVS = new var_statement(new var_def_statement(new ident_list(newLocalNames.ToArray()), vs.var_def.vars_type, vs.var_def.inital_value));
+            var newVS = new var_statement(new var_def_statement(new ident_list(newLocalNames.ToArray()),
+                vs.var_def.vars_type,
+                vs.var_def.inital_value));
+
             Replace(vs, newVS);
 
             base.visit(newVS);
+        }
+
+        public override void visit(variable_definitions vd)
+        {
+            if (vd.var_definitions.Any(vds => vds.vars.idents.Any(id => id.name.StartsWith("$"))))
+                return;
+
+            ++CurrentLevel;
+
+            if (BlockNamesStack.Count <= CurrentLevel)
+            {
+                // Создаем отображение для имен текущего уровня вложенности мини-пространства имен
+                BlockNamesStack.Add(new Dictionary<string, string>());
+            }
+
+            var newVD = new variable_definitions(
+                vd.var_definitions.Select(vds =>
+                {
+                    var newLocalNames = vds.vars.idents.Select(id =>
+                    {
+                        var newName = this.CreateNewVariableName(id.name);
+                        BlockNamesStack[CurrentLevel].Add(id.name, newName);
+                        return new ident(newName, id.source_context);
+                    });
+
+                    return new var_def_statement(new ident_list(newLocalNames.ToArray()), vds.vars_type, vds.inital_value);
+                }).ToList(),
+                vd.source_context);
+
+            Replace(vd, newVD);
+            base.visit(newVD);
         }
 
         public override void visit(ident id)
