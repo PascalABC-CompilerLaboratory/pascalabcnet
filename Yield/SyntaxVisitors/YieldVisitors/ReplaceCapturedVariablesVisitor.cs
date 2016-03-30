@@ -75,7 +75,8 @@ namespace SyntaxVisitors
             var idName = id.name;
             var idSourceContext = id.source_context;
 
-            if (idName.ToLower() == "self")
+            // frninja 31/03/16 - фикс селфа для extensionmethod
+            if (idName.ToLower() == "self" && !CollectedFormalParams.Contains(idName))
             {
                 var newSelf = new dot_node(new ident("self"), new ident(YieldConsts.Self));
                 Replace(id, newSelf);

@@ -558,11 +558,51 @@ namespace SyntaxVisitors
             (pd.proc_body as block).program_code.visit(rcapVis);
         }
 
+        private bool IsExtensionMethod(procedure_definition pd)
+        {
+            var tdecls = UpperTo<declarations>().defs.OfType<type_declarations>().SelectMany(tds => tds.types_decl);
+
+            var isExtension = pd.proc_header.proc_attributes.proc_attributes.Any(attr => attr.name == "extensionmethod");
+
+            if (isExtension)
+            {
+                // Метод объявлен как extensionmethod
+                
+                // !!!!!!!! TODO: Проверить что имя класса не находится в этом модуле.
+
+                // Убираем за ненадобностью имя класса ибо оно указано как тип обязательного параметра self
+                
+                pd.proc_header.name.class_name = null;
+                return true;
+            }
+            else
+            {
+                // Если не похоже на метод-расширение или объявление вне класса
+                if ((object)pd.proc_header.name.class_name == null)
+                    return false;
+
+                
+                // Разрешаем только имена типов из этого модуля (не расширения)
+                if (!tdecls.Any(td => td.type_name.name == pd.proc_header.name.class_name.name))
+                {
+                    // Имя в модуле не найдено -> метод расширение описанный без extensionmethod. Ругаемся!!!
+                    throw new SyntaxError("Possible extension-method definintion withod extensionmethod keyword. Please use extensionmethod syntax",
+                        "",
+                        pd.proc_header.source_context,
+                        pd.proc_header);
+                }
+                
+            }
+            
+            return false;
+        }
+
         public override void visit(procedure_definition pd)
         {
             if (pd.proc_header.name.meth_name.name.StartsWith(YieldConsts.YieldHelperMethodPrefix))
                 return;
 
+            var isExtension = IsExtensionMethod(pd);
 
             hasYields = false;
             if (pd.proc_header is function_header)
