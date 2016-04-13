@@ -630,7 +630,7 @@ namespace SyntaxVisitors
             // Теперь lowering
             LoweringVisitor.Accept(pd);
 
-            // Убираем лишние begin..end
+            // frninja 13/04/16 - убираем лишние begin..end
             DeleteRedundantBeginEnds deleteBeginEndVisitor = new DeleteRedundantBeginEnds();
             pd.visit(deleteBeginEndVisitor);
 
@@ -758,6 +758,13 @@ namespace SyntaxVisitors
 
             foreach (var st in stl.subnodes)
                 Process(st);
+
+            // frninja 13/04/16 - фикс для зависающего в последнем состоянии
+            var lastStateCV = cas.conditions.variants.Last().exec_if_true as statement_list;
+            if ((object)lastStateCV != null)
+            {
+                lastStateCV.Add(new procedure_call("exit"));
+            }
 
             stl.subnodes = BaseChangeVisitor.SeqStatements(cas, StatListAfterCase).ToList();
             //statement_list res = new statement_list(cas);
