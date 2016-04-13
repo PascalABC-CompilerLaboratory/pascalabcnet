@@ -705,7 +705,10 @@ namespace SyntaxVisitors
 
         case_node cas; // формируемый case
 
-        private Dictionary<labeled_statement, List<int>> _dispatches = new Dictionary<labeled_statement, List<int>>();
+        //private Dictionary<labeled_statement, List<int>> dispatches = new Dictionary<labeled_statement, List<int>>();
+
+        private labeled_statement OuterLabeledStatement;
+        private Dictionary<int, labeled_statement> Dispatches = new Dictionary<int,labeled_statement>();
 
         public ConstructFiniteAutomata(statement_list stl)
         {
@@ -726,6 +729,7 @@ namespace SyntaxVisitors
             }
             if (st is yield_node)
             {
+
                 var yn = st as yield_node;
                 curState += 1;
                 curStatList.AddMany(
@@ -736,15 +740,21 @@ namespace SyntaxVisitors
                 );
 
                 curStatList = new statement_list();
+                
                 case_variant cv = new case_variant(new expression_list(new int32_const(curState)), curStatList);
                 cas.conditions.variants.Add(cv);
             }
             if (st is labeled_statement)
             {
                 var ls = st as labeled_statement;
+
+                // frninja 13/04/16 - диспетчерезация к следующему состоянию
+                curStatList.Add(new goto_statement(ls.label_name));
+
                 curStatList = StatListAfterCase;
                 curStatList.Add(new labeled_statement(ls.label_name));
                 Process(ls.to_statement);
+
             }
         }
 
@@ -758,6 +768,8 @@ namespace SyntaxVisitors
 
             foreach (var st in stl.subnodes)
                 Process(st);
+
+            
 
             // frninja 13/04/16 - фикс для зависающего в последнем состоянии
             var lastStateCV = cas.conditions.variants.Last().exec_if_true as statement_list;

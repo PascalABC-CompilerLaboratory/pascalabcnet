@@ -18921,7 +18921,7 @@ namespace PascalABCCompiler.TreeConverter
 
         public override void visit(SyntaxTree.unknown_expression_type _unk_expr)
         {
-            _unk_expr.MapHelper.vars_type_map[_unk_expr.Vds].visit(this);
+             _unk_expr.MapHelper.vars_type_map[_unk_expr.Vds].visit(this);
         }
 
         // frninja - заполнение хелпера типов локальных переменных для yield
