@@ -616,11 +616,11 @@ namespace SyntaxVisitors
             // Проверяем проблемы имен для for
             CheckVariablesRedefenitionVisitor checkVarRedefVisitor = new CheckVariablesRedefenitionVisitor(
                 new HashSet<string>(
-                    pd
-                    .proc_header
-                    .parameters
-                    .params_list
-                    .SelectMany(fp => fp.idents.idents.Select(id => id.name))));
+                    (object)pd.proc_header.parameters != null
+                    ?
+                    pd.proc_header.parameters.params_list.SelectMany(fp => fp.idents.idents.Select(id => id.name))
+                    :
+                    Enumerable.Empty<string>()));
             pd.visit(checkVarRedefVisitor);
 
             // Переименовываем одинаковые имена в мини-ПИ
