@@ -630,6 +630,10 @@ namespace SyntaxVisitors
             // Теперь lowering
             LoweringVisitor.Accept(pd);
 
+            // Убираем лишние begin..end
+            DeleteRedundantBeginEnds deleteBeginEndVisitor = new DeleteRedundantBeginEnds();
+            pd.visit(deleteBeginEndVisitor);
+
             // Обработка метода для корректного захвата локальных переменных и их типов
             locals_type_map_helper localsTypeMapHelper;
             IEnumerable<var_def_statement> localsClonesCollection;
