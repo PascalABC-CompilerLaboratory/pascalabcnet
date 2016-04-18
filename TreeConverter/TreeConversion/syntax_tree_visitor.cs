@@ -9634,7 +9634,7 @@ namespace PascalABCCompiler.TreeConverter
 
             common_namespace_node cnsn = context.create_namespace(namespace_name, _compiled_unit, _compiled_unit.scope, loc);
             cnsn.is_main = true;
-            //compiled_program=new program_node();
+            //compiled_program=new program_node(); 
             //compiled_program.units.Add(compiled_main_unit);
 
             reset_for_interface();

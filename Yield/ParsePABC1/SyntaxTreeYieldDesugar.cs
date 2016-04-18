@@ -11,7 +11,7 @@ using SyntaxVisitors;
 
 namespace ParsePABC1
 {
-    public class TestSyntaxTreeChanger : ISyntaxTreeChanger
+    public class SyntaxTreeYieldDesugar : ISyntaxTreeChanger
     {
         public void Change(syntax_tree_node sn)
         {
