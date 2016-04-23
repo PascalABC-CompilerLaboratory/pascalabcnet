@@ -107,7 +107,7 @@ namespace SyntaxVisitors
                 else
                 {
                     // Bad
-                    // At syntax we don't know if the name is class field or not coz of e.g. base .NET classes
+                    // At syntax we don't know if the className is class field or not coz of e.g. base .NET classes
                     // HERE WE SHOULD REPLACE TO yield_unknown_reference -> so decision is passed to semantic 
                     // Check for globals will be processed at semantic, too
 
@@ -158,11 +158,11 @@ namespace SyntaxVisitors
 
             // LEFT self -> captured self (self.captured_self)
             /*var id = dn.left as ident;
-            if ((object)id != null && (id.name == "self" || CollectedClassFields.Contains(id.name)))
+            if ((object)id != null && (id.className == "self" || CollectedClassFields.Contains(id.className)))
             {
                 // Some magic for blocking back-traverse from BaseChangeVisitor redoin' work
                 //var rid = dn.right as ident;
-                //if ((object)rid != null && rid.name != Consts.Self)
+                //if ((object)rid != null && rid.className != Consts.Self)
                 {
                     var newDotNode = new dot_node(new dot_node(new ident("self"), new ident(Consts.Self)), dn.right);
                     // Change right?
@@ -174,7 +174,7 @@ namespace SyntaxVisitors
 
                 // Some magic for blocking back-traverse from BaseChangeVisitor redoin' work
                 //var rid = dn.right as ident;
-                //if ((object)rid != null && rid.name != Consts.Self)
+                //if ((object)rid != null && rid.className != Consts.Self)
                // {
                 //    var capturedSelf = new dot_node(new ident("self"), new ident(Consts.Self));
                 //    Replace(dn.left, capturedSelf);

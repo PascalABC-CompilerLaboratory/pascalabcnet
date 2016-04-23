@@ -54,7 +54,7 @@
   <ItemGroup>
     <Compile Include="ProgramOld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestSyntaxTreeChanger.cs" />
+    <Compile Include="SyntaxTreeYieldDesugar.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -34,7 +34,7 @@ namespace SyntaxVisitors
     {
         int clnum = 0;
 
-        public string newClassName()
+        public string NewYieldClassName()
         {
             clnum++;
             return "clyield#" + clnum.ToString();
@@ -142,9 +142,16 @@ namespace SyntaxVisitors
 
             var stels = seqt.elements_type;
 
+            var iteratorClassName = GetClassName(pd);
+
             // frninja 08/18/15 - Для захвата self
-            if ((object)GetClassName(pd) != null)
-                cm.Add(new var_def_statement(YieldConsts.Self, GetClassName(pd).name));
+            if (iteratorClassName != null)
+            {
+                // frninja 20/04/16 - поддержка шаблонных классов
+                var iteratorClassRef = CreateClassReference(iteratorClassName);
+
+                cm.Add(new var_def_statement(YieldConsts.Self, iteratorClassRef));
+            }
 
             // Системные поля и методы для реализации интерфейса IEnumerable
             cm.Add(new var_def_statement(YieldConsts.State, "integer"),
@@ -159,29 +166,42 @@ namespace SyntaxVisitors
             
             
 
-            var className = newClassName();
-            var classNameHelper = className + "Helper";
+            // frninja 20/04/16 - поддержка шаблонных классов
+            var yieldClassName = NewYieldClassName();
+            var yieldClassHelperName = yieldClassName + "Helper";
+
+            var className = this.CreateHelperClassName(yieldClassName, iteratorClassName);
+            var classNameHelper = this.CreateHelperClassName(yieldClassHelperName, iteratorClassName);
+            
 
             var interfaces = new named_type_reference_list("System.Collections.IEnumerator", "System.Collections.IEnumerable");
-            var td = new type_declaration(classNameHelper, SyntaxTreeBuilder.BuildClassDefinition(interfaces, cm));
+
+            // frninja 24/04/16 - поддержка шаблонных классов
+            var td = new type_declaration(classNameHelper, this.CreateHelperClassDefinition(classNameHelper, interfaces, cm));
+                //SyntaxTreeBuilder.BuildClassDefinition(interfaces, cm));
 
             // Изменение тела процедуры
             
 
-            var stl = new statement_list(new var_statement("res", new new_expr(className)));
+            // frninja 20/04/16 - поддержка шаблонных классов
+            var stl = new statement_list(new var_statement("res", new new_expr(this.CreateClassReference(className), new expression_list())));
+            
+
             //stl.AddMany(lid.Select(id => new assign(new dot_node("res", id), id)));
             stl.AddMany(lid.Select(id => new assign(new dot_node("res", new ident(formalParamsMap[id.name])), id)));
 
             // frninja 08/12/15 - захват self
-            if ((object)GetClassName(pd) != null)
+            if (iteratorClassName != null)
+            {
                 stl.Add(new assign(new dot_node("res", YieldConsts.Self), new ident("self")));
+            }
 
             stl.Add(new assign("Result", "res"));
 
             // New body
             pd.proc_body = new block(stl);
 
-            if ((object)GetClassName(pd) != null)
+            if (iteratorClassName != null)
             {
                 var cd = UpperTo<class_definition>();
                 if ((object)cd != null)
@@ -194,16 +214,15 @@ namespace SyntaxVisitors
                     {
                         function_header nfh = new function_header();
                         nfh.name = new method_name(fh.name.meth_name.name);
-                        // Set name
-                        nfh.name.class_name = GetClassName(pd);
+                        // Set className
+                        nfh.name.class_name = iteratorClassName;
                         nfh.parameters = fh.parameters;
                         nfh.proc_attributes = fh.proc_attributes;
-
 
                         procedure_definition npd = new procedure_definition(nfh, new block(stl));
 
                         // Update header
-                        //pd.proc_header.name.class_name = GetClassName(pd);
+                        //pd.proc_header.className.class_name = GetClassName(pd);
                         // Add to decls
                         decls.Add(npd);
                     }
@@ -223,12 +242,16 @@ namespace SyntaxVisitors
                 new procedure_definition("Dispose")
             );
 
-            var interfaces1 = new named_type_reference_list(classNameHelper);
+
+            // frninja 20/04/16 - поддержка шаблонных классов
+            var interfaces1 = new named_type_reference_list(this.CreateClassReference(classNameHelper) as named_type_reference);
             var IEnumerableT = new template_type_reference("System.Collections.Generic.IEnumerable", tpl);
 
             interfaces1.Add(IEnumerableT).Add(IEnumeratorT);
 
-            var td1 = new type_declaration(className, SyntaxTreeBuilder.BuildClassDefinition(interfaces1, cm1));
+            // frninja 24/04/16 - поддержка шаблонных классов
+            var td1 = new type_declaration(className, this.CreateHelperClassDefinition(className, interfaces1, cm1));
+                //SyntaxTreeBuilder.BuildClassDefinition(interfaces1, cm1));
 
             var cct = new type_declarations(td);
             cct.Add(td1);
@@ -248,6 +271,55 @@ namespace SyntaxVisitors
                 collectedFormalParamsNames.UnionWith(pd.proc_header.parameters.params_list.SelectMany(tp => tp.idents.idents).Select(id => id.name));
         }
 
+
+        /// <summary>
+        /// Создает обращение к имени класса по имени класса
+        /// </summary>
+        /// <param name="className">Имя класса</param>
+        /// <returns></returns>
+        private type_definition CreateClassReference(ident className)
+        {
+            if (className is template_type_name)
+            {
+                return new template_type_reference(
+                    new named_type_reference(className),
+                    new template_param_list(string.Join(",", (className as template_type_name).template_args.idents.Select(id => id.name)))
+                    );
+            }
+            return new named_type_reference(className);
+        }
+
+
+        /// <summary>
+        /// Создает имя вспомогательного класса
+        /// </summary>
+        /// <param name="helperName">Имя вспомогательного класса</param>
+        /// <param name="className">Имя класса</param>
+        /// <returns></returns>
+        private ident CreateHelperClassName(string helperName, ident className)
+        {
+            if (className is template_type_name)
+            {
+                return new template_type_name(helperName, (className as template_type_name).template_args);
+            }
+            return new ident(helperName);
+        }
+
+        private class_definition CreateHelperClassDefinition(ident className, named_type_reference_list parents, params class_members[] cms)
+        {
+            if (className is template_type_name)
+            {
+                return SyntaxTreeBuilder.BuildClassDefinition(parents, (className as template_type_name).template_args , cms);
+            }
+            return SyntaxTreeBuilder.BuildClassDefinition(parents, cms);
+        }
+
+
+        /// <summary>
+        /// Получает имя класса, в котором описан метод-итератор
+        /// </summary>
+        /// <param name="pd"></param>
+        /// <returns></returns>
         private ident GetClassName(procedure_definition pd)
         {
             if ((object)pd.proc_header.name.class_name != null)
@@ -272,20 +344,25 @@ namespace SyntaxVisitors
             return null;
         }
 
+        /// <summary>
+        /// Определяет описан ли метод-итератор в некотором классе
+        /// </summary>
+        /// <param name="pd"></param>
+        /// <returns></returns>
         private bool IsClassMethod(procedure_definition pd)
         {
-            return (object)GetClassName(pd) != null;
+            return GetClassName(pd) != null;
         }
 
         private void CollectClassFieldsNames(procedure_definition pd, ISet<string> collectedFields)
         {
             ident className = GetClassName(pd);
 
-            if ((object)className != null)
+            if (className != null)
             {
                 CollectClassFieldsVisitor fieldsVis = new CollectClassFieldsVisitor(className);
                 var cu = UpperTo<compilation_unit>();
-                if ((object)cu != null)
+                if (cu != null)
                 {
                     cu.visit(fieldsVis);
                     // Collect
@@ -359,7 +436,7 @@ namespace SyntaxVisitors
         /// <summary>
         /// Обработка локальных переменных метода и их типов для корректного захвата
         /// </summary>
-        /// <param name="pd">Объявление метода</param>
+        /// <param className="pd">Объявление метода</param>
         /// <returns>Коллекция посещенных локальных переменных</returns>
         private void CreateLocalVariablesTypeProxies(procedure_definition pd, out IEnumerable<var_def_statement> localsClonesCollection, out locals_type_map_helper localsTypeMapHelper)
         {
@@ -380,7 +457,7 @@ namespace SyntaxVisitors
             localsClonesCollection = localsTypeDetectorHelperVisitor.LocalDeletedDefs.ToArray();
 
             // Добавляем в класс метод с обертками для локальных переменных
-            pdCloned.proc_header.name.meth_name = new ident(YieldConsts.YieldHelperMethodPrefix+ "_locals_type_detector>" + pd.proc_header.name.meth_name.name); // = new method_name("<yield_helper_locals_type_detector>" + pd.proc_header.name.meth_name.name);
+            pdCloned.proc_header.name.meth_name = new ident(YieldConsts.YieldHelperMethodPrefix+ "_locals_type_detector>" + pd.proc_header.name.meth_name.name); // = new method_name("<yield_helper_locals_type_detector>" + pd.proc_header.className.meth_name.className);
             if (IsClassMethod(pd))
             {
                 var cd = UpperTo<class_definition>();
@@ -423,8 +500,8 @@ namespace SyntaxVisitors
         /// <summary>
         /// Отображение локальных в клонированные локальные
         /// </summary>
-        /// <param name="from">Откуда</param>
-        /// <param name="to">Куда</param>
+        /// <param className="from">Откуда</param>
+        /// <param className="to">Куда</param>
         /// <returns>Отображение</returns>
         private Dictionary<var_def_statement, var_def_statement> CreateLocalsClonesMap(IEnumerable<var_def_statement> from, IEnumerable<var_def_statement> to)
         {
@@ -448,8 +525,8 @@ namespace SyntaxVisitors
         /// <summary>
         /// Вставляем описание классов-хелперов для yield перед методом-итератором в зависимости от его описания
         /// </summary>
-        /// <param name="pd">Метод-итератор</param>
-        /// <param name="cct">Описание классов-хелперов для yield</param>
+        /// <param className="pd">Метод-итератор</param>
+        /// <param className="cct">Описание классов-хелперов для yield</param>
         private void InsertYieldHelpers(procedure_definition pd, type_declarations cct)
         {
             if (IsClassMethod(pd))
@@ -460,15 +537,17 @@ namespace SyntaxVisitors
                     // Если метод класса описан в классе
                     var td = UpperTo<type_declarations>();
 
-                    foreach (var helperName in cct.types_decl.Select(ttd => ttd.type_name))
-                    {
-                        var helperPredef = new type_declaration(helperName, new class_definition());
-                        td.types_decl.Insert(0, helperPredef);
-                    }
+                    // frninja 20/04/16 - выпилено 
+
+                    //foreach (var helperName in cct.types_decl.Select(ttd => ttd.type_name))
+                    //{
+                    //    var helperPredef = new type_declaration(helperName, new class_definition());
+                        //td.types_decl.Insert(0, helperPredef);
+                    //}
 
                     // Insert class predefenition!
-                    var iteratorClassPredef = new type_declaration(GetClassName(pd), new class_definition(null));
-                    td.types_decl.Insert(0, iteratorClassPredef);
+                    //var iteratorClassPredef = new type_declaration(GetClassName(pd), new class_definition(null));
+                    //td.types_decl.Insert(0, iteratorClassPredef);
 
                     foreach (var helper in cct.types_decl)
                     {
@@ -491,10 +570,10 @@ namespace SyntaxVisitors
         /// <summary>
         /// Захватываем имена в методе
         /// </summary>
-        /// <param name="pd">Метод-итератор</param>
-        /// <param name="deletedLocals">Коллекция удаленных локальных переменных</param>
-        /// <param name="capturedLocalsNamesMap">Построенное отображение имен локальных переменных в захваченные имена</param>
-        /// <param name="capturedFormalParamsNamesMap">Построенное отображение имен формальных параметров в захваченные имена</param>
+        /// <param className="pd">Метод-итератор</param>
+        /// <param className="deletedLocals">Коллекция удаленных локальных переменных</param>
+        /// <param className="capturedLocalsNamesMap">Построенное отображение имен локальных переменных в захваченные имена</param>
+        /// <param className="capturedFormalParamsNamesMap">Построенное отображение имен формальных параметров в захваченные имена</param>
         private void ReplaceCapturedVariables(procedure_definition pd,
             IEnumerable<var_def_statement> deletedLocals,
             out IDictionary<string, string> capturedLocalsNamesMap,
