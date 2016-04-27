@@ -1,9 +1,13 @@
-type A<T> = class
+type B<T> = class
+  testBaseField: T;
+end;
+
+type A<T> = class(B<T>)
   testField: T;
   
   function Gen: sequence of T;
   begin
-    yield testField;
+    yield testBaseField;
   end;
 
 end;

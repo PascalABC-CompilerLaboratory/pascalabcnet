@@ -170,14 +170,14 @@ namespace SyntaxVisitors
             var yieldClassName = NewYieldClassName();
             var yieldClassHelperName = yieldClassName + "Helper";
 
-            var className = this.CreateHelperClassName(yieldClassName, iteratorClassName);
-            var classNameHelper = this.CreateHelperClassName(yieldClassHelperName, iteratorClassName);
+            var className = this.CreateHelperClassName(yieldClassName, iteratorClassName, pd);
+            var classNameHelper = this.CreateHelperClassName(yieldClassHelperName, iteratorClassName, pd);
             
 
             var interfaces = new named_type_reference_list("System.Collections.IEnumerator", "System.Collections.IEnumerable");
 
             // frninja 24/04/16 - поддержка шаблонных классов
-            var td = new type_declaration(classNameHelper, this.CreateHelperClassDefinition(classNameHelper, interfaces, cm));
+            var td = new type_declaration(classNameHelper, this.CreateHelperClassDefinition(classNameHelper, pd, interfaces, cm));
                 //SyntaxTreeBuilder.BuildClassDefinition(interfaces, cm));
 
             // Изменение тела процедуры
@@ -250,7 +250,7 @@ namespace SyntaxVisitors
             interfaces1.Add(IEnumerableT).Add(IEnumeratorT);
 
             // frninja 24/04/16 - поддержка шаблонных классов
-            var td1 = new type_declaration(className, this.CreateHelperClassDefinition(className, interfaces1, cm1));
+            var td1 = new type_declaration(className, this.CreateHelperClassDefinition(className, pd, interfaces1, cm1));
                 //SyntaxTreeBuilder.BuildClassDefinition(interfaces1, cm1));
 
             var cct = new type_declarations(td);
@@ -296,20 +296,28 @@ namespace SyntaxVisitors
         /// <param name="helperName">Имя вспомогательного класса</param>
         /// <param name="className">Имя класса</param>
         /// <returns></returns>
-        private ident CreateHelperClassName(string helperName, ident className)
+        private ident CreateHelperClassName(string helperName, ident className, procedure_definition pd)
         {
             if (className is template_type_name)
             {
                 return new template_type_name(helperName, (className as template_type_name).template_args);
             }
+            else if (pd.proc_header.template_args != null)
+            {
+                return new template_type_name(helperName, pd.proc_header.template_args);
+            }
             return new ident(helperName);
         }
 
-        private class_definition CreateHelperClassDefinition(ident className, named_type_reference_list parents, params class_members[] cms)
+        private class_definition CreateHelperClassDefinition(ident className, procedure_definition pd, named_type_reference_list parents, params class_members[] cms)
         {
             if (className is template_type_name)
             {
                 return SyntaxTreeBuilder.BuildClassDefinition(parents, (className as template_type_name).template_args , cms);
+            }
+            else if (pd.proc_header.template_args != null)
+            {
+                return SyntaxTreeBuilder.BuildClassDefinition(parents, pd.proc_header.template_args, cms);
             }
             return SyntaxTreeBuilder.BuildClassDefinition(parents, cms);
         }
