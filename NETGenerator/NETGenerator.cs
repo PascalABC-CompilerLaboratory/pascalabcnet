@@ -14,9 +14,6 @@ using System.Runtime.Remoting;
 using System.Security;
 using System.Runtime.Versioning;
 
-// frninja was here
-using System.Linq;
-
 namespace PascalABCCompiler.NETGenerator
 {
 
@@ -2259,9 +2256,6 @@ namespace PascalABCCompiler.NETGenerator
                 {
                     continue;
                 }*/
-                // frninja 16/03/16 - грязный хак для вырезания мусорных хелперов yield
-                if (funcs[i].name.StartsWith(YieldHelpers.YieldConsts.YieldHelperMethodPrefix))
-                    continue;
                 ConvertFunctionBody(funcs[i]);
             }
         }
@@ -2337,10 +2331,6 @@ namespace PascalABCCompiler.NETGenerator
         //перевод заголовка функции
         private void ConvertFunctionHeader(ICommonFunctionNode func)
         {
-            //frninja 16/03/16 - грязный хак для вырезания мусорных хелперов yield
-            if (func.name.StartsWith(YieldHelpers.YieldConsts.YieldHelperMethodPrefix))
-                return;
-
             //if (is_in_unit && helper.IsUsed(func)==false) return;
             num_scope++; //увеличиваем глубину обл. видимости
             TypeBuilder tb = null, tmp_type = cur_type;
@@ -6670,10 +6660,6 @@ namespace PascalABCCompiler.NETGenerator
         //перевод заголовка метода
         private void ConvertMethodHeader(SemanticTree.ICommonMethodNode value)
         {
-            // frninja 16/03/16 - грязный хак для вырезания мусорных хелперов yield
-            if (value.name.StartsWith(YieldHelpers.YieldConsts.YieldHelperMethodPrefix))
-                return;
-
             if (value.is_constructor == true)
             {
                 ConvertConstructorHeader(value);
@@ -9145,11 +9131,6 @@ namespace PascalABCCompiler.NETGenerator
 
             foreach (ICommonMethodNode meth in value.methods)
             {
-                // frninja 16/03/16 - грубый хак для отмены обхода мусорных методов-хелперов для yield
-                // заменить визитором семант дерева повыше
-                if (meth.name.StartsWith(YieldHelpers.YieldConsts.YieldHelperMethodPrefix))
-                    continue;
-
                 meth.visit(this);
             }
             cur_type = tmp;

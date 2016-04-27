@@ -40,7 +40,7 @@ namespace ParsePABC1
 
         static void Main(string[] args)
         {
-            var cu = ParseFile(@"C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\tests\template\yieldSimpleTemplate.pas");
+            var cu = ParseFile(@"C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\tests\basic\yieldSimpleMethodDef.pas");
             if (cu == null)
                 return;
 

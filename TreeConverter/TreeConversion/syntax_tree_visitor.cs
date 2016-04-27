@@ -9645,6 +9645,16 @@ namespace PascalABCCompiler.TreeConverter
             hard_node_test_and_visit(_program_module.program_block);
             context.check_labels(context.converted_namespace.labels);
 
+            // frninja 28/04/16 - режем мусорные методы хелперы yield
+            {
+                var toRemove = cnsn.functions.Where(m => m.name.StartsWith(YieldHelpers.YieldConsts.YieldHelperMethodPrefix)).ToArray();
+                foreach (var m in toRemove)
+                {
+                    cnsn.functions.remove(m);
+                }
+            }
+            
+
             //TODO: Доделать.
             common_namespace_function_node main_function = new common_namespace_function_node(compiler_string_consts.temp_main_function_name,
                 null, null, cnsn, null);
@@ -10213,8 +10223,8 @@ namespace PascalABCCompiler.TreeConverter
                 //blocks.converted_namespace.types.AddElement(del_type);
                 CheckWaitedRefTypes(del_type);
                 if (_type_declaration.attributes != null)
-            	{
-                	make_attributes_for_declaration(_type_declaration,del_type);
+                {
+                    make_attributes_for_declaration(_type_declaration, del_type);
                 }
                 context.converted_namespace.scope.AddSymbol(del_name, new SymbolInfo(del_type));
                 return;
@@ -10226,32 +10236,32 @@ namespace PascalABCCompiler.TreeConverter
                 context.check_name_free(name, loc);
                 is_direct_type_decl = true;
                 type_node tn = convert_strong(_type_declaration.type_def);
-                assign_doc_info(tn,_type_declaration);
+                assign_doc_info(tn, _type_declaration);
                 is_direct_type_decl = false;
-                if (_type_declaration.type_def is SyntaxTree.named_type_reference||
+                if (_type_declaration.type_def is SyntaxTree.named_type_reference ||
                     _type_declaration.type_def is SyntaxTree.ref_type || _type_declaration.type_def is SyntaxTree.string_num_definition ||
                     tn.type_special_kind == PascalABCCompiler.SemanticTree.type_special_kind.array_kind)// ||
-                    /*tn.type_special_kind == PascalABCCompiler.SemanticTree.type_special_kind.set_type*/
+                /*tn.type_special_kind == PascalABCCompiler.SemanticTree.type_special_kind.set_type*/
                 {
-                	if (context.converted_func_stack.Empty)
-                	{
-                		type_synonym ts = new type_synonym(name, tn, loc);
-                		assign_doc_info(ts,_type_declaration);
-                		context.converted_namespace.type_synonyms.Add(ts);
-                	}
+                    if (context.converted_func_stack.Empty)
+                    {
+                        type_synonym ts = new type_synonym(name, tn, loc);
+                        assign_doc_info(ts, _type_declaration);
+                        context.converted_namespace.type_synonyms.Add(ts);
+                    }
                 }
                 else
                 {
                     tn.SetName(context.BuildName(name));
                 }
                 if (_type_declaration.attributes != null)
-                if (_type_declaration.type_def is SyntaxTree.enum_type_definition)
-                {
-                	make_attributes_for_declaration(_type_declaration,tn);
-                	(tn as common_type_node).add_additional_enum_operations();
-                }
-                else
-                    AddError(get_location(_type_declaration.attributes), "ATTRIBUTES_APPLICABLE_ONLY_TO_THESE_TYPES");
+                    if (_type_declaration.type_def is SyntaxTree.enum_type_definition)
+                    {
+                        make_attributes_for_declaration(_type_declaration, tn);
+                        (tn as common_type_node).add_additional_enum_operations();
+                    }
+                    else
+                        AddError(get_location(_type_declaration.attributes), "ATTRIBUTES_APPLICABLE_ONLY_TO_THESE_TYPES");
                 context.add_type(name, tn, loc);
                 return;
             }
@@ -10327,7 +10337,7 @@ namespace PascalABCCompiler.TreeConverter
                     }
 
                     tc = new template_class(_type_declaration, t_name,
-                        context.converted_namespace, 
+                        context.converted_namespace,
                         current_document, using_list);
 
                     //Проверяем параметры шаблона на совпадение друг с другом
@@ -10342,7 +10352,7 @@ namespace PascalABCCompiler.TreeConverter
                         for (int i = 0; i < count; i++)
                         {
                             test_types.Add(new indefinite_type_node(cl_def.template_args.idents[i].name));
-                        } 
+                        }
                         instance(tc, test_types, t_loc);
                     }
                     return;
@@ -10371,11 +10381,11 @@ namespace PascalABCCompiler.TreeConverter
                 //context.create_record_type(loc, record_type_name);
                 is_direct_type_decl = true;
                 type_node tn = convert_strong(_type_declaration.type_def);
-                assign_doc_info(tn,_type_declaration);
+                assign_doc_info(tn, _type_declaration);
                 if (_type_declaration.attributes != null)
-            	{
-            		make_attributes_for_declaration(_type_declaration, tn);
-            	}
+                {
+                    make_attributes_for_declaration(_type_declaration, tn);
+                }
                 is_direct_type_decl = false;
                 record_type_name = null;
                 record_is_generic = false;
@@ -10387,7 +10397,7 @@ namespace PascalABCCompiler.TreeConverter
             bool interface_creating = (/*cl_def != null &&*/ cl_def.keyword == PascalABCCompiler.SyntaxTree.class_keyword.Interface);
 
             common_type_node ctn = context.advanced_create_type(_type_declaration.type_name.name, get_location(_type_declaration.type_name), interface_creating, (cl_def.attribute & SyntaxTree.class_attribute.Partial) == SyntaxTree.class_attribute.Partial);
-            assign_doc_info(ctn,_type_declaration);
+            assign_doc_info(ctn, _type_declaration);
             if (is_generic)
             {
                 context.create_generic_indicator(ctn);
@@ -10397,10 +10407,18 @@ namespace PascalABCCompiler.TreeConverter
             CheckWaitedRefTypes(ctn);
             is_direct_type_decl = true;
             hard_node_test_and_visit(_type_declaration.type_def);
+            // frninja 28/04/16 - режем мусорные методы хелперы yield
+            {
+                var toRemove = ctn.methods.Where(m => m.name.StartsWith(YieldHelpers.YieldConsts.YieldHelperMethodPrefix)).ToArray();
+                foreach (var m in toRemove)
+                {
+                    ctn.methods.remove(m);
+                }
+            }
             is_direct_type_decl = false;
             if (_type_declaration.attributes != null)
             {
-            	make_attributes_for_declaration(_type_declaration, ctn);
+                make_attributes_for_declaration(_type_declaration, ctn);
             }
         }
 		
