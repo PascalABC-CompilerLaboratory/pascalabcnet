@@ -99,9 +99,9 @@ namespace SyntaxVisitors
             var capturedFields = fields.Select(vds =>
                                     {
                                         ident_list ids = new ident_list(vds.vars.idents.Select(id => new ident(localsMap[id.name])).ToArray());
-                                        if ((object)vds.vars_type == null) //&& (object)vds.inital_value != null)
+                                        if (vds.vars_type == null) //&& vds.inital_value != null)
                                         {
-                                            if ((object)vds.inital_value != null)
+                                            if (vds.inital_value != null)
                                             {
                                                 //return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], varsTypeDetectorHelper), null);
                                                 return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], localTypeMapHelper), null);
@@ -159,8 +159,8 @@ namespace SyntaxVisitors
                 procedure_definition.EmptyDefaultConstructor,
                 new procedure_definition("Reset"),
                 new procedure_definition("MoveNext", "boolean", pd.proc_body),
-                new procedure_definition("get_Current", "object", new assign("Result", YieldConsts.Current)),
-                new procedure_definition("GetEnumerator", "System.Collections.IEnumerator", new assign("Result", "Self"))
+                new procedure_definition("System.Collections.IEnumerator.get_Current", "object", new assign("Result", YieldConsts.Current)),
+                new procedure_definition("System.Collections.IEnumerable.GetEnumerator", "System.Collections.IEnumerator", new assign("Result", "Self"))
                 );
 
             
@@ -177,7 +177,7 @@ namespace SyntaxVisitors
             var interfaces = new named_type_reference_list("System.Collections.IEnumerator", "System.Collections.IEnumerable");
 
             // frninja 24/04/16 - поддержка шаблонных классов
-            var td = new type_declaration(classNameHelper, this.CreateHelperClassDefinition(classNameHelper, pd, interfaces, cm));
+            //var td = new type_declaration(classNameHelper, this.CreateHelperClassDefinition(classNameHelper, pd, interfaces, cm));
                 //SyntaxTreeBuilder.BuildClassDefinition(interfaces, cm));
 
             // Изменение тела процедуры
@@ -204,13 +204,13 @@ namespace SyntaxVisitors
             if (iteratorClassName != null)
             {
                 var cd = UpperTo<class_definition>();
-                if ((object)cd != null)
+                if (cd != null)
                 {
                     // Если метод описан в классе 
                     // frninja 10/12/15 - заменить на function_header и перенести описание тела в declarations
                     Replace(pd, fh);
                     var decls = UpperTo<declarations>();
-                    if ((object)decls != null)
+                    if (decls != null)
                     {
                         function_header nfh = new function_header();
                         nfh.name = new method_name(fh.name.meth_name.name);
@@ -235,8 +235,8 @@ namespace SyntaxVisitors
 
             var IEnumeratorT = new template_type_reference("System.Collections.Generic.IEnumerator", tpl);
 
-            var cm1 = class_members.Public.Add(
-                procedure_definition.EmptyDefaultConstructor,
+            var cm1 = cm.Add( //class_members.Public.Add(
+                //procedure_definition.EmptyDefaultConstructor,
                 new procedure_definition(new function_header("get_Current", stels), new assign("Result", YieldConsts.Current)),
                 new procedure_definition(new function_header("GetEnumerator", IEnumeratorT), new assign("Result", "Self")),
                 new procedure_definition("Dispose")
@@ -244,7 +244,7 @@ namespace SyntaxVisitors
 
 
             // frninja 20/04/16 - поддержка шаблонных классов
-            var interfaces1 = new named_type_reference_list(this.CreateClassReference(classNameHelper) as named_type_reference);
+            var interfaces1 = new named_type_reference_list(/*this.CreateClassReference(classNameHelper) as named_type_reference*/);
             var IEnumerableT = new template_type_reference("System.Collections.Generic.IEnumerable", tpl);
 
             interfaces1.Add(IEnumerableT).Add(IEnumeratorT);
@@ -253,7 +253,7 @@ namespace SyntaxVisitors
             var td1 = new type_declaration(className, this.CreateHelperClassDefinition(className, pd, interfaces1, cm1));
                 //SyntaxTreeBuilder.BuildClassDefinition(interfaces1, cm1));
 
-            var cct = new type_declarations(td);
+            var cct = new type_declarations(/*td*/);
             cct.Add(td1);
 
             return cct;
@@ -261,13 +261,13 @@ namespace SyntaxVisitors
 
         private void CollectFormalParams(procedure_definition pd, ISet<var_def_statement> collectedFormalParams)
         {
-            if ((object)pd.proc_header.parameters != null)
+            if (pd.proc_header.parameters != null)
                 collectedFormalParams.UnionWith(pd.proc_header.parameters.params_list.Select(tp => new var_def_statement(tp.idents, tp.vars_type)));
         }
 
         private void CollectFormalParamsNames(procedure_definition pd, ISet<string> collectedFormalParamsNames)
         {
-            if ((object)pd.proc_header.parameters != null)
+            if (pd.proc_header.parameters != null)
                 collectedFormalParamsNames.UnionWith(pd.proc_header.parameters.params_list.SelectMany(tp => tp.idents.idents).Select(id => id.name));
         }
 
@@ -330,7 +330,7 @@ namespace SyntaxVisitors
         /// <returns></returns>
         private ident GetClassName(procedure_definition pd)
         {
-            if ((object)pd.proc_header.name.class_name != null)
+            if (pd.proc_header.name.class_name != null)
             {
                 // Объявление вне класса его метода
                 return pd.proc_header.name.class_name;
@@ -339,10 +339,10 @@ namespace SyntaxVisitors
             {
                 // Объявление функции в классе?
                 var classDef = UpperNode(3) as class_definition;
-                if ((object)(UpperNode(3) as class_definition) != null)
+                if ((UpperNode(3) as class_definition) != null)
                 {
                     var td = UpperNode(4) as type_declaration;
-                    if ((object)td != null)
+                    if (td != null)
                     {
                         return td.type_name;
                     }
@@ -383,11 +383,11 @@ namespace SyntaxVisitors
         {
             ident className = GetClassName(pd);
 
-            if ((object)className != null)
+            if (className != null)
             {
                 CollectClassMethodsVisitor methodsVis = new CollectClassMethodsVisitor(className);
                 var cu = UpperTo<compilation_unit>();
-                if ((object)cu != null)
+                if (cu != null)
                 {
                     cu.visit(methodsVis);
                     // Collect
@@ -400,11 +400,11 @@ namespace SyntaxVisitors
         {
             ident className = GetClassName(pd);
 
-            if ((object)className != null)
+            if (className != null)
             {
                 CollectClassPropertiesVisitor propertiesVis = new CollectClassPropertiesVisitor(className);
                 var cu = UpperTo<compilation_unit>();
-                if ((object)cu != null)
+                if (cu != null)
                 {
                     cu.visit(propertiesVis);
                     // Collect
@@ -416,7 +416,7 @@ namespace SyntaxVisitors
         private void CollectUnitGlobalsNames(procedure_definition pd, ISet<string> collectedUnitGlobalsName)
         {
             var cu = UpperTo<compilation_unit>();
-            if ((object)cu != null)
+            if (cu != null)
             {
                 var ugVis = new CollectUnitGlobalsVisitor();
                 cu.visit(ugVis);
@@ -469,7 +469,7 @@ namespace SyntaxVisitors
             if (IsClassMethod(pd))
             {
                 var cd = UpperTo<class_definition>();
-                if ((object)cd != null)
+                if (cd != null)
                 {
                     // Метод класса описан в классе
                     var classMembers = UpperTo<class_members>();
@@ -482,11 +482,11 @@ namespace SyntaxVisitors
                     var decls = UpperTo<declarations>();
                     var classMembers = decls.list
                         .Select(decl => decl as type_declarations)
-                        .Where(tdecls => (object)tdecls != null)
+                        .Where(tdecls => tdecls != null)
                         .SelectMany(tdecls => tdecls.types_decl)
                         .Where(td => td.type_name.name == GetClassName(pd).name)
                         .Select(td => td.type_def as class_definition)
-                        .Where(_cd => (object)_cd != null)
+                        .Where(_cd => _cd != null)
                         .SelectMany(_cd => _cd.body.class_def_blocks);
 
 
@@ -540,7 +540,7 @@ namespace SyntaxVisitors
             if (IsClassMethod(pd))
             {
                 var cd = UpperTo<class_definition>();
-                if ((object)cd != null)
+                if (cd != null)
                 {
                     // Если метод класса описан в классе
                     var td = UpperTo<type_declarations>();
@@ -665,7 +665,7 @@ namespace SyntaxVisitors
             else
             {
                 // Если не похоже на метод-расширение или объявление вне класса
-                if ((object)pd.proc_header.name.class_name == null)
+                if (pd.proc_header.name.class_name == null)
                     return false;
 
                 
@@ -673,7 +673,7 @@ namespace SyntaxVisitors
                 if (!tdecls.Any(td => td.type_name.name == pd.proc_header.name.class_name.name))
                 {
                     // Имя в модуле не найдено -> метод расширение описанный без extensionmethod. Ругаемся!!!
-                    throw new SyntaxError("Possible extension-method definintion withod extensionmethod keyword. Please use extensionmethod syntax",
+                    throw new SyntaxError("Possible extension-method definintion without extensionmethod keyword. Please use extensionmethod syntax",
                         "",
                         pd.proc_header.source_context,
                         pd.proc_header);
@@ -689,7 +689,7 @@ namespace SyntaxVisitors
             if (pd.proc_header.name.meth_name.name.StartsWith(YieldConsts.YieldHelperMethodPrefix))
                 return;
 
-            var isExtension = IsExtensionMethod(pd);
+            //var isExtension = IsExtensionMethod(pd);
 
             hasYields = false;
             if (pd.proc_header is function_header)
@@ -703,7 +703,7 @@ namespace SyntaxVisitors
             // Проверяем проблемы имен для for
             CheckVariablesRedefenitionVisitor checkVarRedefVisitor = new CheckVariablesRedefenitionVisitor(
                 new HashSet<string>(
-                    (object)pd.proc_header.parameters != null
+                    pd.proc_header.parameters != null
                     ?
                     pd.proc_header.parameters.params_list.SelectMany(fp => fp.idents.idents.Select(id => id.name))
                     :
@@ -860,7 +860,7 @@ namespace SyntaxVisitors
 
             // frninja 13/04/16 - фикс для зависающего в последнем состоянии
             var lastStateCV = cas.conditions.variants.Last().exec_if_true as statement_list;
-            if ((object)lastStateCV != null)
+            if (lastStateCV != null)
             {
                 lastStateCV.Add(new procedure_call("exit"));
             }

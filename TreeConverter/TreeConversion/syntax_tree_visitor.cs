@@ -18875,7 +18875,7 @@ namespace PascalABCCompiler.TreeConverter
             var iteratorContainingClass = context._ctn.fields.Where(f => f.name == Consts__Self).First().type;
             //var iteratorContainingClass = context._cmn.types.Where(t => t.name == _unk.ClassName.name).First();
 
-            if ((object)iteratorContainingClass != null)
+            if (iteratorContainingClass != null)
             {
                 // Search for unknown ident in class
                 var found = iteratorContainingClass.find(_unk.UnknownID.name);
@@ -18969,6 +18969,7 @@ namespace PascalABCCompiler.TreeConverter
             _vars.vars.visit(this);
         }
         
+        // end frninja
 
         /*public SyntaxTree.question_colon_expression ConvertToQCE(dot_question_node dqn)
         {
