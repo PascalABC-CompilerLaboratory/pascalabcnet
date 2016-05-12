@@ -108,7 +108,7 @@
     <Compile Include="..\Configuration\GlobalAssemblyInfo.cs">
       <Link>Config\globalassemblyinfo.cs</Link>
     </Compile>
-    <Compile Include="Config\AssemblyInfo.cs" />
+    <Compile Include="tree\Config\AssemblyInfo.cs" />
     <Compile Include="tree\AbstractVisitor.cs" />
     <Compile Include="tree\BaseEnterExitVisitor.cs" />
     <Compile Include="tree\TreeHelper.cs" />
@@ -126,7 +126,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="tree\WalkingVisitorNew.cs" />
-    <Compile Include="tree\yield_helpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

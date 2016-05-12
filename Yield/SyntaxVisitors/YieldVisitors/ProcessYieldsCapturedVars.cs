@@ -83,7 +83,7 @@ namespace SyntaxVisitors
             IDictionary<string, string> localsMap, // отображение для захваченных имен локальных переменных
             IDictionary<string, string> formalParamsMap, // отображение для захваченных имен формальных параметров
             IDictionary<var_def_statement, var_def_statement> localsCloneMap, // отображение для оберток локальных переменных 
-            locals_type_map_helper localTypeMapHelper) // вспомогательный узел для типов локальных переменных
+            yield_locals_type_map_helper localTypeMapHelper) // вспомогательный узел для типов локальных переменных
         {
             var fh = (pd.proc_header as function_header);
             if (fh == null)
@@ -103,8 +103,8 @@ namespace SyntaxVisitors
                                         {
                                             if (vds.inital_value != null)
                                             {
-                                                //return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], varsTypeDetectorHelper), null);
-                                                return new var_def_statement(ids, new unknown_expression_type(localsCloneMap[vds], localTypeMapHelper), null);
+                                                //return new var_def_statement(ids, new yield_unknown_expression_type(localsCloneMap[vds], varsTypeDetectorHelper), null);
+                                                return new var_def_statement(ids, new yield_unknown_expression_type(localsCloneMap[vds], localTypeMapHelper), null);
                                             }
                                             else
                                             {
@@ -212,12 +212,16 @@ namespace SyntaxVisitors
                     var decls = UpperTo<declarations>();
                     if (decls != null)
                     {
-                        function_header nfh = new function_header();
-                        nfh.name = new method_name(fh.name.meth_name.name);
+                        // frninja 12/05/16 - забыли копировать return
+                        function_header nfh = ObjectCopier.Clone(fh);
+                        //function_header nfh = new function_header();
+                        //nfh.name = new method_name(fh.name.meth_name.name);
+
                         // Set className
                         nfh.name.class_name = iteratorClassName;
-                        nfh.parameters = fh.parameters;
-                        nfh.proc_attributes = fh.proc_attributes;
+                        //nfh.parameters = fh.parameters;
+                        //nfh.proc_attributes = fh.proc_attributes;
+                        //nfh.return_type = fh.return_type;
 
                         procedure_definition npd = new procedure_definition(nfh, new block(stl));
 
@@ -446,7 +450,7 @@ namespace SyntaxVisitors
         /// </summary>
         /// <param className="pd">Объявление метода</param>
         /// <returns>Коллекция посещенных локальных переменных</returns>
-        private void CreateLocalVariablesTypeProxies(procedure_definition pd, out IEnumerable<var_def_statement> localsClonesCollection, out locals_type_map_helper localsTypeMapHelper)
+        private void CreateLocalVariablesTypeProxies(procedure_definition pd, out IEnumerable<var_def_statement> localsClonesCollection, out yield_locals_type_map_helper localsTypeMapHelper)
         {
             // Выполняем определение типов локальных переменных с автовыводом типов
 
@@ -454,7 +458,7 @@ namespace SyntaxVisitors
             var pdCloned = ObjectCopier.Clone(pd);
 
             // Заменяем локальные переменные с неизвестным типом на обертки-хелперы (откладываем до семантики)
-            localsTypeMapHelper = new locals_type_map_helper();
+            localsTypeMapHelper = new yield_locals_type_map_helper();
             LocalVariablesTypeDetectorHelperVisior localsTypeDetectorHelperVisitor = new LocalVariablesTypeDetectorHelperVisior(localsTypeMapHelper);
             pdCloned.visit(localsTypeDetectorHelperVisitor);
 
@@ -722,7 +726,7 @@ namespace SyntaxVisitors
             pd.visit(deleteBeginEndVisitor);
 
             // Обработка метода для корректного захвата локальных переменных и их типов
-            locals_type_map_helper localsTypeMapHelper;
+            yield_locals_type_map_helper localsTypeMapHelper;
             IEnumerable<var_def_statement> localsClonesCollection;
             CreateLocalVariablesTypeProxies(pd, out localsClonesCollection, out localsTypeMapHelper);
             

@@ -65,6 +65,13 @@ namespace SyntaxVisitors
             // Empty
         }
 
+        // frninja 12/05/16 - фикс для yield_unknown_ident
+        public override void visit(yield_unknown_ident unk)
+        {
+            yield_var_def_statement_with_unknown_type x;
+            // Empty
+        }
+
         public override void visit(ident id)
         {
             // Check dot node
@@ -113,7 +120,7 @@ namespace SyntaxVisitors
 
                     if (!id.name.StartsWith("<")) // Check for already captured
                     {
-                        Replace(id, new unknown_ident(id, ClassName));
+                        Replace(id, new yield_unknown_ident(id, ClassName));
                     }
                 }
             }

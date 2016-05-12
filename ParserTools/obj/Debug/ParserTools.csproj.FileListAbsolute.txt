@@ -1,5 +1,5 @@
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\ParserTools.dll
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\ParserTools.pdb
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\ParserTools\obj\Debug\ParserTools.csprojResolveAssemblyReference.cache
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\ParserTools\obj\Debug\ParserTools.dll
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\ParserTools\obj\Debug\ParserTools.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\bin\ParserTools.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\bin\ParserTools.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\ParserTools\obj\Debug\ParserTools.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\ParserTools\obj\Debug\ParserTools.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\ParserTools\obj\Debug\ParserTools.pdb

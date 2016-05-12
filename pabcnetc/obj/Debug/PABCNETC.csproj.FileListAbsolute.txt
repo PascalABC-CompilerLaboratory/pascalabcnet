@@ -1,6 +1,6 @@
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\pabcnetc.exe.config
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\pabcnetc.exe
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\pabcnetc.pdb
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\pabcnetc\obj\Debug\pabcnetc.exe
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\pabcnetc\obj\Debug\pabcnetc.pdb
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\pabcnetc\obj\Debug\PABCNETC.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\bin\pabcnetc.exe.config
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\bin\pabcnetc.exe
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\bin\pabcnetc.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\pabcnetc\obj\Debug\pabcnetc.exe
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\pabcnetc\obj\Debug\pabcnetc.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\pabcnetc\obj\Debug\PABCNETC.csprojResolveAssemblyReference.cache

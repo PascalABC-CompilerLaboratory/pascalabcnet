@@ -138,8 +138,6 @@ namespace VisualPascalABC
         private void CreateCompiler()
         {
             standartCompiler = new PascalABCCompiler.Compiler(SourceFilesProvider, OnChangeCompilerState);
-            standartCompiler.SyntaxTreeChanger = new ParsePABC1.SyntaxTreeYieldDesugar();
-
             CodeCompletion.CodeCompletionController.comp = new PascalABCCompiler.Compiler((PascalABCCompiler.Compiler)standartCompiler, SourceFilesProvider, OnChangeCompilerState);
             CodeCompletion.CodeCompletionController.ParsersController = standartCompiler.ParsersController;
             CodeCompletion.CodeCompletionController.StandartDirectories = StandartDirectories;

@@ -20,7 +20,7 @@ namespace ParsePABC1
         static syntax_tree_node ParseFile(string fname)
         {
             Compiler c = new Compiler();
-            c.SyntaxTreeChanger = new SyntaxTreeYieldDesugar();
+           // c.SyntaxTreeChanger = new YieldDesugarSyntaxTreeConverter();
             var opts = new CompilerOptions(fname, CompilerOptions.OutputType.ConsoleApplicaton);
             
             var res = c.Compile(opts);
@@ -40,7 +40,7 @@ namespace ParsePABC1
 
         static void Main(string[] args)
         {
-            var cu = ParseFile(@"C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\Yield\tests\template\yieldSimpleTemplateWithField.pas");
+            var cu = ParseFile(@"C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\Yield\tests\template\yieldSimpleTemplateWithField.pas");
             if (cu == null)
                 return;
 

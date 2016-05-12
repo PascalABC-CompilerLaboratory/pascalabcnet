@@ -44,6 +44,12 @@ namespace PascalABCCompiler.TreeConverter
             return default(T);
         }
 
+        private T AddError<T>(location loc, string ErrString, params string[] values)
+        {
+            syntax_tree_visitor.AddError(loc, ErrString, values);
+            return default(T);
+        }
+
         private void AddError(location loc, string ErrString, params string[] values)
         {
             syntax_tree_visitor.AddError(loc, ErrString, values);
@@ -293,18 +299,6 @@ namespace PascalABCCompiler.TreeConverter
 
             switch (fn.semantic_node_type)
             {
-                /*
-                case semantic_node_type.empty_function_node:
-				{
-#if (DEBUG)
-					if (exprs.Length!=1)
-					{
-						throw new CompilerInternalError("Epty functions with only single parameter allowed.");
-					}
-#endif
-					return exprs[0];
-				}
-                */
                 case semantic_node_type.basic_function_node:
                     {
                         return create_basic_function_call((basic_function_node)fn, loc, exprs);
@@ -405,16 +399,6 @@ namespace PascalABCCompiler.TreeConverter
         {
             function_node fn = select_function(exprs, si, loc);
 
-            /*
-            if (fn.compile_time_executor != null)
-            {
-                expression_node ex = fn.compile_time_executor(loc, exprs.ToArray());
-                if (ex != null)
-                {
-                    return ex;
-                }
-            }
-            */
             //allow_procedure = true;
             if ((!allow_procedure) && (fn.return_value_type == null))
             {
@@ -585,6 +569,18 @@ namespace PascalABCCompiler.TreeConverter
                 throw new TwoTypeConversionsPossible(en, pct.first, pct.second);
             if (pct.first == null)
                 throw new CanNotConvertTypes(en, en.type, to, loc);
+        }
+        
+        public bool can_convert_type(expression_node en, type_node to)
+        {
+            if (en.type == to)
+                return true;
+            possible_type_convertions pct = type_table.get_convertions(en.type, to);
+            if (pct.second != null)
+                return false;
+            if (pct.first == null)
+                return false;
+            return true;
         }
 
         public void check_convert_type_with_inheritance(type_node from, type_node to, location loc)
@@ -1467,9 +1463,9 @@ namespace PascalABCCompiler.TreeConverter
         }
 
         //Этот метод сверяет не только параметры, но и возвращаемое значение
-        public static bool function_eq_params_and_result(function_node left, function_node right)
+        public static bool function_eq_params_and_result(function_node left, function_node right, bool weak=false)
         {
-            if (!function_eq_params(left, right))
+            if (!function_eq_params(left, right, weak))
             {
                 return false;
             }
@@ -1482,18 +1478,8 @@ namespace PascalABCCompiler.TreeConverter
         //Сравниваем типы-параметры generic-функций
         public static bool function_eq_generic_params(function_node left, function_node right)
         {
-            common_function_node cleft = left as common_function_node;
-            common_function_node cright = right as common_function_node;
-            List<ICommonTypeNode> left_type_params = null;
-            List<ICommonTypeNode> right_type_params = null;
-            if (cleft != null)
-            {
-                left_type_params = cleft.generic_params;
-            }
-            if (cright != null)
-            {
-                right_type_params = cright.generic_params;
-            }
+            List<type_node> left_type_params = left.get_generic_params_list();
+            List<type_node> right_type_params = right.get_generic_params_list();
             if (left_type_params == null && right_type_params == null)
             {
                 return true;
@@ -1569,38 +1555,6 @@ namespace PascalABCCompiler.TreeConverter
 		private void convert_function_call_expressions(function_node fn,expressions_list exprs,
 			possible_type_convertions_list ptcal)
 		{
-			/*if (SystemLibrary.SystemLibrary.syn_visitor.SystemUnitAssigned && fn.name != compiler_string_consts.assign_name && !SystemLibrary.SystemLibrary.syn_visitor.one_way_operation(fn.name) && SystemLibrary.SystemLibrary.syn_visitor.in_check_range_region())
-            {
-				for (int i=0; i<exprs.Count; i++)
-				{
-					if (exprs[i] is statements_expression_node)
-						break;
-					expression_node right = exprs[i];
-					if (fn.parameters.Count <= i)
-						break;
-					if (fn.parameters[i].parameter_type == parameter_type.var)
-						continue;
-					type_node left_type = fn.parameters[i].type;
-					
-					if (SystemLibrary.SystemLibrary.syn_visitor.is_range_checkable(left_type) && SystemLibrary.SystemLibrary.syn_visitor.is_range_checkable(exprs[i].type))
-					{
-						ordinal_type_interface oti = left_type.get_internal_interface(internal_interface_kind.ordinal_interface) as ordinal_type_interface;
-            			if (left_type != SystemLibrary.SystemLibrary.char_type) 
-            			if(!(oti.lower_value is enum_const_node) && !(oti.lower_value is char_const_node))
-            			right = SystemLibrary.SystemLibrary.syn_visitor.convertion_data_and_alghoritms.convert_type(SystemLibrary.SystemLibrary.syn_visitor.convertion_data_and_alghoritms.create_simple_function_call(SystemLibrary.SystemLibInitializer.CheckRangeFunction.sym_info as common_namespace_function_node, null, SystemLibrary.SystemLibrary.syn_visitor.convertion_data_and_alghoritms.convert_type(right,SystemLibrary.SystemLibrary.int64_type), 
-            				                                                                                                                                                                                               SystemLibrary.SystemLibrary.syn_visitor.convertion_data_and_alghoritms.convert_type(oti.lower_value,SystemLibrary.SystemLibrary.int64_type),SystemLibrary.SystemLibrary.syn_visitor.convertion_data_and_alghoritms.convert_type(oti.upper_value,SystemLibrary.SystemLibrary.int64_type)),right.type);
-            			else if (oti.lower_value is enum_const_node)
-            			{
-            				right = SystemLibrary.SystemLibrary.syn_visitor.convertion_data_and_alghoritms.explicit_convert_type(SystemLibrary.SystemLibrary.syn_visitor.convertion_data_and_alghoritms.create_simple_function_call(SystemLibrary.SystemLibInitializer.CheckRangeFunction.sym_info as common_namespace_function_node, null, SystemLibrary.SystemLibrary.syn_visitor.convertion_data_and_alghoritms.explicit_convert_type(right,SystemLibrary.SystemLibrary.int64_type),
-            		                                                                                                               SystemLibrary.SystemLibrary.syn_visitor.convertion_data_and_alghoritms.explicit_convert_type(oti.lower_value,SystemLibrary.SystemLibrary.int64_type),SystemLibrary.SystemLibrary.syn_visitor.convertion_data_and_alghoritms.explicit_convert_type(oti.upper_value,SystemLibrary.SystemLibrary.int64_type)),right.type);
-            			}
-            			else if (oti.lower_value is char_const_node)
-            			right = SystemLibrary.SystemLibrary.syn_visitor.convertion_data_and_alghoritms.create_simple_function_call(SystemLibrary.SystemLibInitializer.CheckCharRangeFunction.sym_info as common_namespace_function_node, null, right, oti.lower_value,oti.upper_value);
-					
-					}
-					exprs[i] = right;
-				}
-            }*/
 			for(int i=0;i<exprs.Count;i++)
 			{
                 if ((ptcal.snl != null) && (i >= fn.parameters.Count - 1))
@@ -1665,20 +1619,6 @@ namespace PascalABCCompiler.TreeConverter
 			
 		}
 
-        //public common_function_node find_eq_method_in_symbol_info(function_node fn,SymbolInfo si)
-        //{
-        //    while(si!=null)
-        //    {
-        //        common_function_node cfn=si.sym_info as common_function_node;
-        //        if (function_eq_params(cfn,fn))
-        //        {
-        //            return cfn;
-        //        }
-        //        si = si.Next;
-        //    }
-        //    return null;
-        //}
-
         private function_node find_eq_return_value_method_in_list(function_node fn, function_node_list funcs)
         {
             foreach (function_node f in funcs)
@@ -1724,11 +1664,6 @@ namespace PascalABCCompiler.TreeConverter
 		public function_node is_exist_eq_method_in_list(function_node fn,function_node_list funcs)
 		{
 			return find_eq_method_in_list(fn,funcs);
-			/*if (fn==null)
-			{
-				return false;
-			}
-			return true;*/
 		}
 
 		public void init_reference_type(type_node ctn)
@@ -1900,7 +1835,7 @@ namespace PascalABCCompiler.TreeConverter
 
             if (set_of_possible_functions.Count == 0 && indefinits.Count == 0)
             {
-                AddError(loc, "CAN_NOT_CALL_ANY_GENERIC_FUNCTION_{0}_WITH_THESE_PARAMETERS", first_function.name);
+                return AddError<function_node>(loc, "CAN_NOT_CALL_ANY_GENERIC_FUNCTION_{0}_WITH_THESE_PARAMETERS", first_function.name);
             }
 
             possible_type_convertions_list_list tcll = new possible_type_convertions_list_list();
@@ -1973,6 +1908,17 @@ namespace PascalABCCompiler.TreeConverter
                     {
                         method_compare mc = compare_methods(set_of_possible_functions[i],
                             set_of_possible_functions[j], tcll[i], tcll[j]);
+                        if (SystemLibrary.SystemLibInitializer.InSetProcedure != null)
+                        {
+                            if (set_of_possible_functions[j] == SystemLibrary.SystemLibInitializer.InSetProcedure.sym_info)
+                            {
+                                mc = method_compare.less_method;
+                            }
+                            else if (set_of_possible_functions[i] == SystemLibrary.SystemLibInitializer.InSetProcedure.sym_info)
+                            {
+                                mc = method_compare.greater_method;
+                            }
+                        }
                         if (mc == method_compare.greater_method)
                         {
                             tcll.remove_at(j);
@@ -2085,11 +2031,6 @@ namespace PascalABCCompiler.TreeConverter
         {
             fn = find_eq_return_value_method_in_list(fn, funcs);
             return fn;
-            /*if (fn == null)
-            {
-                return false;
-            }
-            return true;*/
         }
 
 		private string get_return_variable_name(string function_name)

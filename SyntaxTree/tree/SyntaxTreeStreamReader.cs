@@ -440,6 +440,18 @@ namespace PascalABCCompiler.SyntaxTree
 					return new uses_closure();
 				case 209:
 					return new dot_question_node();
+				case 210:
+					return new slice_expr();
+				case 211:
+					return new no_type();
+				case 212:
+					return new yield_unknown_ident();
+				case 213:
+					return new yield_unknown_expression_type();
+				case 214:
+					return new yield_var_def_statement_with_unknown_type();
+				case 215:
+					return new yield_variable_definitions_with_unknown_type();
 			}
 			return null;
 		}
@@ -530,6 +542,7 @@ namespace PascalABCCompiler.SyntaxTree
 			}
 			_statement_list.left_logical_bracket = _read_node() as syntax_tree_node;
 			_statement_list.right_logical_bracket = _read_node() as syntax_tree_node;
+			_statement_list.expr_lambda_body = br.ReadBoolean();
 		}
 
 
@@ -2335,7 +2348,7 @@ namespace PascalABCCompiler.SyntaxTree
 
 		public void read_format_expr(format_expr _format_expr)
 		{
-			read_addressed_value(_format_expr);
+			read_expression(_format_expr);
 			_format_expr.expr = _read_node() as expression;
 			_format_expr.format1 = _read_node() as expression;
 			_format_expr.format2 = _read_node() as expression;
@@ -3389,6 +3402,7 @@ namespace PascalABCCompiler.SyntaxTree
 			}
 			_function_lambda_definition.lambda_visit_mode = (LambdaVisitMode)br.ReadByte();
 			_function_lambda_definition.substituting_node = _read_node() as syntax_tree_node;
+			_function_lambda_definition.usedkeyword = (int)br.ReadByte();
 		}
 
 
@@ -3733,25 +3747,81 @@ namespace PascalABCCompiler.SyntaxTree
 			_dot_question_node.right = _read_node() as addressed_value;
 		}
 
-        public void visit(unknown_ident _unk)
-        {
-            // Sth
-        }
 
-        public void visit(unknown_expression_type _unk)
-        {
-            // Sth
-        }
+		public void visit(slice_expr _slice_expr)
+		{
+			read_slice_expr(_slice_expr);
+		}
 
-        public void visit(var_def_statement_with_unknown_type _vars)
-        {
-            // Sth
-        }
+		public void read_slice_expr(slice_expr _slice_expr)
+		{
+			read_dereference(_slice_expr);
+			_slice_expr.v = _read_node() as addressed_value;
+			_slice_expr.from = _read_node() as expression;
+			_slice_expr.to = _read_node() as expression;
+			_slice_expr.step = _read_node() as expression;
+		}
 
-        public void visit(variable_definitions_with_unknown_type _vars)
-        {
-            // Sth
-        }
+
+		public void visit(no_type _no_type)
+		{
+			read_no_type(_no_type);
+		}
+
+		public void read_no_type(no_type _no_type)
+		{
+			read_type_definition(_no_type);
+		}
+
+
+		public void visit(yield_unknown_ident _yield_unknown_ident)
+		{
+			read_yield_unknown_ident(_yield_unknown_ident);
+		}
+
+		public void read_yield_unknown_ident(yield_unknown_ident _yield_unknown_ident)
+		{
+			read_ident(_yield_unknown_ident);
+			_yield_unknown_ident.UnknownID = _read_node() as ident;
+			_yield_unknown_ident.ClassName = _read_node() as ident;
+		}
+
+
+		public void visit(yield_unknown_expression_type _yield_unknown_expression_type)
+		{
+			read_yield_unknown_expression_type(_yield_unknown_expression_type);
+		}
+
+		public void read_yield_unknown_expression_type(yield_unknown_expression_type _yield_unknown_expression_type)
+		{
+			read_type_definition(_yield_unknown_expression_type);
+			_yield_unknown_expression_type.Vds = _read_node() as var_def_statement;
+		}
+
+
+		public void visit(yield_var_def_statement_with_unknown_type _yield_var_def_statement_with_unknown_type)
+		{
+			read_yield_var_def_statement_with_unknown_type(_yield_var_def_statement_with_unknown_type);
+		}
+
+		public void read_yield_var_def_statement_with_unknown_type(yield_var_def_statement_with_unknown_type _yield_var_def_statement_with_unknown_type)
+		{
+			read_statement(_yield_var_def_statement_with_unknown_type);
+			_yield_var_def_statement_with_unknown_type.vars = _read_node() as var_def_statement;
+		}
+
+
+		public void visit(yield_variable_definitions_with_unknown_type _yield_variable_definitions_with_unknown_type)
+		{
+			read_yield_variable_definitions_with_unknown_type(_yield_variable_definitions_with_unknown_type);
+		}
+
+		public void read_yield_variable_definitions_with_unknown_type(yield_variable_definitions_with_unknown_type _yield_variable_definitions_with_unknown_type)
+		{
+			read_declaration(_yield_variable_definitions_with_unknown_type);
+			_yield_variable_definitions_with_unknown_type.vars = _read_node() as variable_definitions;
+		}
+
 	}
 
 

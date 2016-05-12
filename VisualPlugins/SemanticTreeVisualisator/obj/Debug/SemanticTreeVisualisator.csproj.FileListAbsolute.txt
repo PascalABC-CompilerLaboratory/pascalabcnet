@@ -1,8 +1,8 @@
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\SemanticTreeVisualisator.dll
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\SemanticTreeVisualisator.pdb
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SemanticTreeVisualisator\obj\Debug\VisualPascalABCPlugins.Properties.Resources.resources
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SemanticTreeVisualisator\obj\Debug\VisualPascalABCPlugins.SemanticTreeVisualisatorForm.resources
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SemanticTreeVisualisator\obj\Debug\SemanticTreeVisualisator.csproj.GenerateResource.Cache
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SemanticTreeVisualisator\obj\Debug\SemanticTreeVisualisator.dll
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SemanticTreeVisualisator\obj\Debug\SemanticTreeVisualisator.pdb
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SemanticTreeVisualisator\obj\Debug\SemanticTreeVisualisator.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\bin\SemanticTreeVisualisator.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\bin\SemanticTreeVisualisator.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\SemanticTreeVisualisator\obj\Debug\VisualPascalABCPlugins.Properties.Resources.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\SemanticTreeVisualisator\obj\Debug\VisualPascalABCPlugins.SemanticTreeVisualisatorForm.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\SemanticTreeVisualisator\obj\Debug\SemanticTreeVisualisator.csproj.GenerateResource.Cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\SemanticTreeVisualisator\obj\Debug\SemanticTreeVisualisator.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\SemanticTreeVisualisator\obj\Debug\SemanticTreeVisualisator.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\SemanticTreeVisualisator\obj\Debug\SemanticTreeVisualisator.csprojResolveAssemblyReference.cache

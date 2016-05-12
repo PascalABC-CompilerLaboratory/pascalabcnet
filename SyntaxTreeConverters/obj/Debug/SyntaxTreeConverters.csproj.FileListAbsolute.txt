@@ -1,0 +1,11 @@
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\SyntaxTreeConverters\bin\Debug\SyntaxTreeConverters.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\SyntaxTreeConverters\bin\Debug\SyntaxTreeConverters.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\SyntaxTreeConverters\bin\Debug\Errors.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\SyntaxTreeConverters\bin\Debug\Localization.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\SyntaxTreeConverters\bin\Debug\SyntaxTree.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\SyntaxTreeConverters\bin\Debug\Errors.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\SyntaxTreeConverters\bin\Debug\Localization.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\SyntaxTreeConverters\bin\Debug\SyntaxTree.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\SyntaxTreeConverters\obj\Debug\SyntaxTreeConverters.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\SyntaxTreeConverters\obj\Debug\SyntaxTreeConverters.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\SyntaxTreeConverters\obj\Debug\SyntaxTreeConverters.pdb

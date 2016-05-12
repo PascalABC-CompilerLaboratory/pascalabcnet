@@ -127,6 +127,7 @@ namespace PascalABCCompiler.SyntaxTree
 				bw.Write((byte)1);
 				_statement_list.right_logical_bracket.visit(this);
 			}
+			bw.Write(_statement_list.expr_lambda_body);
 		}
 
 
@@ -3414,7 +3415,7 @@ namespace PascalABCCompiler.SyntaxTree
 
 		public void write_format_expr(format_expr _format_expr)
 		{
-			write_addressed_value(_format_expr);
+			write_expression(_format_expr);
 			if (_format_expr.expr == null)
 			{
 				bw.Write((byte)0);
@@ -5268,6 +5269,7 @@ namespace PascalABCCompiler.SyntaxTree
 				bw.Write((byte)1);
 				_function_lambda_definition.substituting_node.visit(this);
 			}
+			bw.Write((byte)_function_lambda_definition.usedkeyword);
 		}
 
 
@@ -5860,25 +5862,159 @@ namespace PascalABCCompiler.SyntaxTree
 			}
 		}
 
-        public void visit(unknown_ident _unk)
-        {
-            // Sth
-        }
 
-        public void visit(unknown_expression_type _unk)
-        {
-            // Sth
-        }
+		public void visit(slice_expr _slice_expr)
+		{
+			bw.Write((Int16)210);
+			write_slice_expr(_slice_expr);
+		}
 
-        public void visit(var_def_statement_with_unknown_type _vars)
-        {
-            // Sth
-        }
+		public void write_slice_expr(slice_expr _slice_expr)
+		{
+			write_dereference(_slice_expr);
+			if (_slice_expr.v == null)
+			{
+				bw.Write((byte)0);
+			}
+			else
+			{
+				bw.Write((byte)1);
+				_slice_expr.v.visit(this);
+			}
+			if (_slice_expr.from == null)
+			{
+				bw.Write((byte)0);
+			}
+			else
+			{
+				bw.Write((byte)1);
+				_slice_expr.from.visit(this);
+			}
+			if (_slice_expr.to == null)
+			{
+				bw.Write((byte)0);
+			}
+			else
+			{
+				bw.Write((byte)1);
+				_slice_expr.to.visit(this);
+			}
+			if (_slice_expr.step == null)
+			{
+				bw.Write((byte)0);
+			}
+			else
+			{
+				bw.Write((byte)1);
+				_slice_expr.step.visit(this);
+			}
+		}
 
-        public void visit(variable_definitions_with_unknown_type _vars)
-        {
-            // Sth
-        }
+
+		public void visit(no_type _no_type)
+		{
+			bw.Write((Int16)211);
+			write_no_type(_no_type);
+		}
+
+		public void write_no_type(no_type _no_type)
+		{
+			write_type_definition(_no_type);
+		}
+
+
+		public void visit(yield_unknown_ident _yield_unknown_ident)
+		{
+			bw.Write((Int16)212);
+			write_yield_unknown_ident(_yield_unknown_ident);
+		}
+
+		public void write_yield_unknown_ident(yield_unknown_ident _yield_unknown_ident)
+		{
+			write_ident(_yield_unknown_ident);
+			if (_yield_unknown_ident.UnknownID == null)
+			{
+				bw.Write((byte)0);
+			}
+			else
+			{
+				bw.Write((byte)1);
+				_yield_unknown_ident.UnknownID.visit(this);
+			}
+			if (_yield_unknown_ident.ClassName == null)
+			{
+				bw.Write((byte)0);
+			}
+			else
+			{
+				bw.Write((byte)1);
+				_yield_unknown_ident.ClassName.visit(this);
+			}
+		}
+
+
+		public void visit(yield_unknown_expression_type _yield_unknown_expression_type)
+		{
+			bw.Write((Int16)213);
+			write_yield_unknown_expression_type(_yield_unknown_expression_type);
+		}
+
+		public void write_yield_unknown_expression_type(yield_unknown_expression_type _yield_unknown_expression_type)
+		{
+			write_type_definition(_yield_unknown_expression_type);
+			if (_yield_unknown_expression_type.Vds == null)
+			{
+				bw.Write((byte)0);
+			}
+			else
+			{
+				bw.Write((byte)1);
+				_yield_unknown_expression_type.Vds.visit(this);
+			}
+		}
+
+
+		public void visit(yield_var_def_statement_with_unknown_type _yield_var_def_statement_with_unknown_type)
+		{
+			bw.Write((Int16)214);
+			write_yield_var_def_statement_with_unknown_type(_yield_var_def_statement_with_unknown_type);
+		}
+
+		public void write_yield_var_def_statement_with_unknown_type(yield_var_def_statement_with_unknown_type _yield_var_def_statement_with_unknown_type)
+		{
+			write_statement(_yield_var_def_statement_with_unknown_type);
+			if (_yield_var_def_statement_with_unknown_type.vars == null)
+			{
+				bw.Write((byte)0);
+			}
+			else
+			{
+				bw.Write((byte)1);
+				_yield_var_def_statement_with_unknown_type.vars.visit(this);
+			}
+		}
+
+
+		public void visit(yield_variable_definitions_with_unknown_type _yield_variable_definitions_with_unknown_type)
+		{
+			bw.Write((Int16)215);
+			write_yield_variable_definitions_with_unknown_type(_yield_variable_definitions_with_unknown_type);
+		}
+
+		public void write_yield_variable_definitions_with_unknown_type(yield_variable_definitions_with_unknown_type _yield_variable_definitions_with_unknown_type)
+		{
+			write_declaration(_yield_variable_definitions_with_unknown_type);
+			if (_yield_variable_definitions_with_unknown_type.vars == null)
+			{
+				bw.Write((byte)0);
+			}
+			else
+			{
+				bw.Write((byte)1);
+				_yield_variable_definitions_with_unknown_type.vars.visit(this);
+			}
+		}
+
 	}
 
 

@@ -190,7 +190,6 @@ namespace PascalABCCompiler.SyntaxTree
 
     public enum c_scalar_sign { none, signed, unsigned };
 
-    [Serializable]
 	public class file_position
 	{
 		private int _line_num;
@@ -220,7 +219,6 @@ namespace PascalABCCompiler.SyntaxTree
 
 	}
 
-    [Serializable]
 	public class SourceContext
 	{
 		private file_position _begin_position;
@@ -267,9 +265,12 @@ namespace PascalABCCompiler.SyntaxTree
                 _begin_position = _end_position;
             if (right == null)
                 _end_position = _begin_position;
-            this._begin_symbol_position = left._begin_symbol_position;
-            this._end_symbol_position = right._end_symbol_position;
-            this.FileName = left.FileName == right.FileName ? left.FileName : null;
+            if (left != null)
+                this._begin_symbol_position = left._begin_symbol_position;
+            if (right != null)
+                this._end_symbol_position = right._end_symbol_position;
+            if (left != null && right != null)
+                this.FileName = left.FileName == right.FileName ? left.FileName : null;
         }
 
         public SourceContext Merge(SourceContext right)

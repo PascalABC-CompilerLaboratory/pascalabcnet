@@ -1,8 +1,8 @@
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\TestPlugin.dll
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\TestPlugin.pdb
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\TestPlugin\obj\Debug\TestPlugin.csprojResolveAssemblyReference.cache
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\TestPlugin\obj\Debug\VisualPascalABCPlugins.Properties.Resources.resources
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\TestPlugin\obj\Debug\VisualPascalABCPlugins.TestForm.resources
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\TestPlugin\obj\Debug\TestPlugin.csproj.GenerateResource.Cache
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\TestPlugin\obj\Debug\TestPlugin.dll
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\TestPlugin\obj\Debug\TestPlugin.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\bin\TestPlugin.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\bin\TestPlugin.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\TestPlugin\obj\Debug\VisualPascalABCPlugins.Properties.Resources.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\TestPlugin\obj\Debug\VisualPascalABCPlugins.TestForm.resources
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\TestPlugin\obj\Debug\TestPlugin.csproj.GenerateResource.Cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\TestPlugin\obj\Debug\TestPlugin.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\TestPlugin\obj\Debug\TestPlugin.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\TestPlugin\obj\Debug\TestPlugin.csprojResolveAssemblyReference.cache

@@ -1,5 +1,5 @@
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\SCharpLanguageConverter.dll
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\bin\SCharpLanguageConverter.pdb
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SCharpLanguageConverter\obj\Debug\SCharpLanguageConverter.csprojResolveAssemblyReference.cache
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SCharpLanguageConverter\obj\Debug\SCharpLanguageConverter.dll
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPlugins\SCharpLanguageConverter\obj\Debug\SCharpLanguageConverter.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\bin\SCharpLanguageConverter.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\bin\SCharpLanguageConverter.pdb
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\SCharpLanguageConverter\obj\Debug\SCharpLanguageConverter.csprojResolveAssemblyReference.cache
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\SCharpLanguageConverter\obj\Debug\SCharpLanguageConverter.dll
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPlugins\SCharpLanguageConverter\obj\Debug\SCharpLanguageConverter.pdb

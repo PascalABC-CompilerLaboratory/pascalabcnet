@@ -14,10 +14,6 @@ namespace SyntaxVisitors
         private bool _rootAdded = false;
         public override void DefaultVisit(syntax_tree_node n)
         {
-            if (n is unknown_ident)
-            {
-                var x = n.source_context;
-            }
             // frninja 07/12/15
             if (!_rootAdded)
             {

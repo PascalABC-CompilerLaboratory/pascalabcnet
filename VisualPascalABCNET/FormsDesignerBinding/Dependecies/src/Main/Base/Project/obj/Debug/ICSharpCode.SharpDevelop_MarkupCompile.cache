@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET\VisualPascalABCNET\FormsDesignerBinding\Dependecies\src\Main\Base\Project\obj\Debug\
+C:\Users\Oleg\Documents\Visual Studio 2015\Projects\C#\Compilers\PascalABC.NET_Diplom\VisualPascalABCNET\FormsDesignerBinding\Dependecies\src\Main\Base\Project\obj\Debug\
 
 none
 false
@@ -13,7 +13,7 @@ DEBUG,TRACE;PUBLICINTERPROCESS
 22671607202
 
 594-838542534
-31-1536373130
+31369610144
 Src\Bookmarks\Pad\Controls\ListViewPad.xaml;Src\Gui\Dialogs\OptionPanels\IDEOptions\TaskListOptionsl.xaml;Src\Gui\Dialogs\OptionPanels\ProjectOptions\BuildEvents.xaml;Src\Gui\Dialogs\OptionPanels\ProjectOptions\DebugOptions.xaml;Src\Gui\Dialogs\OptionPanels\ProjectOptions\ProjectOptionPanel.xaml;Src\Gui\Dialogs\ReferenceDialog\ServiceReference\AddServiceReferenceDialog.xaml;Src\Gui\Dialogs\ReferenceDialog\ServiceReference\AdvancedServiceDialog.xaml;Src\Gui\Dialogs\ReferenceDialog\ServiceReference\ServiceReferenceOptionsPanel..xaml;Src\Services\RefactoringService\ContextActions\ContextActionsBulbControl.xaml;Src\Services\RefactoringService\ContextActions\ContextActionsControl.xaml;Src\Services\RefactoringService\ContextActions\ContextActionsHeaderedControl.xaml;themes\generic.xaml;Src\Gui\App.xaml;Src\Gui\Components\ColorPickerButton.xaml;Src\Gui\Dialogs\GotoDialog.xaml;Src\Gui\Dialogs\OptionPanels\IDEOptions\LoadSaveOptions.xaml;Src\Gui\Dialogs\OptionPanels\IDEOptions\ProjectAndSolutionOptions.xaml;Src\Gui\Dialogs\OptionPanels\IDEOptions\SelectCulturePanel.xaml;Src\Gui\Dialogs\TabbedOptionsDialog.xaml;Src\Gui\Dialogs\TreeViewOptionsDialog.xaml;Src\Gui\Workbench\WpfWorkbench.xaml;Src\Project\Converter\UpgradeView.xaml;
 
 False
